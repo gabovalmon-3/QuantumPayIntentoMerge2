@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0_DTOs", "0_DTOs", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1_DataAccess", "1_DataAccess", "{8E924541-A47C-48AE-975B-0FD41A863C66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2_CoreApp", "2_CoreApp", "{F910CEA7-A2F7-4DEF-AF4A-10078EC4C815}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3_Exceptions", "3_Exceptions", "{AB850647-B31F-4FF5-9124-3858418F0923}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4_WebAPI", "4_WebAPI", "{1736CA8B-57A5-4CF7-92CB-076026BB0E0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5_WebApp", "5_WebApp", "{E2FCE2F4-BE63-404F-B94A-A7C455141400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", "{94A88D54-9B5C-470E-BF17-EE08A156A28E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94A88D54-9B5C-470E-BF17-EE08A156A28E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94A88D54-9B5C-470E-BF17-EE08A156A28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94A88D54-9B5C-470E-BF17-EE08A156A28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94A88D54-9B5C-470E-BF17-EE08A156A28E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{94A88D54-9B5C-470E-BF17-EE08A156A28E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC115FBD-B74E-49E8-BFDF-A3B093AE0F29}
+	EndGlobalSection
+EndGlobal
