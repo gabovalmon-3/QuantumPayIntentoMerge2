@@ -10,5 +10,18 @@ namespace DTOs
     {
         public string nombreUsuario { get; set; }
         public string contrasena { get; set; }
+
+        public void AprobarSolicitudInstitucionBancaria()
+        {
+            //Definir comision
+        }
+
+        public void AprobarSolicitudComercio()
+        {
+            //Definir comision
+        }
+
+
+
     }
 }
