@@ -9,7 +9,6 @@ namespace DTOs
     public class Comercio : BaseDTO
     {
         public string Nombre { get; set; }
-        public int IdAdmin { get; set; }
         public int IdCuenta { get; set; }
 
         public void VerTransacciones() 

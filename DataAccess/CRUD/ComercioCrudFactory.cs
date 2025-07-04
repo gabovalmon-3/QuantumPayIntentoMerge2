@@ -80,7 +80,6 @@ namespace DataAccess.CRUD
             var sqlOperation = new SQLOperation() { ProcedureName = "UPD_COMERCIO_PR" };
 
             sqlOperation.AddIntParam("P_Id", comercio.Id);
-            sqlOperation.AddIntParam("P_IdAdmin", comercio.IdAdmin);
             sqlOperation.AddIntParam("P_IdCuenta", comercio.IdCuenta);
             sqlOperation.AddDateTimeParam("P_Created", comercio.Created);
             sqlOperation.AddDateTimeParam("P_Updated", comercio.Updated);
@@ -104,7 +103,6 @@ namespace DataAccess.CRUD
             return new Comercio()
             {
                 Id = (int)row["Id"],
-                IdAdmin = (int)row["IdAdmin"],
                 IdCuenta = (int)row["IdCuenta"],
                 Created = row["Created"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Created"],
                 Updated = row["Updated"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Updated"],
