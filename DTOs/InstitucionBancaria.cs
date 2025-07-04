@@ -12,7 +12,7 @@ namespace DTOs
         public int codigoIBAN { get; set; }
         public string cedulaJuridica { get; set; }
         public string direccionSedePrincipal { get; set; }
-        public string telefono { get; set; }
+        public int telefono { get; set; }
         public string correoElectronico { get; set; }
 
         public void iniciarSesion()
