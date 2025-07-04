@@ -12,7 +12,7 @@ namespace DTOs
         public string NombreUsuario { get; set; }
         public string Contrasena { get; set; }
         public string CedulaJuridica { get; set; }
-        public string Telefono { get; set; }
+        public int Telefono { get; set; }
         public string CorreoElectronico { get; set; }
         public string Direccion { get; set; }
 

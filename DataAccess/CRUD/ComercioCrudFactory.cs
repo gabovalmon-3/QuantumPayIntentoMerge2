@@ -55,11 +55,29 @@ namespace DataAccess.CRUD
             return lstComercios;
         }
 
+        public T RetrieveById<T>(Comercio comercio)
+        {
+            var sqlOperation = new SQLOperation() { ProcedureName = "RET_COMERCIO_BY_ID_PR" };
+
+            sqlOperation.AddIntParam("P_Id", comercio.Id);
+
+            var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResult.Count > 0)
+            {
+                var row = lstResult[0];
+                comercio = BuildComercio(row);
+                return (T)Convert.ChangeType(comercio, typeof(T));
+            }
+
+            return default(T);
+        }
+
         public T RetrieveByComercioName<T>(Comercio comercio)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_COMERCIO_BY_NAME_PR" };
 
-            sqlOperation.AddStringParameter("P_Code", comercio.Nombre);
+            sqlOperation.AddStringParameter("P_Nombre", comercio.Nombre);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -83,7 +101,7 @@ namespace DataAccess.CRUD
             sqlOperation.AddIntParam("P_IdCuenta", comercio.IdCuenta);
             sqlOperation.AddDateTimeParam("P_Created", comercio.Created);
             sqlOperation.AddDateTimeParam("P_Updated", comercio.Updated);
-            sqlOperation.AddStringParameter("Nombre", comercio.Nombre);
+            sqlOperation.AddStringParameter("P_Nombre", comercio.Nombre);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
         }

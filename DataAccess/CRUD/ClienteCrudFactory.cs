@@ -84,6 +84,25 @@ namespace DataAccess.CRUD
             return default(T);
         }
 
+        public T RetrieveByTelefono<T>(Cliente cliente)
+        {
+            var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_TELEFONO_PR" };
+
+            sqlOperation.AddIntParam("P_Telefono", cliente.telefono);
+
+            var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResult.Count > 0)
+            {
+                var row = lstResult[0];
+                cliente = BuildCliente(row);
+
+                return (T)Convert.ChangeType(cliente, typeof(T));
+            }
+
+            return default(T);
+        }
+
         public T RetrieveById<T>(Cliente cliente)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_ID_PR" };
@@ -106,7 +125,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_EMAIL_PR" };
 
-            sqlOperation.AddStringParameter("P_Email", cliente.correo);
+            sqlOperation.AddStringParameter("P_Correo", cliente.correo);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
