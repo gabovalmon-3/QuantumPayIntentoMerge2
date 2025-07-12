@@ -87,7 +87,7 @@ namespace CoreApp
             return iCrud.RetrieveByIBAN<InstitucionBancaria>(codigoIBAN);
         }
 
-        public InstitucionBancaria RetrieveByCodigoIdentidad(InstitucionBancaria institucionBancaria)
+        public InstitucionBancaria RetrieveByCodigoIdentidad(int institucionBancaria)
         {
             var iCrud = new InstitucionBancariaCrudFactory();
             return iCrud.RetrieveByCodigoIdentidad<InstitucionBancaria>(institucionBancaria);

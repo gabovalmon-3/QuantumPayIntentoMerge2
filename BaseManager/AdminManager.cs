@@ -11,7 +11,7 @@ namespace CoreApp
     public class AdminManager : BaseManager
     {
 
-        public async Task  Create(Admin admin)
+        public async Task Create(Admin admin)
         {
             try
             {

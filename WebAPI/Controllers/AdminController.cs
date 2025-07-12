@@ -76,20 +76,19 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete")]
-        public ActionResult Delete(Admin admin)
+        [Route("Delete/{id}")]
+        public ActionResult Delete(int id)
         {
             try
             {
-                var um = new AdminManager();
-                var existing = um.RetrieveById(admin.Id);
-                um.Delete(admin.Id);
-                return Ok(new { Message = $"Usuario con ID {admin.Id} eliminado correctamente." });
+                var cm = new AdminManager();
+                var existing = cm.RetrieveById(id);
+                cm.Delete(id);
+                return Ok(new { Message = $"Admin con ID {id} eliminado correctamente." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
-
             }
         }
     }

@@ -126,20 +126,19 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete")]
-        public ActionResult Delete(Cliente cliente)
+        [Route("Delete/{id}")]
+        public ActionResult Delete(int id)
         {
             try
             {
                 var cm = new CuentaComercioManager();
-                var existing = cm.RetrieveById(cliente.Id);
-                cm.Delete(cliente.Id);
-                return Ok(new { Message = $"Usuario con ID {cliente.Id} eliminado correctamente." });
+                var existing = cm.RetrieveById(id);
+                cm.Delete(id);
+                return Ok(new { Message = $"CuentaComercio con ID {id} eliminado correctamente." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
-
             }
         }
     }

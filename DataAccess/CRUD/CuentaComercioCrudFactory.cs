@@ -24,12 +24,12 @@ namespace DataAccess.CRUD
 
             sqlOperation.ProcedureName = "CRE_CUENTACOMERCIO_PR";
 
-            sqlOperation.AddStringParameter("P_NombreUsuario", cuentaComercio.NombreUsuario);
-            sqlOperation.AddStringParameter("P_Contrasena", cuentaComercio.Contrasena);
-            sqlOperation.AddStringParameter("P_CedulaJuridica", cuentaComercio.CedulaJuridica);
-            sqlOperation.AddIntParam("P_Telefono", cuentaComercio.Telefono);
-            sqlOperation.AddStringParameter("P_CorreoElectronico", cuentaComercio.CorreoElectronico);
-            sqlOperation.AddStringParameter("P_Direccion", cuentaComercio.Direccion);
+            sqlOperation.AddStringParameter("P_nombreUsuario", cuentaComercio.NombreUsuario);
+            sqlOperation.AddStringParameter("P_contrasena", cuentaComercio.Contrasena);
+            sqlOperation.AddStringParameter("P_cedulaJuridica", cuentaComercio.CedulaJuridica);
+            sqlOperation.AddIntParam("P_telefono", cuentaComercio.Telefono);
+            sqlOperation.AddStringParameter("P_correoElectronico", cuentaComercio.CorreoElectronico);
+            sqlOperation.AddStringParameter("P_direccion", cuentaComercio.Direccion);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
 
@@ -65,7 +65,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_ID_PR" };
 
-            sqlOperation.AddIntParam("P_Id", Id);
+            sqlOperation.AddIntParam("P_idCuenta", Id);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -84,7 +84,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_USERNAME_PR" };
 
-            sqlOperation.AddStringParameter("P_NombreUsuario", NombreUsuario);
+            sqlOperation.AddStringParameter("P_nombreUsuario", NombreUsuario);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -103,7 +103,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_TELEFONO_PR" };
 
-            sqlOperation.AddIntParam("P_Telefono", Telefono);
+            sqlOperation.AddIntParam("P_telefono", Telefono);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -122,7 +122,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_EMAIL_PR" };
 
-            sqlOperation.AddStringParameter("P_CorreoElectronico", CorreoElectronico);
+            sqlOperation.AddStringParameter("P_correoElectronico", CorreoElectronico);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -140,15 +140,13 @@ namespace DataAccess.CRUD
             var cuentaComercio = baseDTO as CuentaComercio;
             var sqlOperation = new SQLOperation() { ProcedureName = "UPD_CUENTACOMERCIO_PR" };
 
-            sqlOperation.AddIntParam("P_Id", cuentaComercio.Id);
-            sqlOperation.AddDateTimeParam("P_Created", cuentaComercio.Created);
-            sqlOperation.AddDateTimeParam("P_Updated", cuentaComercio.Updated);
-            sqlOperation.AddStringParameter("P_NombreUsuario", cuentaComercio.NombreUsuario);
-            sqlOperation.AddStringParameter("P_Contrasena", cuentaComercio.Contrasena);
-            sqlOperation.AddStringParameter("P_CedulaJuridica", cuentaComercio.CedulaJuridica);
-            sqlOperation.AddIntParam("P_Telefono", cuentaComercio.Telefono);
-            sqlOperation.AddStringParameter("P_CorreoElectronico", cuentaComercio.CorreoElectronico);
-            sqlOperation.AddStringParameter("P_Direccion", cuentaComercio.Direccion);
+            sqlOperation.AddIntParam("P_idCuenta", cuentaComercio.Id);
+            sqlOperation.AddStringParameter("P_nombreUsuario", cuentaComercio.NombreUsuario);
+            sqlOperation.AddStringParameter("P_contrasena", cuentaComercio.Contrasena);
+            sqlOperation.AddStringParameter("P_cedulaJuridica", cuentaComercio.CedulaJuridica);
+            sqlOperation.AddIntParam("P_telefono", cuentaComercio.Telefono);
+            sqlOperation.AddStringParameter("P_correoElectronico", cuentaComercio.CorreoElectronico);
+            sqlOperation.AddStringParameter("P_direccion", cuentaComercio.Direccion);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
@@ -158,7 +156,7 @@ namespace DataAccess.CRUD
         {
             var cuentaComercio = baseDTO as CuentaComercio;
             var sqlOperation = new SQLOperation() { ProcedureName = "DEL_CUENTACOMERCIO_PR" };
-            sqlOperation.AddIntParam("P_Id", cuentaComercio.Id);
+            sqlOperation.AddIntParam("P_idCuenta", cuentaComercio.Id);
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
@@ -167,15 +165,13 @@ namespace DataAccess.CRUD
         {
             return new CuentaComercio()
             {
-                Id = (int)row["Id"],
-                Created = row["Created"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Created"],
-                Updated = row["Updated"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Updated"],
-                NombreUsuario = row["NombreUsuario"].ToString(),
-                Contrasena = row["Contrasena"].ToString(),
-                CedulaJuridica = row["CedulaJuridica"].ToString(),
-                Telefono = row["Telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["Telefono"]),
-                CorreoElectronico = row["CorreoElectronico"].ToString(),
-                Direccion = row["Direccion"].ToString()
+                Id = (int)row["idCuenta"],
+                NombreUsuario = row["nombreUsuario"].ToString(),
+                Contrasena = row["contrasena"].ToString(),
+                CedulaJuridica = row["cedulaJuridica"].ToString(),
+                Telefono = row["telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["telefono"]),
+                CorreoElectronico = row["correoElectronico"].ToString(),
+                Direccion = row["direccion"].ToString()
             };
         }
 

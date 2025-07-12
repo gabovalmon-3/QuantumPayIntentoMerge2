@@ -25,17 +25,19 @@ namespace DataAccess.CRUD
 
             sqlOperation.ProcedureName = "CRE_CLIENTE_PR";
 
-            sqlOperation.AddStringParameter("P_Cedula", cliente.cedula);
-            sqlOperation.AddStringParameter("P_Nombre", cliente.nombre);
-            sqlOperation.AddStringParameter("P_Apellidos", cliente.apellido);
-            sqlOperation.AddIntParam("P_Telefono", cliente.telefono);
+            sqlOperation.AddStringParameter("P_cedula", cliente.cedula);
+            sqlOperation.AddStringParameter("P_nombre", cliente.nombre);
+            sqlOperation.AddStringParameter("P_apellidos", cliente.apellido);
+            sqlOperation.AddIntParam("P_telefono", cliente.telefono);
             sqlOperation.AddStringParameter("P_correoElectronico", cliente.correo);
-            sqlOperation.AddStringParameter("P_Direccion", cliente.direccion);
-            sqlOperation.AddStringParameter("P_FotoCedula", cliente.fotoCedula);
-            sqlOperation.AddDateTimeParam("P_FechaNacimiento", cliente.fechaNacimiento.ToDateTime(TimeOnly.MinValue));
-            sqlOperation.AddStringParameter("P_FotoPerfil", cliente.fotoPerfil);
-            sqlOperation.AddStringParameter("P_Contrasena", cliente.contrasena);
+            sqlOperation.AddStringParameter("P_direccion", cliente.direccion);
+            sqlOperation.AddStringParameter("P_fotoCedula", cliente.fotoCedula);
+            sqlOperation.AddDateTimeParam("P_fechaNacimiento", cliente.fechaNacimiento.ToDateTime(TimeOnly.MinValue));
+            sqlOperation.AddStringParameter("P_fotoPerfil", cliente.fotoPerfil);
+            sqlOperation.AddStringParameter("P_contrasena", cliente.contrasena);
             sqlOperation.AddStringParameter("P_IBAN", cliente.IBAN);
+
+
 
             _sqlDao.ExecuteProcedure(sqlOperation);
 
@@ -70,7 +72,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_CEDULA_PR" };
 
-            sqlOperation.AddStringParameter("P_Cedula", cedula);
+            sqlOperation.AddStringParameter("P_cedula", cedula);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -89,7 +91,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_TELEFONO_PR" };
 
-            sqlOperation.AddIntParam("P_Telefono", telefono);
+            sqlOperation.AddIntParam("P_telefono", telefono);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -108,7 +110,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_ID_PR" };
 
-            sqlOperation.AddIntParam("P_Id", Id);
+            sqlOperation.AddIntParam("P_idCliente", Id);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -126,7 +128,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_EMAIL_PR" };
 
-            sqlOperation.AddStringParameter("P_Correo", correo);
+            sqlOperation.AddStringParameter("P_correoElectronico", correo);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -144,17 +146,17 @@ namespace DataAccess.CRUD
             var cliente = baseDTO as Cliente;
             var sqlOperation = new SQLOperation() { ProcedureName = "UPD_CLIENTE_PR" };
 
-            sqlOperation.AddIntParam("P_Id", cliente.Id);
-            sqlOperation.AddStringParameter("P_Cedula", cliente.cedula);
-            sqlOperation.AddStringParameter("P_Nombre", cliente.nombre);
-            sqlOperation.AddStringParameter("P_Apellidos", cliente.apellido);
-            sqlOperation.AddIntParam("P_Telefono", cliente.telefono);
+            sqlOperation.AddIntParam("P_idCliente", cliente.Id);
+            sqlOperation.AddStringParameter("P_cedula", cliente.cedula);
+            sqlOperation.AddStringParameter("P_nombre", cliente.nombre);
+            sqlOperation.AddStringParameter("P_apellidos", cliente.apellido);
+            sqlOperation.AddIntParam("P_telefono", cliente.telefono);
             sqlOperation.AddStringParameter("P_correoElectronico", cliente.correo);
-            sqlOperation.AddStringParameter("P_Direccion", cliente.direccion);
-            sqlOperation.AddStringParameter("P_FotoCedula", cliente.fotoCedula);
-            sqlOperation.AddDateTimeParam("P_FechaNacimiento", cliente.fechaNacimiento.ToDateTime(TimeOnly.MinValue));
-            sqlOperation.AddStringParameter("P_FotoPerfil", cliente.fotoPerfil);
-            sqlOperation.AddStringParameter("P_Contrasena", cliente.contrasena);
+            sqlOperation.AddStringParameter("P_direccion", cliente.direccion);
+            sqlOperation.AddStringParameter("P_fotoCedula", cliente.fotoCedula);
+            sqlOperation.AddDateTimeParam("P_fechaNacimiento", cliente.fechaNacimiento.ToDateTime(TimeOnly.MinValue));
+            sqlOperation.AddStringParameter("P_fotoPerfil", cliente.fotoPerfil);
+            sqlOperation.AddStringParameter("P_contrasena", cliente.contrasena);
             sqlOperation.AddStringParameter("P_IBAN", cliente.IBAN);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
@@ -165,7 +167,7 @@ namespace DataAccess.CRUD
         {
             var cliente = baseDTO as Cliente;
             var sqlOperation = new SQLOperation() { ProcedureName = "DEL_CLIENTE_PR" };
-            sqlOperation.AddIntParam("P_Id", cliente.Id);
+            sqlOperation.AddIntParam("P_idCliente", cliente.Id);
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
@@ -174,19 +176,17 @@ namespace DataAccess.CRUD
         {
             return new Cliente()
             {
-                Id = (int)row["Id"],
-                Created = row["Created"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Created"],
-                Updated = row["Updated"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Updated"],
-                cedula = row["Cedula"].ToString(),
-                nombre = row["Nombre"].ToString(),
-                apellido = row["Apellidos"].ToString(),
-                telefono = row["Telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["Telefono"]),
-                correo = row["CorreoElectronico"].ToString(),
-                direccion = row["Direccion"].ToString(),
-                fotoCedula = row["FotoCedula"].ToString(),
-                fechaNacimiento = row["FechaNacimiento"] == DBNull.Value ? DateOnly.MinValue : (DateOnly)row["FechaNacimiento"],
-                fotoPerfil = row["FotoPerfil"].ToString(),
-                contrasena = row["Contrasena"].ToString(),
+                Id = (int)row["idCliente"],
+                cedula = row["cedula"].ToString(),
+                nombre = row["nombre"].ToString(),
+                apellido = row["apellidos"].ToString(),
+                telefono = row["telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["telefono"]),
+                correo = row["correoElectronico"].ToString(),
+                direccion = row["direccion"].ToString(),
+                fotoCedula = row["fotoCedula"].ToString(),
+                fechaNacimiento = row["fechaNacimiento"] == DBNull.Value? DateOnly.MinValue: DateOnly.FromDateTime((DateTime)row["fechaNacimiento"]),
+                fotoPerfil = row["fotoPerfil"].ToString(),
+                contrasena = row["contrasena"].ToString(),
                 IBAN = row["IBAN"].ToString()
             };
         }

@@ -77,20 +77,21 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete")]
-        public ActionResult Delete(Comision comision)
+        [Route("Delete/{id}")]
+        public ActionResult Delete(int id)
         {
             try
             {
                 var cm = new ComisionManager();
-                var existing = cm.Obtener(comision.Id);
-                cm.Eliminar(comision);
-                return Ok(new { Message = $"Comercio con ID {comision.Id} eliminado correctamente." });
+                var existing = cm.Obtener(id);
+                if (existing == null)
+                    return NotFound();
+                cm.Eliminar(existing);
+                return Ok(new { Message = $"Comision con ID {id} eliminada correctamente." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
-
             }
         }
     }

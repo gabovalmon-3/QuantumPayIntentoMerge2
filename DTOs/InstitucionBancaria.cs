@@ -14,6 +14,8 @@ namespace DTOs
         public string direccionSedePrincipal { get; set; }
         public int telefono { get; set; }
         public string correoElectronico { get; set; }
+        public string estadoSolicitud { get; set; }
+
 
         public void iniciarSesion()
         {

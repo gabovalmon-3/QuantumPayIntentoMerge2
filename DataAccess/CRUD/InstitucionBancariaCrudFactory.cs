@@ -24,12 +24,13 @@ namespace DataAccess.CRUD
 
             sqlOperation.ProcedureName = "CRE_INSTITUCIONBANCARIA_PR";
 
-            sqlOperation.AddIntParam("P_CodigoIdentidadBancaria", institucionBancaria.codigoIdentidad);
-            sqlOperation.AddIntParam("P_CodigoIBAN", institucionBancaria.codigoIBAN);
-            sqlOperation.AddStringParameter("P_CedulaJuridica", institucionBancaria.cedulaJuridica);
-            sqlOperation.AddStringParameter("P_Direccion", institucionBancaria.direccionSedePrincipal);
-            sqlOperation.AddIntParam("P_Telefono", institucionBancaria.telefono);
-            sqlOperation.AddStringParameter("P_CorreoElectronico", institucionBancaria.correoElectronico);
+            sqlOperation.AddIntParam("P_codigoIdentidad", institucionBancaria.codigoIdentidad);
+            sqlOperation.AddIntParam("P_codigoIBAN", institucionBancaria.codigoIBAN);
+            sqlOperation.AddStringParameter("P_cedulaJuridica", institucionBancaria.cedulaJuridica);
+            sqlOperation.AddStringParameter("P_direccionSedePrincipal", institucionBancaria.direccionSedePrincipal);
+            sqlOperation.AddIntParam("@P_telefono", institucionBancaria.telefono);
+            sqlOperation.AddStringParameter("P_estadoSolicitud", institucionBancaria.estadoSolicitud);
+            sqlOperation.AddStringParameter("P_correoElectronico", institucionBancaria.correoElectronico);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
 
@@ -65,7 +66,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_INSTITUCIONBANCARIA_BY_ID_PR" };
 
-            sqlOperation.AddIntParam("P_Id", Id);
+            sqlOperation.AddIntParam("P_idInstBancaria", Id);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -79,18 +80,18 @@ namespace DataAccess.CRUD
             return default(T);
         }
 
-        public T RetrieveByCodigoIdentidad<T>(InstitucionBancaria institucionBancaria)
+        public T RetrieveByCodigoIdentidad<T>(int codigoIdentidad)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_INSTITUCIONBANCARIA_BY_CODIGOIDENTIDAD_PR" };
 
-            sqlOperation.AddIntParam("P_CodigoIdentidadBancaria", institucionBancaria.codigoIBAN);
+            sqlOperation.AddIntParam("P_codigoIdentidad", codigoIdentidad);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
             {
                 var row = lstResult[0];
-                institucionBancaria = BuildInstitucionBancaria(row);
+                var institucionBancaria = BuildInstitucionBancaria(row);
 
                 return (T)Convert.ChangeType(institucionBancaria, typeof(T));
             }
@@ -102,7 +103,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_INSTITUCIONBANCARIA_BY_IBAN_PR" };
 
-            sqlOperation.AddIntParam("P_CodigoIBAN", codigoIBAN);
+            sqlOperation.AddIntParam("P_codigoIBAN", codigoIBAN);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -121,7 +122,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_INSTITUCIONBANCARIA_BY_TELEFONO_PR" };
 
-            sqlOperation.AddIntParam("P_Telefono", telefono);
+            sqlOperation.AddIntParam("P_telefono", telefono);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -140,7 +141,7 @@ namespace DataAccess.CRUD
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_INSTITUCIONBANCARIA_BY_EMAIL_PR" };
 
-            sqlOperation.AddStringParameter("P_CorreoElectronico", correoElectronico);
+            sqlOperation.AddStringParameter("P_correoElectronico", correoElectronico);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -158,15 +159,14 @@ namespace DataAccess.CRUD
             var institucionBancaria = baseDTO as InstitucionBancaria;
             var sqlOperation = new SQLOperation() { ProcedureName = "UPD_INSTITUCIONBANCARIA_PR" };
 
-            sqlOperation.AddIntParam("Id", institucionBancaria.Id);
-            sqlOperation.AddDateTimeParam("Created", institucionBancaria.Created);
-            sqlOperation.AddDateTimeParam("Updated", institucionBancaria.Updated);
-            sqlOperation.AddIntParam("CodigoIdentidadBancaria", institucionBancaria.codigoIdentidad);
-            sqlOperation.AddIntParam("CodigoIBAN", institucionBancaria.codigoIBAN);
-            sqlOperation.AddStringParameter("CedulaJuridica", institucionBancaria.cedulaJuridica);
-            sqlOperation.AddStringParameter("Direccion", institucionBancaria.direccionSedePrincipal);
-            sqlOperation.AddIntParam("Telefono", institucionBancaria.telefono);
-            sqlOperation.AddStringParameter("CorreoElectronico", institucionBancaria.correoElectronico);
+            sqlOperation.AddIntParam("P_idInstBancaria", institucionBancaria.Id);
+            sqlOperation.AddIntParam("P_codigoIdentidad", institucionBancaria.codigoIdentidad);
+            sqlOperation.AddIntParam("P_codigoIBAN", institucionBancaria.codigoIBAN);
+            sqlOperation.AddStringParameter("P_cedulaJuridica", institucionBancaria.cedulaJuridica);
+            sqlOperation.AddStringParameter("P_direccionSedePrincipal", institucionBancaria.direccionSedePrincipal);
+            sqlOperation.AddIntParam("P_telefono", institucionBancaria.telefono);
+            sqlOperation.AddStringParameter("P_estadoSolicitud", institucionBancaria.estadoSolicitud);
+            sqlOperation.AddStringParameter("P_correoElectronico", institucionBancaria.correoElectronico);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
@@ -176,7 +176,7 @@ namespace DataAccess.CRUD
         {
             var institucionBancaria = baseDTO as InstitucionBancaria;
             var sqlOperation = new SQLOperation() { ProcedureName = "DEL_INSTITUCIONBANCARIA_PR" };
-            sqlOperation.AddIntParam("P_Id", institucionBancaria.Id);
+            sqlOperation.AddIntParam("P_idInstBancaria", institucionBancaria.Id);
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
@@ -185,15 +185,14 @@ namespace DataAccess.CRUD
         {
             return new InstitucionBancaria()
             {
-                Id = (int)row["Id"],
-                Created = row["Created"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Created"],
-                Updated = row["Updated"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Updated"],
-                codigoIdentidad = row["CodigoIdentidad"] == DBNull.Value ? 0 : Convert.ToInt32(row["CodigoIdentidad"]),
-                codigoIBAN = row["CodigoIBAN"] == DBNull.Value ? 0 : Convert.ToInt32(row["CodigoIBAN"]),
-                cedulaJuridica = row["CedulaJuridica"].ToString(),
-                direccionSedePrincipal = row["CedulaJuridica"].ToString(),
-                telefono = row["Telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["Telefono"]),
-                correoElectronico = row["CorreoElectronico"].ToString()
+                Id = (int)row["idInstBancaria"],
+                codigoIdentidad = row["codigoIdentidad"] == DBNull.Value ? 0 : Convert.ToInt32(row["codigoIdentidad"]),
+                codigoIBAN = row["codigoIBAN"] == DBNull.Value ? 0 : Convert.ToInt32(row["codigoIBAN"]),
+                cedulaJuridica = row["cedulaJuridica"].ToString(),
+                direccionSedePrincipal = row["direccionSedePrincipal"].ToString(),
+                telefono = row["telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["telefono"]),
+                estadoSolicitud = row["estadoSolicitud"].ToString(),
+                correoElectronico = row["correoElectronico"].ToString()
             };
         }
 
