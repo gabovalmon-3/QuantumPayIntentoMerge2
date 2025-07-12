@@ -23,7 +23,7 @@ namespace CoreApp
 
                     if (cExist == null)
                     {
-                        cExist = cCrud.RetrieveByEmail<Cliente>(cliente);
+                        cExist = cCrud.RetrieveByEmail<Cliente>(cliente.correo);
 
                         if (cExist == null)
                         {

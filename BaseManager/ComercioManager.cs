@@ -50,7 +50,7 @@ namespace CoreApp
 
         public Comercio Update(Comercio comercio)
         {
-            var cCrud = new ClienteCrudFactory();
+            var cCrud = new ComercioCrudFactory();
             cCrud.Update(comercio);
             return RetrieveById(comercio.Id);
         }

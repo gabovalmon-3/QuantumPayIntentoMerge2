@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("RetrieveByCodigoIdentidad")]
-        public ActionResult RetrieveByCodigoIdentidad(InstitucionBancaria codigoIdentidad)
+        public ActionResult RetrieveByCodigoIdentidad(int codigoIdentidad)
         {
             try
             {
@@ -144,20 +144,19 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete")]
-        public ActionResult Delete(Cliente cliente)
+        [Route("Delete/{id}")]
+        public ActionResult Delete(int id)
         {
             try
             {
                 var im = new InstitucionBancariaManager();
-                var existing = im.RetrieveById(cliente.Id);
-                im.Delete(cliente.Id);
-                return Ok(new { Message = $"Usuario con ID {cliente.Id} eliminado correctamente." });
+                var existing = im.RetrieveById(id);
+                im.Delete(id);
+                return Ok(new { Message = $"InstitucionBancaria con ID {id} eliminado correctamente." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
-
             }
         }
     }

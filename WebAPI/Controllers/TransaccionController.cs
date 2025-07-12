@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
             try
             {
                 var tm = new TransaccionManager();
-                await Create(transaccion);
+                await Task.Run(() => tm.Registrar(transaccion)); // If Registrar is not async
                 return Ok(transaccion);
             }
             catch (Exception ex)

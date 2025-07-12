@@ -10,6 +10,7 @@ namespace DTOs
     {
         public string Nombre { get; set; }
         public int IdCuenta { get; set; }
+        public string estadoSolicitud { get; set; }
 
         public void VerTransacciones() 
         { 

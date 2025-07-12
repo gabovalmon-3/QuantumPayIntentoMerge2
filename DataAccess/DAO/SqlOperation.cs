@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace DataAccess.DAOs
 {
@@ -42,5 +43,15 @@ namespace DataAccess.DAOs
             Parameters.Add(new SqlParameter(paramName, paramValue));
         }
 
+        public void AddDecimalParam(string paramName, decimal value, byte precision, byte scale)
+        {
+            var param = new SqlParameter(paramName, System.Data.SqlDbType.Decimal)
+            {
+                Precision = precision,
+                Scale = scale,
+                Value = value
+            };
+            Parameters.Add(param);
+        }
     }
 }

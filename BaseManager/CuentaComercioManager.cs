@@ -21,7 +21,7 @@ namespace CoreApp
 
                 if (cExist == null)
                 {
-                    cExist = cCrud.RetrieveByEmail<CuentaComercio>(cuentaComercio);
+                    cExist = cCrud.RetrieveByEmail<CuentaComercio>(cuentaComercio.CorreoElectronico);
 
                     if (cExist == null)
                     {
