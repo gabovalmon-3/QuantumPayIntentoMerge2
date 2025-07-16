@@ -24,12 +24,12 @@ namespace DataAccess.CRUD
 
             sqlOperation.ProcedureName = "CRE_CUENTACOMERCIO_PR";
 
-            sqlOperation.AddStringParameter("P_NombreUsuario", cuentaComercio.NombreUsuario);
-            sqlOperation.AddStringParameter("P_Contrasena", cuentaComercio.Contrasena);
-            sqlOperation.AddStringParameter("P_CedulaJuridica", cuentaComercio.CedulaJuridica);
-            sqlOperation.AddIntParam("P_Telefono", cuentaComercio.Telefono);
-            sqlOperation.AddStringParameter("P_CorreoElectronico", cuentaComercio.CorreoElectronico);
-            sqlOperation.AddStringParameter("P_Direccion", cuentaComercio.Direccion);
+            sqlOperation.AddStringParameter("P_nombreUsuario", cuentaComercio.NombreUsuario);
+            sqlOperation.AddStringParameter("P_contrasena", cuentaComercio.Contrasena);
+            sqlOperation.AddStringParameter("P_cedulaJuridica", cuentaComercio.CedulaJuridica);
+            sqlOperation.AddIntParam("P_telefono", cuentaComercio.Telefono);
+            sqlOperation.AddStringParameter("P_correoElectronico", cuentaComercio.CorreoElectronico);
+            sqlOperation.AddStringParameter("P_direccion", cuentaComercio.Direccion);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
 
@@ -61,18 +61,18 @@ namespace DataAccess.CRUD
         }
 
 
-        public T RetrieveById<T>(CuentaComercio cuentaComercio)
+        public override T RetrieveById<T>(int Id)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_ID_PR" };
 
-            sqlOperation.AddIntParam("P_Id", cuentaComercio.Id);
+            sqlOperation.AddIntParam("P_idCuenta", Id);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
             {
                 var row = lstResult[0];
-                cuentaComercio = BuildCuentasComercio(row);
+                var cuentaComercio = BuildCuentasComercio(row);
                 return (T)Convert.ChangeType(cuentaComercio, typeof(T));
             }
 
@@ -80,18 +80,18 @@ namespace DataAccess.CRUD
         }
 
 
-        public T RetrieveByUserName<T>(CuentaComercio cuentaComercio)
+        public T RetrieveByUserName<T>(string NombreUsuario)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_USERNAME_PR" };
 
-            sqlOperation.AddStringParameter("P_NombreUsuario", cuentaComercio.NombreUsuario);
+            sqlOperation.AddStringParameter("P_nombreUsuario", NombreUsuario);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
             {
                 var row = lstResult[0];
-                cuentaComercio = BuildCuentasComercio(row);
+                var cuentaComercio = BuildCuentasComercio(row);
 
                 return (T)Convert.ChangeType(cuentaComercio, typeof(T));
             }
@@ -99,18 +99,18 @@ namespace DataAccess.CRUD
             return default(T);
         }
 
-        public T RetrieveByTelefono<T>(CuentaComercio cuentaComercio)
+        public T RetrieveByTelefono<T>(int Telefono)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_TELEFONO_PR" };
 
-            sqlOperation.AddIntParam("P_Telefono", cuentaComercio.Telefono);
+            sqlOperation.AddIntParam("P_telefono", Telefono);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
             {
                 var row = lstResult[0];
-                cuentaComercio = BuildCuentasComercio(row);
+                var cuentaComercio = BuildCuentasComercio(row);
 
                 return (T)Convert.ChangeType(cuentaComercio, typeof(T));
             }
@@ -118,18 +118,18 @@ namespace DataAccess.CRUD
             return default(T);
         }
 
-        public T RetrieveByEmail<T>(CuentaComercio cuentaComercio)
+        public T RetrieveByEmail<T>(string CorreoElectronico)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_EMAIL_PR" };
 
-            sqlOperation.AddStringParameter("P_CorreoElectronico", cuentaComercio.CorreoElectronico);
+            sqlOperation.AddStringParameter("P_correoElectronico", CorreoElectronico);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
             {
                 var row = lstResult[0];
-                cuentaComercio = BuildCuentasComercio(row);
+                var cuentaComercio = BuildCuentasComercio(row);
                 return (T)Convert.ChangeType(cuentaComercio, typeof(T));
             }
             return default(T);
@@ -140,15 +140,13 @@ namespace DataAccess.CRUD
             var cuentaComercio = baseDTO as CuentaComercio;
             var sqlOperation = new SQLOperation() { ProcedureName = "UPD_CUENTACOMERCIO_PR" };
 
-            sqlOperation.AddIntParam("P_Id", cuentaComercio.Id);
-            sqlOperation.AddDateTimeParam("P_Created", cuentaComercio.Created);
-            sqlOperation.AddDateTimeParam("P_Updated", cuentaComercio.Updated);
-            sqlOperation.AddStringParameter("P_NombreUsuario", cuentaComercio.NombreUsuario);
-            sqlOperation.AddStringParameter("P_Contrasena", cuentaComercio.Contrasena);
-            sqlOperation.AddStringParameter("P_CedulaJuridica", cuentaComercio.CedulaJuridica);
-            sqlOperation.AddIntParam("P_Telefono", cuentaComercio.Telefono);
-            sqlOperation.AddStringParameter("P_CorreoElectronico", cuentaComercio.CorreoElectronico);
-            sqlOperation.AddStringParameter("P_Direccion", cuentaComercio.Direccion);
+            sqlOperation.AddIntParam("P_idCuenta", cuentaComercio.Id);
+            sqlOperation.AddStringParameter("P_nombreUsuario", cuentaComercio.NombreUsuario);
+            sqlOperation.AddStringParameter("P_contrasena", cuentaComercio.Contrasena);
+            sqlOperation.AddStringParameter("P_cedulaJuridica", cuentaComercio.CedulaJuridica);
+            sqlOperation.AddIntParam("P_telefono", cuentaComercio.Telefono);
+            sqlOperation.AddStringParameter("P_correoElectronico", cuentaComercio.CorreoElectronico);
+            sqlOperation.AddStringParameter("P_direccion", cuentaComercio.Direccion);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
@@ -158,7 +156,7 @@ namespace DataAccess.CRUD
         {
             var cuentaComercio = baseDTO as CuentaComercio;
             var sqlOperation = new SQLOperation() { ProcedureName = "DEL_CUENTACOMERCIO_PR" };
-            sqlOperation.AddIntParam("P_Id", cuentaComercio.Id);
+            sqlOperation.AddIntParam("P_idCuenta", cuentaComercio.Id);
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
@@ -167,21 +165,14 @@ namespace DataAccess.CRUD
         {
             return new CuentaComercio()
             {
-                Id = (int)row["Id"],
-                Created = row["Created"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Created"],
-                Updated = row["Updated"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Updated"],
-                NombreUsuario = row["NombreUsuario"].ToString(),
-                Contrasena = row["Contrasena"].ToString(),
-                CedulaJuridica = row["CedulaJuridica"].ToString(),
-                Telefono = row["Telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["Telefono"]),
-                CorreoElectronico = row["CorreoElectronico"].ToString(),
-                Direccion = row["Direccion"].ToString()
+                Id = (int)row["idCuenta"],
+                NombreUsuario = row["nombreUsuario"].ToString(),
+                Contrasena = row["contrasena"].ToString(),
+                CedulaJuridica = row["cedulaJuridica"].ToString(),
+                Telefono = row["telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["telefono"]),
+                CorreoElectronico = row["correoElectronico"].ToString(),
+                Direccion = row["direccion"].ToString()
             };
-        }
-
-        public override T RetrieveById<T>()
-        {
-            throw new NotImplementedException();
         }
 
         public T RetrieveByEmail<T>(T cuentaComercio)
