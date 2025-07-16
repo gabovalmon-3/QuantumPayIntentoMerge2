@@ -1,0 +1,144 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+header {
+  background-color: #4a90e2;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  height: 30px;
+  width: auto;
+}
+
+.logo span {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+
+.offers-container {
+  background-color: white;
+  padding: 40px 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  max-width: 1000px;
+  width: 100%;
+  text-align: center;
+}
+
+.offers-container h2 {
+  margin-bottom: 30px;
+  font-size: 2em;
+  color: #4a90e2;
+}
+
+
+.offers-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.offers-table thead {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.offers-table th,
+.offers-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.offers-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.status {
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 5px 10px;
+  color: white;
+  display: inline-block;
+  min-width: 110px;
+}
+
+.status.activo {
+  background-color: #4CAF50; 
+}
+
+
+.back-btn {
+  margin-top: 25px;
+  background-color: #4a90e2;
+  color: white;
+  text-decoration: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+  background-color: #357ab8;
+}
+
+
+footer {
+  background-color: #4a90e2;
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
