@@ -6,4 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+
+    <ProjectReference Include="..\BaseManager\BaseManager.csproj" />
+    <ProjectReference Include="..\DTOs\DTOs.csproj" />
+
+  </ItemGroup>
+
 </Project>

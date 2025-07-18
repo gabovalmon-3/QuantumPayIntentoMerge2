@@ -1,0 +1,31 @@
+﻿@page
+@model WebApp.Pages.Comisiones.IndexModel
+@{
+    ViewData["Title"] = "Comisiones";
+}
+
+<h2>@ViewData["Title"]</h2>
+<p><a class="btn btn-primary" asp-page="Create">Nueva Comisión</a></p>
+
+<table id="tblComisiones"
+       ColumnsDataName="Id,IdInstitucionBancaria,IdCuentaComercio,Porcentaje,MontoMaximo"
+       class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Banco</th>
+            <th>Comercio</th>
+            <th>%</th>
+            <th>Tope</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+@section Scripts {
+        <script src="~/js/ControlActions.js"></script>
+    <script src="~/js/pages/Comisiones.js"></script>
+}

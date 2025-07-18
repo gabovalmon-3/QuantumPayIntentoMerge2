@@ -1,0 +1,33 @@
+﻿@page "{idBanco:int}"
+<div id="Context" data-type="banco" data-id="@Model.IdBanco"></div>
+@model WebApp.Pages.Transacciones.BancoModel
+@{
+    ViewData["Title"] = $"Transacciones Banco {Model.IdBanco}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table id="tblTransacciones"
+       ColumnsDataName="id,IdCuentaBancaria,IdCuentaComercio,Monto,Comision,DescuentoAplicado,Fecha,MetodoPago"
+       class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Banco</th>
+            <th>Comercio</th>
+            <th>Monto</th>
+            <th>Comisión</th>
+            <th>Descuento</th>
+            <th>Fecha</th>
+            <th>Método</th>
+        </tr>
+    </thead>
+    <tbody
+
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/js/ControlActions.js"></script>
+    <script src="~/js/pages/Transacciones.js"></script>
+}
