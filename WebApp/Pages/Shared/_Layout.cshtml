@@ -47,16 +47,8 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark"
-                               asp-area="" asp-page="/Transacciones/Banco"
-                               asp-route-idBanco="1">
-                                Transacciones Banco
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-area="" asp-page="/Transacciones/Comercio"
-                               asp-route-idComercio="1">
-                                Transacciones Comercio
+                               asp-area="" asp-page="/Transacciones/Transacciones">
+                                Transacciones
                             </a>
                         </li>
                         <li class="nav-item">
@@ -82,10 +74,10 @@
             &copy; 2025 - QuantumPay - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
-    <!-- Sitio JS global -->
-    <script src="~/js/site.js" asp-append-version="true"></script>
+      <!-- Sitio JS global -->
+  <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- Aquí se inyectan los scripts específicos de cada Razor Page -->
-    @RenderSection("Scripts", required: false)
+  <!-- Aquí se inyectan los scripts específicos de cada Razor Page -->
+  @RenderSection("Scripts", required: false)
 </body>
 </html>
