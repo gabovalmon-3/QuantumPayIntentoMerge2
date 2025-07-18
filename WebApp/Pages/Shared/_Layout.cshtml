@@ -3,21 +3,40 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApp</title>
+    <title>QuantumPay</title>
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/lib/datatables/datatables.min.css" />
+    <!-- Tu CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true" />
+
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap Bundle JS -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables CSS & JS (mismo CDN que CenfoCinemas) -->
+    <link href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Tu helper AJAX -->
+    <script src="~/js/ControlActions.js" asp-append-version="true"></script>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">WebApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <!-- Brand -->
+                <a class="navbar-brand" asp-area="" asp-page="/Index">QuantumPay WebApp</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <!-- Nav links -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -26,37 +45,32 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
-
-
                         <li class="nav-item">
                             <a class="nav-link text-dark"
-                               asp-area=""
-                               asp-page="/Transacciones/Banco"
+                               asp-area="" asp-page="/Transacciones/Banco"
                                asp-route-idBanco="1">
                                 Transacciones Banco
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark"
-                               asp-area=""
-                               asp-page="/Transacciones/Comercio"
+                               asp-area="" asp-page="/Transacciones/Comercio"
                                asp-route-idComercio="1">
                                 Transacciones Comercio
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark"
-                               asp-area=""
-                               asp-page="/Comisiones/Index">
+                               asp-area="" asp-page="/Comisiones/Comisiones">
                                 Comisiones
                             </a>
                         </li>
-
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -65,14 +79,13 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - WebApp - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2025 - QuantumPay - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Sitio JS global -->
     <script src="~/js/site.js" asp-append-version="true"></script>
 
+    <!-- Aquí se inyectan los scripts específicos de cada Razor Page -->
     @RenderSection("Scripts", required: false)
 </body>
 </html>

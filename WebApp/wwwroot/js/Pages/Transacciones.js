@@ -1,28 +1,38 @@
 ﻿// wwwroot/js/pages/Transacciones.js
-
 function TransaccionesViewController() {
-    this.ApiController = "transacciones";
+    this.Api = "Transaccion"; // /api/transacciones
 
     this.initView = function () {
-        console.log("Transacciones view initialized");
-        // Lee el ID de un input hidden que debes añadir en tus .cshtml:
-        // <input type="hidden" id="ContextId" value="@Model.IdBanco" />
-        var ctx = $('#Context').data('type');      // "banco" o "comercio"
-        var id = $('#Context').data('id');        // número
+        console.log("Transacciones init → OK");
+        this.loadTable();
+    };
 
-        if (ctx && id) {
-            this.loadTable(ctx, id);
-        }
-    }
-
-    this.loadTable = function (context, id) {
+    this.loadTable = function () {
         var ca = new ControlActions();
-        var service = this.ApiController + "/" + context + "/" + id;
-        ca.FillTable(service, "tblTransacciones", false);
-    }
+        var type = $('#Context').data('type');
+        var id = $('#Context').data('id');
+        var url = ca.GetUrlApiService(this.Api + "/" + type + "/" + id);
+
+        if (!$.fn.dataTable.isDataTable('#tblTransacciones')) {
+            $('#tblTransacciones').DataTable({
+                processing: true,
+                ajax: { url: url, dataSrc: '' },
+                columns: [
+                    { data: 'id' },
+                    { data: type === 'banco' ? 'idCuentaComercio' : 'idCuentaBancaria' },
+                    { data: 'monto' },
+                    { data: 'comision' },
+                    { data: 'descuentoAplicado' },
+                    { data: 'fecha' },
+                    { data: 'metodoPago' }
+                ]
+            });
+        } else {
+            $('#tblTransacciones').DataTable().ajax.url(url).load();
+        }
+    };
 }
 
 $(document).ready(function () {
-    var vc = new TransaccionesViewController();
-    vc.initView();
+    new TransaccionesViewController().initView();
 });

@@ -1,24 +1,47 @@
 ﻿using BaseManager;
-using CoreApp;
 using DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ComisionController : ControllerBase
     {
-        [HttpPost]
-        [Route("Create")]
+        private readonly ComisionManager _cm;
 
-        public async Task<ActionResult> Create(Comision comision)
+        public ComisionController()
+        {
+            _cm = new ComisionManager();
+        }
+
+        // GET api/comision
+        [HttpGet]
+        public ActionResult<IEnumerable<Comision>> Get()
         {
             try
             {
-                var cm = new ComisionManager();
-                await cm.Create(comision);
+                var lista = _cm.Listar();
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET api/comision/{id}
+        [HttpGet("{id}")]
+        public ActionResult<Comision> Get(int id)
+
+        {
+            try
+            {
+                var comision = _cm.Obtener(id);
+                if (comision == null) return NotFound();
                 return Ok(comision);
             }
             catch (Exception ex)
@@ -26,15 +49,16 @@ namespace WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpGet]
-        [Route("RetrieveAll")]
-        public ActionResult RetrieveAll()
+
+        // POST api/comision/Create
+        [HttpPost]
+        public async Task<ActionResult<Comision>> Post([FromBody] Comision comision)
         {
             try
             {
-                var cm = new ComisionManager();
-                var lstResults = cm.Listar();
-                return Ok(lstResults);
+                await _cm.Create(comision);
+                // Devuelve 201 Created + Location header
+                return CreatedAtAction(nameof(Get), new { id = comision.Id }, comision);
             }
             catch (Exception ex)
             {
@@ -42,16 +66,19 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("RetrieveById")]
-        public ActionResult RetrieveById(int Id)
+        // PUT api/comision/Update
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Comision comision)
         {
             try
             {
-                var cm = new ComisionManager();
-                var result = cm.Obtener(Id);
+                // Opción: validar que comision.Id == id
+                var existing = _cm.Obtener(id);
+                if (existing == null)
+                    return NotFound();
 
-                return Ok(result);
+                _cm.Actualizar(comision);
+                return NoContent();      // 204 es más estándar en PUT RESTful
             }
             catch (Exception ex)
             {
@@ -59,35 +86,17 @@ namespace WebAPI.Controllers
             }
         }
 
-
-        [HttpPut]
-        [Route("Update")]
-        public ActionResult Update(Comision comision)
-        {
-            try
-            {
-                var cm = new ComisionManager();
-                cm.Actualizar(comision);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpDelete]
-        [Route("Delete/{id}")]
+        // DELETE api/Comision/Delete
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             try
             {
-                var cm = new ComisionManager();
-                var existing = cm.Obtener(id);
-                if (existing == null)
-                    return NotFound();
-                cm.Eliminar(existing);
-                return Ok(new { Message = $"Comision con ID {id} eliminada correctamente." });
+                var existing = _cm.Obtener(id);
+                if (existing == null) return NotFound();
+
+                _cm.Eliminar(existing);
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -96,4 +105,3 @@ namespace WebAPI.Controllers
         }
     }
 }
-

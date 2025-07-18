@@ -16,5 +16,10 @@ namespace BaseManager
         public List<Transaccion> ObtenerPorBanco(int idBanco) => crud.RetrieveByBanco(idBanco);
         public List<Transaccion> ObtenerPorComercio(int idComercio)
                                                               => crud.RetrieveByComercio(idComercio);
+
+        public object RetrieveAll()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
