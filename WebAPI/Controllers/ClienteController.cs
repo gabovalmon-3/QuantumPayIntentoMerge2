@@ -1,6 +1,4 @@
-﻿using Amazon.Rekognition;
-using BaseManager;
-using CoreApp;
+﻿using CoreApp;
 using DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +13,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("Create")]
 
-        public async Task<ActionResult> Create(Cliente cliente, [FromQuery]string emailCode, [FromQuery]string smsCode)
+        public async Task<ActionResult> Create(Cliente cliente)
         {
             try
             {
