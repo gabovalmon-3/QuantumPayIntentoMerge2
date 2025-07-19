@@ -1,6 +1,4 @@
-﻿using Amazon.Rekognition;
-using BaseManager;
-using CoreApp;
+﻿using CoreApp;
 using DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,48 +13,10 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("Create")]
 
-        public async Task<ActionResult> Create(Cliente cliente, [FromQuery]string emailCode, [FromQuery]string smsCode)
+        public async Task<ActionResult> Create(Cliente cliente)
         {
             try
             {
-                //VERIFICADORES
-
-                var emailVerifier = new EmailVerificationManager(); //instancia del verificador de email
-                var smsVerifier = new SmsVerificationManager(); // instancia del verificador de SMS
-
-
-
-                // Verificar código OTP email
-                bool emailVerified = emailVerifier.VerifyCode(cliente.correo, emailCode);
-                if (!emailVerified)
-                    return BadRequest("Código de verificación de email inválido.");
-
-                // Verificar código OTP de SMS
-                bool smsVerified = smsVerifier.VerifyCode(cliente.telefono.ToString(), smsCode);
-                if (!smsVerified)
-                    return BadRequest("Código de verificación SMS inválido.");
-
-                // Leer variables de entorno dentro de sistema (HAY QUE CONFIGURARLAS EN EL SERVIDOR)
-                var awsAccessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID")
-                    ?? throw new Exception("AWS_ACCESS_KEY_ID no configurada.");
-                var awsSecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY")
-                    ?? throw new Exception("AWS_SECRET_ACCESS_KEY no configurada.");
-                var awsRegionName = Environment.GetEnvironmentVariable("AWS_REGION") ?? "us-east-1";
-                var region = Amazon.RegionEndpoint.GetBySystemName(awsRegionName);
-
-                var faceVerifier = new FaceRecognitionManager(awsAccessKeyId, awsSecretKey, region);
-
-                // Convertir imágenes base64 a byte[]
-                byte[] cedulaBytes = Convert.FromBase64String(cliente.fotoCedula);
-                byte[] selfieBytes = Convert.FromBase64String(cliente.fotoPerfil);
-
-                // Verificar selfie vs cédula
-                bool faceMatch = await faceVerifier.VerifyFaceAsync(selfieBytes, cedulaBytes);
-                if (!faceMatch)
-                    return BadRequest("La selfie no coincide con la imagen de la cédula.");
-
-                //SI PASA LAS VERIFICACIONES, CREAR EL CLIENTE
-
                 var cm = new ClienteManager();
                 await cm.Create(cliente);
                 return Ok(cliente);
