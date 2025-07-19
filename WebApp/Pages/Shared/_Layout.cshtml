@@ -91,5 +91,25 @@
 
   <!-- Aquí se inyectan los scripts específicos de cada Razor Page -->
   @RenderSection("Scripts", required: false)
+
+  @using Microsoft.AspNetCore.Http
+  @inject IHttpContextAccessor HttpContextAccessor
+
+  <nav>
+      <ul>
+          @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+          {
+              <li>
+                  <form id="logoutForm" method="post" asp-page="/Logout">
+                      <button type="submit" class="btn btn-link">Cerrar sesión</button>
+                  </form>
+              </li>
+          }
+          else
+          {
+              <li><a href="/Login">Iniciar sesión</a></li>
+          }
+      </ul>
+  </nav>
 </body>
 </html>
