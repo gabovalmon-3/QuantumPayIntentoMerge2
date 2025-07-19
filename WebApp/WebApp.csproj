@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-=======
     <Folder Include="Pages\AdminPages\" />
     <Folder Include="Pages\ComercioPages\" />
     <Folder Include="wwwroot\js\pages\AdminPages\" />
@@ -22,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
->>>>>>> AngelBranch
 
     <ProjectReference Include="..\BaseManager\BaseManager.csproj" />
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
