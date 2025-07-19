@@ -15,15 +15,28 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("Create")]
 
-        public async Task<ActionResult> Create(Cliente cliente, [FromQuery]string emailCode)
+        public async Task<ActionResult> Create(Cliente cliente, [FromQuery]string emailCode, [FromQuery]string smsCode)
         {
             try
             {
                 //VERIFICADORES
 
-                var emailVerifier = new EmailVerificationManager();
+                var emailVerifier = new EmailVerificationManager(); //instancia del verificador de email
+                var smsVerifier = new SmsVerificationManager(); // instancia del verificador de SMS
 
-                // Leer variables de entorno acá (dentro del método)
+
+
+                // Verificar código OTP email
+                bool emailVerified = emailVerifier.VerifyCode(cliente.correo, emailCode);
+                if (!emailVerified)
+                    return BadRequest("Código de verificación de email inválido.");
+
+                // Verificar código OTP de SMS
+                bool smsVerified = smsVerifier.VerifyCode(cliente.telefono.ToString(), smsCode);
+                if (!smsVerified)
+                    return BadRequest("Código de verificación SMS inválido.");
+
+                // Leer variables de entorno dentro de sistema (HAY QUE CONFIGURARLAS EN EL SERVIDOR)
                 var awsAccessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID")
                     ?? throw new Exception("AWS_ACCESS_KEY_ID no configurada.");
                 var awsSecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY")
@@ -32,11 +45,6 @@ namespace WebAPI.Controllers
                 var region = Amazon.RegionEndpoint.GetBySystemName(awsRegionName);
 
                 var faceVerifier = new FaceRecognitionManager(awsAccessKeyId, awsSecretKey, region);
-
-                // Verificar código OTP email
-                bool emailVerified = emailVerifier.VerifyCode(cliente.correo, emailCode);
-                if (!emailVerified)
-                    return BadRequest("Código de verificación de email inválido.");
 
                 // Convertir imágenes base64 a byte[]
                 byte[] cedulaBytes = Convert.FromBase64String(cliente.fotoCedula);
