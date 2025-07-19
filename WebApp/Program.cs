@@ -1,7 +1,14 @@
+using System;
+using Microsoft.AspNetCore.Builder;
+using BaseManager;
+using CoreApp;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<TransaccionManager>();
+builder.Services.AddSingleton<ComisionManager>();
 
 var app = builder.Build();
 

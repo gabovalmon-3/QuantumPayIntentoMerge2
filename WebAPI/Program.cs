@@ -1,15 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.WebHost.UseUrls("http://localhost:5221", "https://localhost:5001");
 
+// 2) Tus servicios
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -18,8 +19,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// 3) ¡Importante!  
+app.UseRouting();
+
 app.UseAuthorization();
 
+// 5) Luego mapea los controladores
 app.MapControllers();
 
 app.Run();
