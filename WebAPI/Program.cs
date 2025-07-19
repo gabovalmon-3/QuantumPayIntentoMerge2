@@ -1,5 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://localhost:5221", "https://localhost:5001");
+
 // 2) Tus servicios
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -9,7 +11,6 @@ var app = builder.Build();
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
