@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/cliente")] //CAMBIADO
     [ApiController]
     public class ClienteController : ControllerBase
     {
         [HttpPost]
         [Route("Create")]
 
-        public async Task<ActionResult> Create(Cliente cliente, [FromQuery] string emailCode, [FromQuery] string smsCode)
+        public async Task<ActionResult> Create([FromBody] Cliente cliente, [FromQuery] string emailCode, [FromQuery] string smsCode)
         {
             try
             {

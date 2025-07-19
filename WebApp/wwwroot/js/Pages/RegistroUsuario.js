@@ -15,39 +15,50 @@
         const cedula = document.getElementById("cedula").files[0];
 
         if (password !== confirmPassword) {
-            alert("Las contraseñas no coinciden.");
+            await Swal.fire('Error', 'Las contraseñas no coinciden.', 'error');
             return;
         }
 
         // 1. Enviar OTPs
         try {
             await Promise.all([
-                fetch(`/api/Otp/SendEmail?email=${encodeURIComponent(email)}`),
-                fetch(`/api/Otp/SendSms?telefono=${encodeURIComponent(phone)}`)
+                fetch(`/api/Cliente/SendEmailVerification?email=${encodeURIComponent(email)}`),
+                fetch(`/api/Cliente/SendSmsVerification?telefono=${encodeURIComponent(phone)}`)
             ]);
         } catch (err) {
-            alert("Error al enviar códigos OTP.");
+            await Swal.fire('Error', 'Error al enviar códigos OTP.', 'error');
             return;
         }
 
-        // 2. Pedir códigos al usuario
-        const emailCode = prompt("Ingresa el código que recibiste por correo:");
-        const smsCode = prompt("Ingresa el código que recibiste por SMS:");
-        if (!emailCode || !smsCode) {
-            alert("Debes ingresar ambos códigos.");
-            return;
-        }
+        // 2. Pedir códigos al usuario con Swal inputs
+        const { value: emailCode } = await Swal.fire({
+            title: 'Código de verificación',
+            input: 'text',
+            inputLabel: 'Ingresa el código que recibiste por correo',
+            inputValidator: value => !value && 'Debes ingresar el código'
+        });
+
+        if (!emailCode) return;
+
+        const { value: smsCode } = await Swal.fire({
+            title: 'Código de verificación',
+            input: 'text',
+            inputLabel: 'Ingresa el código que recibiste por SMS',
+            inputValidator: value => !value && 'Debes ingresar el código'
+        });
+
+        if (!smsCode) return;
 
         // 3. Verificar códigos
         try {
             const otpResp = await fetch(`/api/Otp/Verify?email=${encodeURIComponent(email)}&telefono=${encodeURIComponent(phone)}&emailCode=${emailCode}&smsCode=${smsCode}`);
             const otpData = await otpResp.json();
             if (!otpResp.ok || !otpData.success) {
-                alert("Códigos incorrectos.");
+                await Swal.fire('Error', 'Códigos incorrectos.', 'error');
                 return;
             }
         } catch {
-            alert("Error verificando códigos.");
+            await Swal.fire('Error', 'Error verificando códigos.', 'error');
             return;
         }
 
@@ -64,11 +75,15 @@
             const facialData = await facialResp.json();
             facialPassed = facialData.aprobado;
         } catch {
-            alert("Error en verificación facial.");
+            await Swal.fire('Error', 'Error en verificación facial.', 'error');
             return;
         }
 
-        alert(facialPassed ? "Verificación facial aprobada." : "Verificación facial fallida.");
+        await Swal.fire(
+            facialPassed ? 'Verificación aprobada' : 'Verificación fallida',
+            facialPassed ? 'La verificación facial fue exitosa.' : 'La verificación facial falló.',
+            facialPassed ? 'success' : 'error'
+        );
         if (!facialPassed) return;
 
         // 5. Crear cuenta
@@ -87,10 +102,10 @@
             });
             if (!createResp.ok) throw new Error();
 
-            alert("Cuenta creada con éxito.");
+            await Swal.fire('Éxito', 'Cuenta creada con éxito.', 'success');
             window.location.href = "/index.html";
         } catch {
-            alert("No se pudo crear la cuenta.");
+            await Swal.fire('Error', 'No se pudo crear la cuenta.', 'error');
         }
     });
 });
