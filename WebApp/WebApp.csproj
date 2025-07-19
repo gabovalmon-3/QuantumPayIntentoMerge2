@@ -7,6 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
+=======
+    <Folder Include="Pages\AdminPages\" />
+    <Folder Include="Pages\ComercioPages\" />
+    <Folder Include="wwwroot\js\pages\AdminPages\" />
+    <Folder Include="wwwroot\js\pages\ComercioPages\" />
+    <Folder Include="wwwroot\lib\NewFolder\" />
+    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.Rekognition" Version="4.0.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+>>>>>>> AngelBranch
 
     <ProjectReference Include="..\BaseManager\BaseManager.csproj" />
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
