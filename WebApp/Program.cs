@@ -10,6 +10,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<TransaccionManager>();
 builder.Services.AddSingleton<ComisionManager>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddCors(options =>
 {
