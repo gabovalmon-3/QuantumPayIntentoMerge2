@@ -1,6 +1,10 @@
-﻿using CoreApp;
+﻿using BCrypt.Net;
+using CoreApp;
 using DTOs;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -140,6 +144,36 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public ActionResult Login([FromBody] DTOs.LoginRequest request)
+        {
+            try
+            {
+                var cm = new CuentaComercioManager();
+                var user = cm.RetrieveByEmail(request.Email);
+                if (user == null)
+                    return Unauthorized("Usuario o contraseña incorrectos.");
+
+                if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Contrasena))
+                    return Unauthorized("Usuario o contraseña incorrectos.");
+
+                return Ok(new { Message = "Login exitoso", UserId = user.Id });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok(new { Message = "Sesión cerrada correctamente." });
         }
     }
 }
