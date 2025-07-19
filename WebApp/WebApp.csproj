@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.Rekognition" Version="4.0.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
 
     <ProjectReference Include="..\BaseManager\BaseManager.csproj" />
     <ProjectReference Include="..\DTOs\DTOs.csproj" />

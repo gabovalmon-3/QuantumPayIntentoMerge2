@@ -13,7 +13,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("Create")]
 
-        public async Task<ActionResult> Create(Cliente cliente)
+        public async Task<ActionResult> Create(Cliente cliente, [FromQuery] string emailCode, [FromQuery] string smsCode)
         {
             try
             {
