@@ -26,14 +26,32 @@ namespace WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] Transaccion transaccion)
+        {
+            try
+            {
+                transaccion.Id = id; // Asegúrate de asignar el id del path
+                var tm = new TransaccionManager();
+                tm.Actualizar(transaccion); // Debes tener este método en tu Manager
+                return Ok(transaccion);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
         [HttpGet]
-        [Route("RetrieveByBanco")]
-        public ActionResult RetrieveByBanco(int idBanco)
+        [Route("RetrieveAll")]
+        public ActionResult RetrieveAll()
         {
             try
             {
                 var tm = new TransaccionManager();
-                var lstResults = tm.ObtenerPorBanco(idBanco);
+                var lstResults = tm.RetrieveAll();
                 return Ok(lstResults);
             }
             catch (Exception ex)
@@ -41,6 +59,23 @@ namespace WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("RetrieveByBanco")]
+        public ActionResult RetrieveByBanco(string iban)
+        {
+            try
+            {
+                var tm = new TransaccionManager();
+                var lstResults = tm.ObtenerPorBanco(iban);
+                return Ok(lstResults);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         [HttpGet]
         [Route("RetrieveByComercio")]

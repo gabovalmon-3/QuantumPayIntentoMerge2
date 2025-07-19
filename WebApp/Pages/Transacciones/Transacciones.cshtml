@@ -1,0 +1,110 @@
+﻿@page
+@model WebApp.Pages.Transacciones.TransaccionesModel
+@{
+    ViewData["Title"] = "Transacciones";
+}
+
+<h1>Gestión de Transacciones</h1>
+
+<div class="bs-docs-section">
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="transaccionFiltro">Mostrar:</label>
+            <select id="transaccionFiltro" class="form-control">
+                <option value="all">Todas</option>
+                <option value="banco">Por Banco (IBAN)</option>
+                <option value="comercio">Por Comercio (ID)</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="filtroValor">Valor de filtro:</label>
+            <input id="filtroValor" type="text" class="form-control" placeholder="IBAN o ID de Comercio" />
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button id="btnBuscar" class="btn btn-primary w-100">Buscar</button>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="row">
+        <legend>Lista de Transacciones</legend>
+        <div class="col-lg-12">
+            <table id="tblTransacciones" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Cuenta Bancaria</th>
+                        <th>Cuenta Comercio</th>
+                        <th>Monto</th>
+                        <th>Comisión</th>
+                        <th>Descuento</th>
+                        <th>Fecha</th>
+                        <th>Método</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Formulario de CRUD -->
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <fieldset>
+                <legend>Formulario Transacción</legend>
+
+                <div class="form-group">
+                    <label for="txtId">ID</label>
+                    <input id="txtId" readonly type="number" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtIdCuentaBancaria">Cuenta Bancaria</label>
+                    <input id="txtIdCuentaBancaria" type="text" class="form-control" />
+                </div>
+
+
+                <div class="form-group">
+                    <label for="txtIdCuentaComercio">Cuenta Comercio</label>
+                    <input id="txtIdCuentaComercio" type="number" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtMonto">Monto</label>
+                    <input id="txtMonto" type="number" step="0.01" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtComision">Comisión</label>
+                    <input id="txtComision" type="number" step="0.01" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtDescuentoAplicado">Descuento Aplicado</label>
+                    <input id="txtDescuentoAplicado" type="number" step="0.01" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtFecha">Fecha</label>
+                    <input id="txtFecha" type="datetime-local" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtMetodoPago">Método Pago</label>
+                    <input id="txtMetodoPago" type="text" class="form-control" />
+                </div>
+            </fieldset>
+
+            <div class="mt-2">
+                <button id="btnCreate" class="btn btn-primary btn-xs">Save</button>
+                <button id="btnUpdate" class="btn btn-info btn-xs">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- JS específico para Transacciones CRUD -->
+    <script src="~/js/pages/Transacciones.js" asp-append-version="true"></script>
+}

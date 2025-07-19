@@ -1,4 +1,7 @@
+using System;
+using Microsoft.AspNetCore.Builder;
 using BaseManager;
+using CoreApp;
 
 var builder = WebApplication.CreateBuilder(args);
 

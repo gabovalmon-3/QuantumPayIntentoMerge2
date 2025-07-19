@@ -101,7 +101,7 @@ namespace DataAccess.CRUD
                 lst.Add(new Transaccion
                 {
                     Id = (int)r["Id"],
-                    IdCuentaBancaria = (string)r["IdCuentaBancaria"], 
+                    IdCuentaBancaria = (string)r["IdCuentaBancaria"],
                     IdCuentaComercio = (int)r["IdCuentaComercio"],
                     Monto = Convert.ToDecimal(r["Monto"]),
                     Comision = Convert.ToDecimal(r["Comision"]),

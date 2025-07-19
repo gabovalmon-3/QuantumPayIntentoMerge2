@@ -53,5 +53,14 @@ namespace DataAccess.DAOs
             };
             Parameters.Add(param);
         }
+
+        internal void AddVarcharParam(string paramName, string value, int size)
+        {
+            var param = new SqlParameter(paramName, System.Data.SqlDbType.NVarChar, size)
+            {
+                Value = value ?? (object)DBNull.Value
+            };
+            Parameters.Add(param); // Usa tu lista interna de parámetros, igual que con otros métodos
+        }
     }
 }
