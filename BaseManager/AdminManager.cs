@@ -48,9 +48,11 @@ namespace CoreApp
             return aCrud.RetrieveById<Admin>(Id);
         }
 
+        
 
 
-        public Admin Retrieve(string nombreUsuario)
+
+        public Admin RetrieveByUserName(string nombreUsuario)
         {
             var aCrud = new AdminCrudFactory();
             var admin = new Admin { nombreUsuario = nombreUsuario };
