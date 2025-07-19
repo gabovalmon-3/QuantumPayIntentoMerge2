@@ -35,6 +35,7 @@ namespace DTOs
 
         public void verificarCorreo()
         {
+
         }
 
         public void verificarTelefono()
