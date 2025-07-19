@@ -20,3 +20,35 @@ html {
 body {
   margin-bottom: 60px;
 }
+.nav-dropdown {
+    text-decoration: none;
+    position: relative;
+}
+/* Menú desplegable oculto */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.dropdown-menu li a {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+}
+
+.dropdown-menu li a:hover {
+    background-color: white;
+
+}
+
+/* Mostrar menú desplegable si tiene la clase "show" */
+.dropdown-menu.show {
+    display: block;
+}
