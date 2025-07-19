@@ -12,7 +12,7 @@ namespace BaseManager
 
         public EmailVerificationManager()
         {
-            // Leer variables de entorno
+            //Leer variables de entorno
             _accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID")
                 ?? throw new ArgumentNullException("TWILIO_ACCOUNT_SID no está configurada en variables de entorno.");
 

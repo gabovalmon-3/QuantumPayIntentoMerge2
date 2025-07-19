@@ -16,7 +16,7 @@ namespace BaseManager
             _rekognitionClient = new AmazonRekognitionClient(awsAccessKeyId, awsSecretAccessKey, region);
         }
 
-        /// <summary>
+        ///
         /// Compara dos imágenes (selfie y foto del ID) y devuelve true si la similitud es mayor al umbral.
         /// </summary>
         /// <param name="selfieImageBytes">Bytes de la imagen selfie.</param>

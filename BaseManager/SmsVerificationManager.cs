@@ -6,6 +6,7 @@ namespace BaseManager
 {
     public class SmsVerificationManager
     {
+        //variables de entorno para Twilio
         private readonly string _accountSid;
         private readonly string _authToken;
         private readonly string _verifyServiceSid;

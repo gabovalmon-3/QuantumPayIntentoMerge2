@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
 
 
 
-                // Verificar código OTP email
+                // Verificar código OTP email 1
                 bool emailVerified = emailVerifier.VerifyCode(cliente.correo, emailCode);
                 if (!emailVerified)
                     return BadRequest("Código de verificación de email inválido.");
