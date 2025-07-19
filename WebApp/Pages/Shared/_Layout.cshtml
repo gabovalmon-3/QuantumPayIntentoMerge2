@@ -10,6 +10,7 @@
     <!-- Tu CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true" />
+    <link rel="icon" href="../img/QuantumPayIcon.png" type="image/png" />
 
     <!-- jQuery -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -25,6 +26,8 @@
 
     <!-- Tu helper AJAX -->
     <script src="~/js/ControlActions.js" asp-append-version="true"></script>
+    <script src="~/js/pages/controlactions.js"></script>
+    <script src="~/js/site.js"></script>
 </head>
 <body>
     <header>
@@ -43,7 +46,15 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/AdminHome">Admin</a>
+                        </li>
+                        <li class="dropdown">
+                            <a class="nav-dropdown" href=" #" onclick="toggleDropdown(event)">Opciones</a>
+                            <ul class="dropdown-menu" id="dropdownMenu">
+                                <li><a asp-page="/Clientes">Clientes</a></li>
+                                <li><a asp-page="/CuentaComercio">Comercios</a></li>
+                                <li><a asp-page="/Bancos">Bancos</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark"
@@ -69,6 +80,7 @@
                 </div>
             </div>
         </nav>
+
     </header>
 
     <div class="container">
@@ -82,10 +94,6 @@
             &copy; 2025 - QuantumPay - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
-    <!-- Sitio JS global -->
-    <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- Aquí se inyectan los scripts específicos de cada Razor Page -->
-    @RenderSection("Scripts", required: false)
 </body>
 </html>
