@@ -1,9 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// 2) Tus servicios
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -20,8 +18,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// 3) ¡Importante!  
+app.UseRouting();
+
 app.UseAuthorization();
 
+// 5) Luego mapea los controladores
 app.MapControllers();
 
 app.Run();

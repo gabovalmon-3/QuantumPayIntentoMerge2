@@ -15,4 +15,11 @@
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
+  <ItemGroup>
+
+    <ProjectReference Include="..\BaseManager\BaseManager.csproj" />
+    <ProjectReference Include="..\DTOs\DTOs.csproj" />
+
+  </ItemGroup>
+
 </Project>
