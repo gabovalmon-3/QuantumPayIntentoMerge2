@@ -28,7 +28,7 @@ namespace DataAccess.CRUD
             sqlOperation.AddStringParameter("P_cedula", cliente.cedula);
             sqlOperation.AddStringParameter("P_nombre", cliente.nombre);
             sqlOperation.AddStringParameter("P_apellidos", cliente.apellido);
-            sqlOperation.AddIntParam("P_telefono", cliente.telefono);
+            sqlOperation.AddStringParameter("P_telefono", cliente.telefono);
             sqlOperation.AddStringParameter("P_correoElectronico", cliente.correo);
             sqlOperation.AddStringParameter("P_direccion", cliente.direccion);
             sqlOperation.AddStringParameter("P_fotoCedula", cliente.fotoCedula);
@@ -87,11 +87,11 @@ namespace DataAccess.CRUD
             return default(T);
         }
 
-        public T RetrieveByTelefono<T>(int telefono)
+        public T RetrieveByTelefono<T>(string telefono)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_TELEFONO_PR" };
 
-            sqlOperation.AddIntParam("P_telefono", telefono);
+            sqlOperation.AddStringParameter("P_telefono", telefono);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -150,7 +150,7 @@ namespace DataAccess.CRUD
             sqlOperation.AddStringParameter("P_cedula", cliente.cedula);
             sqlOperation.AddStringParameter("P_nombre", cliente.nombre);
             sqlOperation.AddStringParameter("P_apellidos", cliente.apellido);
-            sqlOperation.AddIntParam("P_telefono", cliente.telefono);
+            sqlOperation.AddStringParameter("P_telefono", cliente.telefono);
             sqlOperation.AddStringParameter("P_correoElectronico", cliente.correo);
             sqlOperation.AddStringParameter("P_direccion", cliente.direccion);
             sqlOperation.AddStringParameter("P_fotoCedula", cliente.fotoCedula);
@@ -180,7 +180,7 @@ namespace DataAccess.CRUD
                 cedula = row["cedula"].ToString(),
                 nombre = row["nombre"].ToString(),
                 apellido = row["apellidos"].ToString(),
-                telefono = row["telefono"] == DBNull.Value ? 0 : Convert.ToInt32(row["telefono"]),
+                telefono = row["telefono"].ToString(),
                 correo = row["correoElectronico"].ToString(),
                 direccion = row["direccion"].ToString(),
                 fotoCedula = row["fotoCedula"].ToString(),

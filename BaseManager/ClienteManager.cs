@@ -84,7 +84,7 @@ namespace CoreApp
             return cCrud.RetrieveByCedula<Cliente>(cedula);
         }
 
-        public Cliente RetrieveByTelefono(int telefono)
+        public Cliente RetrieveByTelefono(string telefono)
         {
             var cCrud = new ClienteCrudFactory();
             return cCrud.RetrieveByTelefono<Cliente>(telefono);

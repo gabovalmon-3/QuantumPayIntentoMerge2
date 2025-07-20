@@ -30,15 +30,18 @@ namespace WebAPI.Controllers
                 var emailVerifier = new EmailVerificationManager(); //instancia del verificador de email
                 var smsVerifier = new SmsVerificationManager(); // instancia del verificador de SMS
 
-
-
                 // Verificar código OTP email 1
                 bool emailVerified = emailVerifier.VerifyCode(cliente.correo, emailCode);
                 if (!emailVerified)
                     return BadRequest("Código de verificación de email inválido.");
 
                 // Verificar código OTP de SMS
-                bool smsVerified = smsVerifier.VerifyCode(cliente.telefono.ToString(), smsCode);
+                if (string.IsNullOrWhiteSpace(smsCode))
+                {
+                    Console.WriteLine("[CREATE] smsCode vacío o nulo.");
+                    return BadRequest("El código de verificación SMS es requerido.");
+                }
+                bool smsVerified = smsVerifier.VerifyCode(cliente.telefono, smsCode);
                 if (!smsVerified)
                     return BadRequest("Código de verificación SMS inválido.");
 
@@ -52,7 +55,22 @@ namespace WebAPI.Controllers
 
                 var faceVerifier = new FaceRecognitionManager(awsAccessKeyId, awsSecretKey, region);
 
-                // Convertir imágenes base64 a byte[]
+                if (cliente == null)
+                {
+                    Console.WriteLine("[CREATE] Cliente is null.");
+                    return BadRequest("Cliente data is missing.");
+                }
+                if (string.IsNullOrWhiteSpace(cliente.fotoCedula) || string.IsNullOrWhiteSpace(cliente.fotoPerfil))
+                {
+                    Console.WriteLine("[CREATE] fotoCedula or fotoPerfil is null or empty.");
+                    return BadRequest("Las imágenes son requeridas.");
+                }
+                if (!IsBase64String(cliente.fotoCedula) || !IsBase64String(cliente.fotoPerfil))
+                {
+                    Console.WriteLine("[CREATE] Invalid base64 for images.");
+                    return BadRequest("Las imágenes deben estar en formato base64 válido.");
+                }
+
                 byte[] cedulaBytes = Convert.FromBase64String(cliente.fotoCedula);
                 byte[] selfieBytes = Convert.FromBase64String(cliente.fotoPerfil);
 
@@ -145,7 +163,7 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("RetrieveByTelefono")]
-        public ActionResult RetrieveByTelefono(int telefono)
+        public ActionResult RetrieveByTelefono(string telefono)
         {
             try
             {
@@ -274,5 +292,12 @@ namespace WebAPI.Controllers
             return Ok(new { Message = "Sesión cerrada correctamente." });
         }
 
+        private bool IsBase64String(string base64)
+        {
+            if (string.IsNullOrWhiteSpace(base64))
+                return false;
+            Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
+            return Convert.TryFromBase64String(base64, buffer, out _);
+        }
     }
 }
