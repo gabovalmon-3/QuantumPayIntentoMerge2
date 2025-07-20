@@ -166,6 +166,11 @@ namespace WebAPI.Controllers
         {
             try
             {
+                if (!string.IsNullOrWhiteSpace(cliente.contrasena))
+                {
+                    cliente.contrasena = BCrypt.Net.BCrypt.HashPassword(cliente.contrasena);
+                }
+
                 var cm = new ClienteManager();
                 var updatedCliente = cm.Update(cliente);
                 return Ok(updatedCliente);

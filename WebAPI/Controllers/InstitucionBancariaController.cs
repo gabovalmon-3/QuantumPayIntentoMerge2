@@ -1,6 +1,5 @@
 ﻿using CoreApp;
 using DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -153,6 +152,39 @@ namespace WebAPI.Controllers
                 var existing = im.RetrieveById(id);
                 im.Delete(id);
                 return Ok(new { Message = $"InstitucionBancaria con ID {id} eliminado correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public ActionResult Login([FromBody] DTOs.LoginInstiBancariaRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.CedulaJuridica))
+                    return Unauthorized("Usuario o cédula jurídica incorrectos.");
+
+                var manager = new InstitucionBancariaManager();
+                var institucion = manager.RetrieveByEmail(request.Email.Trim());
+
+                if (institucion == null)
+                    return Unauthorized("Usuario o cédula jurídica incorrectos.");
+
+                // Normaliza y compara la cédula jurídica
+                var cedulaInput = request.CedulaJuridica.Trim();
+                var cedulaDb = institucion.cedulaJuridica?.Trim();
+
+                if (!string.Equals(cedulaDb, cedulaInput, StringComparison.OrdinalIgnoreCase))
+                    return Unauthorized("Usuario o cédula jurídica incorrectos.");
+
+                if (!string.Equals(institucion.estadoSolicitud, "aprobada", StringComparison.OrdinalIgnoreCase))
+                    return Unauthorized("Error al iniciar sesion, su institucion no ha sido aprobada.");
+
+                return Ok(new { Message = "Login exitoso", UserId = institucion.Id });
             }
             catch (Exception ex)
             {

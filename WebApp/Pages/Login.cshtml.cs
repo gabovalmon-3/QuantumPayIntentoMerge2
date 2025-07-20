@@ -22,10 +22,28 @@ namespace WebApp.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            // Validación manual según el tipo de usuario
+            if (string.IsNullOrWhiteSpace(LoginRequest.UserType) || string.IsNullOrWhiteSpace(LoginRequest.Email))
             {
-                ErrorMessage = "Datos inválidos.";
+                ErrorMessage = "Debe ingresar el tipo de usuario y el correo.";
                 return Page();
+            }
+
+            if (LoginRequest.UserType == "InstitucionBancaria")
+            {
+                if (string.IsNullOrWhiteSpace(LoginRequest.CedulaJuridica))
+                {
+                    ErrorMessage = "Debe ingresar la cédula jurídica.";
+                    return Page();
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(LoginRequest.Password))
+                {
+                    ErrorMessage = "Debe ingresar la contraseña.";
+                    return Page();
+                }
             }
 
             string apiUrl = LoginRequest.UserType switch
@@ -43,7 +61,7 @@ namespace WebApp.Pages
             {
                 "Admin" => new { UserName = LoginRequest.Email, Password = LoginRequest.Password },
                 "CuentaComercio" => new { Email = LoginRequest.Email, Password = LoginRequest.Password },
-                "InstitucionBancaria" => new { Email = LoginRequest.Email, Password = LoginRequest.Password },
+                "InstitucionBancaria" => new { Email = LoginRequest.Email, CedulaJuridica = LoginRequest.CedulaJuridica },
                 _ => new { Email = LoginRequest.Email, Password = LoginRequest.Password }
             };
 
@@ -54,7 +72,7 @@ namespace WebApp.Pages
 
             if (!response.IsSuccessStatusCode)
             {
-                ErrorMessage = "Usuario o contraseña incorrectos.";
+                ErrorMessage = "Usuario o credenciales incorrectos.";
                 return Page();
             }
 
@@ -73,7 +91,11 @@ namespace WebApp.Pages
                     IsPersistent = true
                 });
 
-            return RedirectToPage("/Index");
+            if (LoginRequest.UserType == "Admin")
+            {
+                return RedirectToPage("/AdminHome");
+            }
+            return RedirectToPage("/AdminHome");
         }
     }
 
@@ -81,6 +103,7 @@ namespace WebApp.Pages
     {
         public string UserType { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string? Password { get; set; }
+        public string? CedulaJuridica { get; set; }
     }
 }

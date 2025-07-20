@@ -85,6 +85,11 @@ namespace WebAPI.Controllers
         {
             try
             {
+                if (!string.IsNullOrWhiteSpace(admin.contrasena))
+                {
+                    admin.contrasena = BCrypt.Net.BCrypt.HashPassword(admin.contrasena);
+                }
+
                 var cm = new AdminManager();
                 var update = cm.Update(admin);
                 return Ok(update);
