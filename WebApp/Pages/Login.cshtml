@@ -1,0 +1,21 @@
+﻿@page
+@model WebApp.Pages.LoginModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+<h2>Iniciar sesión</h2>
+<form method="post">
+    <div>
+        <label>Correo electrónico o usuario</label>
+        <input asp-for="LoginRequest.Email" />
+    </div>
+    <div>
+        <label>Contraseña</label>
+        <input asp-for="LoginRequest.Password" type="password" />
+    </div>
+    <button type="submit">Entrar</button>
+</form>
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}

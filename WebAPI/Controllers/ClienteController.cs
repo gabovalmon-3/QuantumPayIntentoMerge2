@@ -188,6 +188,38 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("SendEmailVerification")]
+        public ActionResult SendEmailVerification(string email)
+        {
+            try
+            {
+                var emailVerifier = new EmailVerificationManager();
+                emailVerifier.SendVerificationCode(email);
+                return Ok("Código de verificación enviado por email.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("SendSmsVerification")]
+        public ActionResult SendSmsVerification(string telefono)
+        {
+            try
+            {
+                var smsVerifier = new SmsVerificationManager();
+                smsVerifier.SendVerificationCode(telefono);
+                return Ok("Código de verificación enviado por SMS.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("Login")]
         public ActionResult Login([FromBody] DTOs.LoginRequest request)

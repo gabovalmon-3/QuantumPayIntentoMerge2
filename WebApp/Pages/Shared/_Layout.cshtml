@@ -28,6 +28,8 @@
     <script src="~/js/ControlActions.js" asp-append-version="true"></script>
     <script src="~/js/pages/controlactions.js"></script>
     <script src="~/js/site.js"></script>
+
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
@@ -68,6 +70,12 @@
                                 Comisiones
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark"
+                               asp-area="" asp-page="/SignUp">
+                                Registro de Usuario
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -91,5 +99,25 @@
 
   <!-- Aquí se inyectan los scripts específicos de cada Razor Page -->
   @RenderSection("Scripts", required: false)
+
+  @using Microsoft.AspNetCore.Http
+  @inject IHttpContextAccessor HttpContextAccessor
+
+  <nav>
+      <ul>
+          @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+          {
+              <li>
+                  <form id="logoutForm" method="post" asp-page="/Logout">
+                      <button type="submit" class="btn btn-link">Cerrar sesión</button>
+                  </form>
+              </li>
+          }
+          else
+          {
+              <li><a href="/Login">Iniciar sesión</a></li>
+          }
+      </ul>
+  </nav>
 </body>
 </html>
