@@ -24,6 +24,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+                Console.WriteLine($"[CREATE] Registro de cliente: correo={cliente.correo}, contrasena={cliente.contrasena}");
                 //VERIFICADORES
 
                 var emailVerifier = new EmailVerificationManager(); //instancia del verificador de email
@@ -62,12 +63,16 @@ namespace WebAPI.Controllers
 
                 //SI PASA LAS VERIFICACIONES, CREAR EL CLIENTE
 
+                cliente.contrasena = BCrypt.Net.BCrypt.HashPassword(cliente.contrasena);
+
                 var cm = new ClienteManager();
                 await cm.Create(cliente);
+                Console.WriteLine("[CREATE] Cliente creado exitosamente.");
                 return Ok(cliente);
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"[CREATE] Excepción: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -226,18 +231,32 @@ namespace WebAPI.Controllers
         {
             try
             {
+                Console.WriteLine($"[LOGIN] Email recibido: {request.Email}");
+                Console.WriteLine($"[LOGIN] Password recibido: {request.Password}");
+
                 var cm = new ClienteManager();
                 var user = cm.RetrieveByEmail(request.Email);
+
                 if (user == null)
+                {
+                    Console.WriteLine("[LOGIN] Usuario no encontrado en la base de datos.");
                     return Unauthorized("Usuario o contraseña incorrectos.");
+                }
+
+                Console.WriteLine($"[LOGIN] Hash almacenado en BD: {user.contrasena}");
 
                 if (!BCrypt.Net.BCrypt.Verify(request.Password, user.contrasena))
+                {
+                    Console.WriteLine("[LOGIN] Contraseña incorrecta.");
                     return Unauthorized("Usuario o contraseña incorrectos.");
+                }
 
+                Console.WriteLine("[LOGIN] Login exitoso.");
                 return Ok(new { Message = "Login exitoso", UserId = user.Id });
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"[LOGIN] Excepción: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

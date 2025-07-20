@@ -9,7 +9,7 @@
     @P_fotoCedula NVARCHAR(150),
     @P_fechaNacimiento DATE,
     @P_fotoPerfil NVARCHAR(100),
-    @P_contrasena NVARCHAR(20),
+    @P_contrasena NVARCHAR(120),
     @P_IBAN NVARCHAR(30)
 AS
 BEGIN

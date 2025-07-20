@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE CRE_ADMIN_PR
 @P_nombreUsuario NVARCHAR(20),
-@P_contrasena NVARCHAR(20)
+@P_contrasena NVARCHAR(120)
 AS
 BEGIN
     INSERT INTO admin (nombreUsuario, contrasena)

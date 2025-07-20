@@ -33,8 +33,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.MapFallbackToPage("/Welcome"); // Usar Welcome.cshtml como página principal
+
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseRouting();
 
@@ -43,5 +48,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.MapControllers();
+
+
 
 app.Run();

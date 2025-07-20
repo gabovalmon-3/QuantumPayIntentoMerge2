@@ -6,8 +6,17 @@
 <h2>Iniciar sesión</h2>
 <form method="post">
     <div>
-        <label>Correo electrónico o usuario</label>
-        <input asp-for="LoginRequest.Email" />
+        <label>Tipo de usuario</label>
+        <select asp-for="LoginRequest.UserType" id="userTypeSelect">
+            <option value="Cliente">Cliente</option>
+            <option value="Admin">Administrador</option>
+            <option value="CuentaComercio">Comercio</option>
+            <option value="InstitucionBancaria">Institución Bancaria</option>
+        </select>
+    </div>
+    <div>
+        <label id="login-label">Correo electrónico</label>
+        <input asp-for="LoginRequest.Email" id="login-input" placeholder="Correo electrónico" />
     </div>
     <div>
         <label>Contraseña</label>
@@ -18,4 +27,20 @@
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+@section Scripts {
+<script>
+    document.getElementById('userTypeSelect').addEventListener('change', function() {
+        var label = document.getElementById('login-label');
+        var input = document.getElementById('login-input');
+        if (this.value === 'Admin') {
+            label.textContent = 'Nombre de usuario';
+            input.placeholder = 'Nombre de usuario';
+        } else {
+            label.textContent = 'Correo electrónico';
+            input.placeholder = 'Correo electrónico';
+        }
+    });
+</script>
 }

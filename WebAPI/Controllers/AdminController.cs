@@ -18,6 +18,8 @@ namespace WebAPI.Controllers
         {
             try
             {
+                admin.contrasena = BCrypt.Net.BCrypt.HashPassword(admin.contrasena);
+
                 var am = new AdminManager();
                 await am.Create(admin);
                 return Ok(admin);
@@ -112,22 +114,42 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public ActionResult Login([FromBody] DTOs.LoginRequest request)
+        public ActionResult Login([FromBody] DTOs.LoginAdminRequest request)
         {
             try
             {
+                Console.WriteLine($"[ADMIN LOGIN] UserName recibido: {request.UserName}");
+                Console.WriteLine($"[ADMIN LOGIN] Password recibido: {request.Password}");
+
                 var am = new AdminManager();
                 var admin = am.RetrieveByUserName(request.UserName);
+
                 if (admin == null)
+                {
+                    Console.WriteLine("[ADMIN LOGIN] Usuario no encontrado.");
                     return Unauthorized("Usuario o contraseña incorrectos.");
+                }
+
+                Console.WriteLine($"[ADMIN LOGIN] Hash almacenado en BD: {admin.contrasena}");
+
+                if (string.IsNullOrEmpty(admin.contrasena))
+                {
+                    Console.WriteLine("[ADMIN LOGIN] Hash de contraseña vacío o nulo.");
+                    return Unauthorized("Usuario o contraseña incorrectos.");
+                }
 
                 if (!BCrypt.Net.BCrypt.Verify(request.Password, admin.contrasena))
+                {
+                    Console.WriteLine("[ADMIN LOGIN] Contraseña incorrecta.");
                     return Unauthorized("Usuario o contraseña incorrectos.");
+                }
 
+                Console.WriteLine("[ADMIN LOGIN] Login exitoso.");
                 return Ok(new { Message = "Login exitoso", UserId = admin.Id });
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"[ADMIN LOGIN] Excepción: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

@@ -28,10 +28,26 @@ namespace WebApp.Pages
                 return Page();
             }
 
-            using var httpClient = new HttpClient();
-            var apiUrl = "https://localhost:7085/api/CuentaComercio/Login";
+            string apiUrl = LoginRequest.UserType switch
+            {
+                "Cliente" => "https://localhost:5001/api/Cliente/Login",
+                "Admin" => "https://localhost:5001/api/Admin/Login",
+                "CuentaComercio" => "https://localhost:5001/api/CuentaComercio/Login",
+                "InstitucionBancaria" => "https://localhost:5001/api/InstitucionBancaria/Login",
+                _ => throw new Exception("Tipo de usuario no soportado")
+            };
 
-            var json = JsonSerializer.Serialize(LoginRequest);
+            using var httpClient = new HttpClient();
+
+            object loginPayload = LoginRequest.UserType switch
+            {
+                "Admin" => new { UserName = LoginRequest.Email, Password = LoginRequest.Password },
+                "CuentaComercio" => new { Email = LoginRequest.Email, Password = LoginRequest.Password },
+                "InstitucionBancaria" => new { Email = LoginRequest.Email, Password = LoginRequest.Password },
+                _ => new { Email = LoginRequest.Email, Password = LoginRequest.Password }
+            };
+
+            var json = JsonSerializer.Serialize(loginPayload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await httpClient.PostAsync(apiUrl, content);
@@ -63,6 +79,7 @@ namespace WebApp.Pages
 
     public class LoginRequestModel
     {
+        public string UserType { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
     }
