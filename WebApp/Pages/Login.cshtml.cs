@@ -22,23 +22,57 @@ namespace WebApp.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            // Validación manual según el tipo de usuario
+            if (string.IsNullOrWhiteSpace(LoginRequest.UserType) || string.IsNullOrWhiteSpace(LoginRequest.Email))
             {
-                ErrorMessage = "Datos inválidos.";
+                ErrorMessage = "Debe ingresar el tipo de usuario y el correo.";
                 return Page();
             }
 
-            using var httpClient = new HttpClient();
-            var apiUrl = "https://localhost:7085/api/CuentaComercio/Login";
+            if (LoginRequest.UserType == "InstitucionBancaria")
+            {
+                if (string.IsNullOrWhiteSpace(LoginRequest.CedulaJuridica))
+                {
+                    ErrorMessage = "Debe ingresar la cédula jurídica.";
+                    return Page();
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(LoginRequest.Password))
+                {
+                    ErrorMessage = "Debe ingresar la contraseña.";
+                    return Page();
+                }
+            }
 
-            var json = JsonSerializer.Serialize(LoginRequest);
+            string apiUrl = LoginRequest.UserType switch
+            {
+                "Cliente" => "https://localhost:5001/api/Cliente/Login",
+                "Admin" => "https://localhost:5001/api/Admin/Login",
+                "CuentaComercio" => "https://localhost:5001/api/CuentaComercio/Login",
+                "InstitucionBancaria" => "https://localhost:5001/api/InstitucionBancaria/Login",
+                _ => throw new Exception("Tipo de usuario no soportado")
+            };
+
+            using var httpClient = new HttpClient();
+
+            object loginPayload = LoginRequest.UserType switch
+            {
+                "Admin" => new { UserName = LoginRequest.Email, Password = LoginRequest.Password },
+                "CuentaComercio" => new { Email = LoginRequest.Email, Password = LoginRequest.Password },
+                "InstitucionBancaria" => new { Email = LoginRequest.Email, CedulaJuridica = LoginRequest.CedulaJuridica },
+                _ => new { Email = LoginRequest.Email, Password = LoginRequest.Password }
+            };
+
+            var json = JsonSerializer.Serialize(loginPayload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await httpClient.PostAsync(apiUrl, content);
 
             if (!response.IsSuccessStatusCode)
             {
-                ErrorMessage = "Usuario o contraseña incorrectos.";
+                ErrorMessage = "Usuario o credenciales incorrectos.";
                 return Page();
             }
 
@@ -57,13 +91,19 @@ namespace WebApp.Pages
                     IsPersistent = true
                 });
 
-            return RedirectToPage("/Index");
+            if (LoginRequest.UserType == "Admin")
+            {
+                return RedirectToPage("/AdminHome");
+            }
+            return RedirectToPage("/AdminHome");
         }
     }
 
     public class LoginRequestModel
     {
+        public string UserType { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string? Password { get; set; }
+        public string? CedulaJuridica { get; set; }
     }
 }

@@ -4,12 +4,25 @@
     ViewData["Title"] = "Iniciar sesión";
 }
 <h2>Iniciar sesión</h2>
-<form method="post">
+<form method="post" id="login-form">
     <div>
-        <label>Correo electrónico o usuario</label>
-        <input asp-for="LoginRequest.Email" />
+        <label>Tipo de usuario</label>
+        <select asp-for="LoginRequest.UserType" id="userTypeSelect">
+            <option value="Cliente">Cliente</option>
+            <option value="Admin">Administrador</option>
+            <option value="CuentaComercio">Comercio</option>
+            <option value="InstitucionBancaria">Institución Bancaria</option>
+        </select>
     </div>
     <div>
+        <label id="login-label">Correo electrónico</label>
+        <input asp-for="LoginRequest.Email" id="login-input" placeholder="Correo electrónico" />
+    </div>
+    <div id="cedula-juridica-div" style="display:none;">
+        <label for="cedulaJuridica-input">Cédula Jurídica</label>
+        <input id="cedulaJuridica-input" name="LoginRequest.CedulaJuridica" placeholder="Cédula Jurídica" />
+    </div>
+    <div id="password-div">
         <label>Contraseña</label>
         <input asp-for="LoginRequest.Password" type="password" />
     </div>
@@ -18,4 +31,37 @@
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+@section Scripts {
+<script>
+    document.getElementById('userTypeSelect').addEventListener('change', function() {
+        var label = document.getElementById('login-label');
+        var input = document.getElementById('login-input');
+        var cedulaDiv = document.getElementById('cedula-juridica-div');
+        var passwordDiv = document.getElementById('password-div');
+        if (this.value === 'Admin') {
+            label.textContent = 'Nombre de usuario';
+            input.placeholder = 'Nombre de usuario';
+            cedulaDiv.style.display = 'none';
+            passwordDiv.style.display = 'block';
+            document.getElementById('cedulaJuridica-input').value = '';
+        } else if (this.value === 'InstitucionBancaria') {
+            label.textContent = 'Correo electrónico';
+            input.placeholder = 'Correo electrónico';
+            cedulaDiv.style.display = 'block';
+            passwordDiv.style.display = 'none';
+        } else {
+            label.textContent = 'Correo electrónico';
+            input.placeholder = 'Correo electrónico';
+            cedulaDiv.style.display = 'none';
+            passwordDiv.style.display = 'block';
+            document.getElementById('cedulaJuridica-input').value = '';
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        var event = new Event('change');
+        document.getElementById('userTypeSelect').dispatchEvent(event);
+    });
+</script>
 }

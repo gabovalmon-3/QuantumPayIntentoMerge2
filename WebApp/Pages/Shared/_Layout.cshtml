@@ -26,7 +26,6 @@
 
     <!-- Tu helper AJAX -->
     <script src="~/js/ControlActions.js" asp-append-version="true"></script>
-    <script src="~/js/pages/controlactions.js"></script>
     <script src="~/js/site.js"></script>
 
     @RenderSection("Styles", required: false)
@@ -42,6 +41,9 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <!-- Nav links -->
+                @using Microsoft.AspNetCore.Http
+                @inject IHttpContextAccessor HttpContextAccessor
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -70,13 +72,30 @@
                                 Comisiones
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-area="" asp-page="/SignUp">
-                                Registro de Usuario
-                            </a>
-                        </li>
+                        @if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/SignUp">
+                                    Registro de Usuario
+                                </a>
+                            </li>
+                        }
                     </ul>
+                    @{
+                        var displayName = ViewContext.ActionDescriptor.DisplayName ?? "";
+                        var isWelcomePage = displayName.Contains("Welcome", StringComparison.OrdinalIgnoreCase);
+                        var isLoginPage = displayName.Contains("Login", StringComparison.OrdinalIgnoreCase);
+                    }
+                    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                    {
+                        <form id="logoutForm" method="post" asp-page="/Logout" class="d-flex ms-auto">
+                            <button type="submit" class="btn btn-link text-danger" style="font-weight:bold;">Cerrar sesión</button>
+                        </form>
+                    }
+                    else if (!isWelcomePage && !isLoginPage)
+                    {
+                        <a href="/Login" class="btn btn-outline-primary ms-auto">Iniciar sesión</a>
+                    }
                 </div>
             </div>
         </nav>
@@ -102,22 +121,5 @@
 
   @using Microsoft.AspNetCore.Http
   @inject IHttpContextAccessor HttpContextAccessor
-
-  <nav>
-      <ul>
-          @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-          {
-              <li>
-                  <form id="logoutForm" method="post" asp-page="/Logout">
-                      <button type="submit" class="btn btn-link">Cerrar sesión</button>
-                  </form>
-              </li>
-          }
-          else
-          {
-              <li><a href="/Login">Iniciar sesión</a></li>
-          }
-      </ul>
-  </nav>
 </body>
 </html>

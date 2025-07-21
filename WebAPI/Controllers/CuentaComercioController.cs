@@ -16,13 +16,15 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("Create")]
 
-        public async Task<ActionResult> Create(CuentaComercio cuentacomercio)
+        public async Task<ActionResult> Create(CuentaComercio cuentaComercio)
         {
             try
             {
+                cuentaComercio.Contrasena = BCrypt.Net.BCrypt.HashPassword(cuentaComercio.Contrasena);
+
                 var cm = new CuentaComercioManager();
-                await cm.Create(cuentacomercio);
-                return Ok(cuentacomercio);
+                await cm.Create(cuentaComercio);
+                return Ok(cuentaComercio);
             }
             catch (Exception ex)
             {
@@ -119,6 +121,11 @@ namespace WebAPI.Controllers
         {
             try
             {
+                if (!string.IsNullOrWhiteSpace(cuentaComercio.Contrasena))
+                {
+                    cuentaComercio.Contrasena = BCrypt.Net.BCrypt.HashPassword(cuentaComercio.Contrasena);
+                }
+
                 var cm = new CuentaComercioManager();
                 cm.Update(cuentaComercio);
                 return Ok(cuentaComercio);

@@ -27,7 +27,7 @@ function BancoViewController() {
     this.LoadTable = function () {
 
         //URL del API a invocar
-        //https://localhost:7085/api/InstitucionBancaria/RetrieveAll
+        //https://localhost:5001/api/InstitucionBancaria/RetrieveAll
 
         var ca = new ControlActions();
         var service = this.ApiEndPointName + "/RetrieveAll";
