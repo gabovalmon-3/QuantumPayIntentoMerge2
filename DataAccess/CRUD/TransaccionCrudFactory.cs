@@ -93,7 +93,8 @@ namespace DataAccess.CRUD
 
         public List<Transaccion> RetrieveByComercio(int idComercio)
         {
-            var op = new SQLOperation { ProcedureName = "SP_RET_TRANS_POR_CUENTA" };
+            // Nuevo procedimiento solo para comercio
+            var op = new SQLOperation { ProcedureName = "SP_RET_TRANS_POR_COMERCIO" };
             op.AddIntParam("P_IdCuentaComercio", idComercio);
             var rows = _sqlDao.ExecuteQueryProcedure(op);
             var lst = new List<Transaccion>();
