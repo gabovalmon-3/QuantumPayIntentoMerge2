@@ -87,28 +87,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("RetrieveByIBAN")]
-        public ActionResult RetrieveByIBAN(string codigoIBAN)
-        {
-            try
-            {
-                var im = new InstitucionBancariaManager();
-                var result = im.RetrieveByIBAN(codigoIBAN);
-
-                if (result == null)
-                {
-                    return Ok(new List<object>());
-                }
-
-                return Ok(new List<object> { result });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpGet]
         [Route("RetrieveByTelefono")]
         public ActionResult Retrieve(int telefono)
         {
