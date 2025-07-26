@@ -11,8 +11,7 @@ namespace WebAPI.Controllers
     {
         [HttpPost]
         [Route("Create")]
-
-        public async Task<ActionResult> Create(InstitucionBancaria institucionBancaria)
+        public async Task<ActionResult> Create([FromBody] InstitucionBancaria institucionBancaria)
         {
             try
             {

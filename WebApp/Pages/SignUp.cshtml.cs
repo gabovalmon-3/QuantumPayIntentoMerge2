@@ -67,11 +67,11 @@ namespace WebApp.Pages
                 },
                 "InstitucionBancaria" => new {
                     codigoIdentidad = SignUpRequest.CodigoIdentidad,
-                    codigoIBAN = SignUpRequest.CodigoIBAN,
                     cedulaJuridica = SignUpRequest.CedulaJuridica,
                     direccionSedePrincipal = SignUpRequest.DireccionSedePrincipal,
                     telefono = SignUpRequest.Telefono,
-                    correoElectronico = SignUpRequest.CorreoElectronico
+                    correoElectronico = SignUpRequest.CorreoElectronico,
+                    contrasena = SignUpRequest.Password
                 },
                 _ => throw new Exception("Tipo de usuario no soportado")
             };
@@ -142,11 +142,11 @@ namespace WebApp.Pages
                     break;
                 case "InstitucionBancaria":
                     if (string.IsNullOrWhiteSpace(req.CodigoIdentidad) ||
-                        string.IsNullOrWhiteSpace(req.CodigoIBAN) ||
                         string.IsNullOrWhiteSpace(req.CedulaJuridica) ||
                         string.IsNullOrWhiteSpace(req.DireccionSedePrincipal) ||
                         req.Telefono == null ||
-                        string.IsNullOrWhiteSpace(req.CorreoElectronico))
+                        string.IsNullOrWhiteSpace(req.CorreoElectronico) ||
+                        string.IsNullOrWhiteSpace(req.Password))
                     {
                         error = "Todos los campos de institución bancaria son obligatorios.";
                         return false;
@@ -186,7 +186,6 @@ namespace WebApp.Pages
 
         // InstitucionBancaria
         public string CodigoIdentidad { get; set; }
-        public string CodigoIBAN { get; set; }
         public string DireccionSedePrincipal { get; set; }
         public string EstadoSolicitud { get; set; }
     }
