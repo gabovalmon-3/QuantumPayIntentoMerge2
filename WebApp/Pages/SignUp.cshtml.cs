@@ -30,13 +30,10 @@ namespace WebApp.Pages
             string apiUrl = SignUpRequest.UserType switch
             {
                 "Cliente" => "https://localhost:5001/api/Cliente/Create",
-                "Admin" => "https://localhost:5001/api/Admin/Create",
                 "CuentaComercio" => "https://localhost:5001/api/CuentaComercio/Create",
                 "InstitucionBancaria" => "https://localhost:5001/api/InstitucionBancaria/Create",
                 _ => throw new Exception("Tipo de usuario no soportado")
             };
-
-            using var httpClient = new HttpClient();
 
             object payload = SignUpRequest.UserType switch
             {
@@ -47,15 +44,11 @@ namespace WebApp.Pages
                     telefono = SignUpRequest.Telefono,
                     correo = SignUpRequest.Correo,
                     direccion = SignUpRequest.Direccion,
-                    contrasena = SignUpRequest.Password, // <-- aquí el cambio
+                    contrasena = SignUpRequest.Password,
                     IBAN = SignUpRequest.IBAN,
                     fotoCedula = SignUpRequest.FotoCedula,
                     fotoPerfil = SignUpRequest.FotoPerfil,
                     fechaNacimiento = SignUpRequest.FechaNacimiento
-                },
-                "Admin" => new {
-                    nombreUsuario = SignUpRequest.NombreUsuario,
-                    contrasena = SignUpRequest.Password // <-- aquí el cambio
                 },
                 "CuentaComercio" => new {
                     nombreUsuario = SignUpRequest.NombreUsuario,
@@ -79,6 +72,7 @@ namespace WebApp.Pages
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+            using var httpClient = new HttpClient();
             var response = await httpClient.PostAsync(apiUrl, content);
 
             if (!response.IsSuccessStatusCode)
@@ -119,13 +113,6 @@ namespace WebApp.Pages
                         req.FechaNacimiento == null)
                     {
                         error = "Todos los campos de cliente son obligatorios.";
-                        return false;
-                    }
-                    break;
-                case "Admin":
-                    if (string.IsNullOrWhiteSpace(req.NombreUsuario))
-                    {
-                        error = "El nombre de usuario es obligatorio para el administrador.";
                         return false;
                     }
                     break;

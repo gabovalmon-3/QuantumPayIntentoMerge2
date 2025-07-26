@@ -20,7 +20,6 @@
         <select asp-for="SignUpRequest.UserType" id="UserType" name="SignUpRequest.UserType" required>
             <option value="">Seleccione...</option>
             <option value="Cliente">Cliente</option>
-            <option value="Admin">Administrador</option>
             <option value="CuentaComercio">Comercio</option>
             <option value="InstitucionBancaria">Institución Bancaria</option>
         </select>
@@ -48,13 +47,6 @@
             <label>IBAN</label>
             <input asp-for="SignUpRequest.IBAN" />
         </div>
-
-        <!-- Campos Admin -->
-        <div class="user-fields user-admin" style="display:none;">
-            <label>Nombre de usuario</label>
-            <input asp-for="SignUpRequest.NombreUsuario" id="SignUpRequest_NombreUsuario_Admin" name="SignUpRequest.NombreUsuario" />
-        </div>
-
         <!-- Campos CuentaComercio -->
         <div class="user-fields user-cuentacomercio" style="display:none;">
             <label>Nombre de Usuario</label>
