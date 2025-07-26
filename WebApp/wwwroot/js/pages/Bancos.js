@@ -36,11 +36,10 @@
         var columns = [];
         columns[0] = { 'data': 'id' }; //ID
         columns[1] = { 'data': 'codigoIdentidad' }
-        columns[2] = { 'data': 'codigoIBAN' }
-        columns[3] = { 'data': 'cedulaJuridica' }
-        columns[4] = { 'data': 'direccionSedePrincipal' }
-        columns[5] = { 'data': 'telefono' }
-        columns[6] = { 'data': 'correoElectronico' }
+        columns[2] = { 'data': 'cedulaJuridica' }
+        columns[3] = { 'data': 'direccionSedePrincipal' }
+        columns[4] = { 'data': 'telefono' }
+        columns[5] = { 'data': 'correoElectronico' }
 
         $('#tblinstitucionBancaria').dataTable({
             "ajax": {
@@ -63,7 +62,6 @@
             //Binding en el form
             $('#txtId').val(bancoDTO.id);
             $('#txtCodigoIdentidad').val(bancoDTO.codigoIdentidad);
-            $('#txtCodigoIBAN').val(bancoDTO.codigoIBAN);
             $('#txtCedulaJuridica').val(bancoDTO.cedulaJuridica);
             $('#txtDireccionSedePrincipal').val(bancoDTO.direccionSedePrincipal);
             $('#txtTelefono').val(bancoDTO.telefono);
@@ -73,7 +71,6 @@
     this.fillForm = function (bancoDTO) {
         $('#txtId').val(bancoDTO.id);
         $('#txtCodigoIdentidad').val(bancoDTO.codigoIdentidad);
-        $('#txtCodigoIBAN').val(bancoDTO.codigoIBAN);
         $('#txtCedulaJuridica').val(bancoDTO.cedulaJuridica);
         $('#txtDireccionSedePrincipal').val(bancoDTO.direccionSedePrincipal);
         $('#txtTelefono').val(bancoDTO.telefono);
@@ -86,7 +83,6 @@
         bancoDTO.id = $('#txtId').val(); //ID del banco
         bancoDTO.codigoIdentidad = $('#txtCodigoIdentidad').val();
         //Valores capturados en pantalla
-        bancoDTO.codigoIBAN = $('#txtCodigoIBAN').val();
         bancoDTO.cedulaJuridica = $('#txtCedulaJuridica').val();
         bancoDTO.direccionSedePrincipal = $('#txtDireccionSedePrincipal').val();
         bancoDTO.telefono = $('#txtTelefono').val();
@@ -108,7 +104,6 @@
 
 
         //Valores capturados en pantalla
-        bancoDTO.codigoIBAN = $('#txtCodigoIBAN').val();
         bancoDTO.cedulaJuridica = $('#txtCedulaJuridica').val();
         bancoDTO.direccionSedePrincipal = $('#txtDireccionSedePrincipal').val();
         bancoDTO.telefono = $('#txtTelefono').val();
@@ -131,7 +126,6 @@
         bancoDTO.codigoIdentidad = $('#txtCodigoIdentidad').val();
 
         //Valores capturados en pantalla
-        bancoDTO.codigoIBAN = $('#txtCodigoIBAN').val();
         bancoDTO.cedulaJuridica = $('#txtCedulaJuridica').val();
         bancoDTO.direccionSedePrincipal = $('#txtDireccionSedePrincipal').val();
         bancoDTO.telefono = $('#txtTelefono').val();
