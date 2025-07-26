@@ -1,4 +1,4 @@
-﻿// wwwroot/js/pages/Transacciones.js
+﻿
 function TransaccionesViewController() {
     const ca = new ControlActions();
     const self = this;
@@ -7,12 +7,12 @@ function TransaccionesViewController() {
 
     this.initView = function () {
         this.bindFilterPlaceholder();
-        this.loadTable();      // Carga inicial: todas
+        this.loadTable(); 
         this.bindEvents();
         console.log("Transacciones init → OK");
     };
 
-    // Ajusta el placeholder y habilita/inhabilita el input según el dropdown
+
     this.bindFilterPlaceholder = function () {
         $('#transaccionFiltro').on('change', function () {
             const tipo = $(this).val();
@@ -27,7 +27,7 @@ function TransaccionesViewController() {
         }).trigger('change');
     };
 
-    // Carga la tabla según el filtro seleccionado
+
     this.loadTable = function () {
         const filtro = $('#transaccionFiltro').val();
         const valor = $('#filtroValor').val().trim();
@@ -61,19 +61,18 @@ function TransaccionesViewController() {
         }
     };
 
-    // Vincula eventos de botones y filas de la tabla
     this.bindEvents = function () {
-        // Botón Buscar
+       
         $('#btnBuscar').click(() => this.loadTable());
 
-        // Limpia el valor si vuelves a "Todas"
+
         $('#transaccionFiltro').change(() => {
             if ($('#transaccionFiltro').val() === 'all') {
                 $('#filtroValor').val('');
             }
         });
 
-        // Crear nueva transacción
+
         $('#btnCreate').click(() => {
             const dto = {
                 idCuentaBancaria: $('#txtIdCuentaBancaria').val(),
@@ -87,7 +86,7 @@ function TransaccionesViewController() {
             ca.PostToAPI(`${this.Api}/Create`, dto, () => this.loadTable());
         });
 
-        // Actualizar transacción seleccionada
+
         $('#btnUpdate').click(() => {
             const id = parseInt($('#txtId').val(), 10);
             const dto = {
@@ -103,7 +102,7 @@ function TransaccionesViewController() {
             ca.PutToAPI(`${this.Api}/${id}`, dto, () => this.loadTable());
         });
 
-        // Al hacer clic en una fila, carga sus datos en el formulario
+
         $('#tblTransacciones tbody').on('click', 'tr', function () {
             const data = $('#tblTransacciones').DataTable().row(this).data();
             $('#txtId').val(data.id);
