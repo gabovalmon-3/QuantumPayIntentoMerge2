@@ -33,12 +33,12 @@
             apiUrl = "https://localhost:5001/api/Admin/Create";
         } else if (userType === "CuentaComercio") {
             data = {
-                nombreUsuario: form.querySelector('[name="SignUpRequest.NombreUsuario"]').value,
+                nombreUsuario: document.getElementById("SignUpRequest_NombreUsuario_CuentaComercio").value,
                 contrasena: form.querySelector('[name="SignUpRequest.Password"]').value,
-                cedulaJuridica: form.querySelector('[name="SignUpRequest.CedulaJuridica"]').value,
-                telefono: parseInt(form.querySelector('[name="SignUpRequest.Telefono"]').value),
-                correoElectronico: form.querySelector('[name="SignUpRequest.CorreoElectronico"]').value,
-                direccion: form.querySelector('[name="SignUpRequest.Direccion"]').value
+                cedulaJuridica: document.getElementById("SignUpRequest_CedulaJuridica_CuentaComercio").value,
+                telefono: parseInt(document.getElementById("SignUpRequest_Telefono_CuentaComercio").value) || 0,
+                correoElectronico: document.getElementById("SignUpRequest_CorreoElectronico_CuentaComercio").value,
+                direccion: document.getElementById("SignUpRequest_Direccion_CuentaComercio").value
             };
             apiUrl = "https://localhost:5001/api/CuentaComercio/Create";
         } else if (userType === "InstitucionBancaria") {
