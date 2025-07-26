@@ -1,7 +1,9 @@
 ﻿@page
-@model WebApp.Pages.AdminHomeModel
+@using Microsoft.AspNetCore.Authorization
+@model WebApp.Pages.AdminPages.AdminHomeModel
 @{
 }
+@attribute [Authorize(Roles = "Admin")]
 <script src="~/js/pages/adminhome.js"></script>
 <link href="~/css/AdminHome.css" rel="stylesheet" />
 
@@ -25,7 +27,7 @@
                     <h3>Usuarios</h3>
                     <p>Buscar y administrar usuarios registrados.</p>
                 </a>
-                <a href="../Transactions/transactions.html" class="dashboard-card">
+                <a asp-page="/Transacciones/Transacciones" class="dashboard-card">
                     <img src="../img/transaction.png" alt="Transacciones" />
                     <h3>Transacciones</h3>
                     <p>Buscar y administrar transacciones.</p>
@@ -46,6 +48,11 @@
                     <p>Administrar promociones activas.</p>
                 </a>
             </div>
+            <a class="nav-link text-dark" asp-area="" asp-page="/Transacciones/Transacciones">Transacciones</a>
+             <a class="nav-link text-dark" asp-area="" asp-page="/ClientesPages/ClienteHome">Clientes</a>
+            <a class="nav-link text-dark" asp-area="" asp-page="/ComercioPages/ComercioHome">Comercios</a>
+            <a class="nav-link text-dark" asp-area="" asp-page="/BancoPages/BancoHome">Bancos</a>
+               
         </section>
     </main>
 </body>

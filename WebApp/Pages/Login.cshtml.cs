@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http.Headers;
@@ -9,6 +10,7 @@ using System.Text.Json;
 
 namespace WebApp.Pages
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         [BindProperty]
@@ -69,7 +71,8 @@ namespace WebApp.Pages
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, LoginRequest.Email)
+            new Claim(ClaimTypes.Name, LoginRequest.Email),
+            new Claim(ClaimTypes.Role, LoginRequest.UserType) // Agrega el rol aquí
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -82,11 +85,14 @@ namespace WebApp.Pages
                     IsPersistent = true
                 });
 
-            if (LoginRequest.UserType == "Admin")
+            return LoginRequest.UserType switch
             {
-                return RedirectToPage("/AdminHome");
-            }
-            return RedirectToPage("/AdminHome");
+                "Admin" => RedirectToPage("/AdminPages/AdminHome"),
+                "Cliente" => RedirectToPage("/ClientesPages/ClienteHome"),
+                "CuentaComercio" => RedirectToPage("/ComercioPages/ComercioHome"),
+                "InstitucionBancaria" => RedirectToPage("/BancoPages/BancoHome"),
+                _ => RedirectToPage("/") // en caso de tipo inesperado
+            };
         }
     }
 
