@@ -39,7 +39,12 @@
                 var vc = new CuentaComercioViewController();
                 vc.fillForm(cuentaComercioDTO);
             } else {
-                alert('Comercio no encontrado');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'ID de Comercio requerido',
+                    text: 'Por favor, ingrese un ID válido antes de continuar.',
+                    confirmButtonText: 'Aceptar'
+                });
             }
             // Disparar búsqueda con Enter
             $('#txtSearchComercioId').keyup(function (e) {
@@ -95,7 +100,7 @@
             columns: columns
         });
         //asignar eventos de carga de datos o bindin segun la tabla
-        $('tblcuentaComercio tbody').on('click', 'tr', function () {
+        $('#tblcuentaComercio tbody').on('click', 'tr', function () {
 
             //Extraemos la fila y los datos de la tabla
             var row = $(this).closest("tr");
@@ -106,9 +111,9 @@
             var cuentaComercioDTO = $('#tblcuentaComercio').DataTable().row(this).data();
 
             //Binding en el form
-            $('#txtIdcuenta').val(cuentaComercioDTO.id);
+            $('#txtIdCuenta').val(cuentaComercioDTO.id);
             $('#txtNombreUsuario').val(cuentaComercioDTO.nombreUsuario);
-            $('txtCedulaJuridica').val(cuentaComercioDTO.cedulaJuridica);
+            $('#txtCedulaJuridica').val(cuentaComercioDTO.cedulaJuridica);
             $('#txtTelefono').val(cuentaComercioDTO.telefono);
             $('#txtCorreoElectronico').val(cuentaComercioDTO.correoElectronico);
             $('#txtDireccion').val(cuentaComercioDTO.direccion);
@@ -124,25 +129,19 @@
     };
     this.Create = function () {
         var cuentaComercioDTO = {};
-        //Atributos con valores default, que son coltrolados por el API
-
-        //Valores capturados en pantalla
-        cuentaComercioDTO.id = 0;
+        cuentaComercioDTO.id = $('#txtId').val();
         cuentaComercioDTO.nombreUsuario = $('#txtNombreUsuario').val();
-        cuentaComercioDTO.contrasena = $('#txtContrasena').val(); //Este campo no se muestra en la pantalla, pero es requerido por el API
+        cuentaComercioDTO.contrasena = $('#txtContrasena').val();
         cuentaComercioDTO.cedulaJuridica = $('#txtCedulaJuridica').val();
-        cuentaComercioDTO.telefono = $('#txtTelefono').val();
+        cuentaComercioDTO.telefono = parseInt($('#txtTelefono').val());
         cuentaComercioDTO.correoElectronico = $('#txtCorreoElectronico').val();
         cuentaComercioDTO.direccion = $('#txtDireccion').val();
 
-        //Enviar la data al API
         var ca = new ControlActions();
         var urlService = this.ApiEndPointName + "/Create";
         ca.PostToAPI(urlService, cuentaComercioDTO, function () {
-            //Recargar la tabla
             $('#tblcuentaComercio').DataTable().ajax.reload();
         })
-
     }
     this.Update = function () {
         var cuentaComercioDTO = {};
@@ -198,4 +197,3 @@ $(document).ready(function () {
     var vc = new CuentaComercioViewController();
     vc.InitView();
 })
-    

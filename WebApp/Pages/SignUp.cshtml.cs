@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
@@ -5,6 +6,7 @@ using System.Text.Json;
 
 namespace WebApp.Pages
 {
+    [AllowAnonymous]
     public class SignUpModel : PageModel
     {
         [BindProperty]
@@ -28,13 +30,10 @@ namespace WebApp.Pages
             string apiUrl = SignUpRequest.UserType switch
             {
                 "Cliente" => "https://localhost:5001/api/Cliente/Create",
-                "Admin" => "https://localhost:5001/api/Admin/Create",
                 "CuentaComercio" => "https://localhost:5001/api/CuentaComercio/Create",
                 "InstitucionBancaria" => "https://localhost:5001/api/InstitucionBancaria/Create",
                 _ => throw new Exception("Tipo de usuario no soportado")
             };
-
-            using var httpClient = new HttpClient();
 
             object payload = SignUpRequest.UserType switch
             {
@@ -45,15 +44,11 @@ namespace WebApp.Pages
                     telefono = SignUpRequest.Telefono,
                     correo = SignUpRequest.Correo,
                     direccion = SignUpRequest.Direccion,
-                    contrasena = SignUpRequest.Password, // <-- aquí el cambio
+                    contrasena = SignUpRequest.Password,
                     IBAN = SignUpRequest.IBAN,
                     fotoCedula = SignUpRequest.FotoCedula,
                     fotoPerfil = SignUpRequest.FotoPerfil,
                     fechaNacimiento = SignUpRequest.FechaNacimiento
-                },
-                "Admin" => new {
-                    nombreUsuario = SignUpRequest.NombreUsuario,
-                    contrasena = SignUpRequest.Password // <-- aquí el cambio
                 },
                 "CuentaComercio" => new {
                     nombreUsuario = SignUpRequest.NombreUsuario,
@@ -65,11 +60,11 @@ namespace WebApp.Pages
                 },
                 "InstitucionBancaria" => new {
                     codigoIdentidad = SignUpRequest.CodigoIdentidad,
-                    codigoIBAN = SignUpRequest.CodigoIBAN,
                     cedulaJuridica = SignUpRequest.CedulaJuridica,
                     direccionSedePrincipal = SignUpRequest.DireccionSedePrincipal,
                     telefono = SignUpRequest.Telefono,
-                    correoElectronico = SignUpRequest.CorreoElectronico
+                    correoElectronico = SignUpRequest.CorreoElectronico,
+                    contrasena = SignUpRequest.Password
                 },
                 _ => throw new Exception("Tipo de usuario no soportado")
             };
@@ -77,6 +72,7 @@ namespace WebApp.Pages
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+            using var httpClient = new HttpClient();
             var response = await httpClient.PostAsync(apiUrl, content);
 
             if (!response.IsSuccessStatusCode)
@@ -120,13 +116,6 @@ namespace WebApp.Pages
                         return false;
                     }
                     break;
-                case "Admin":
-                    if (string.IsNullOrWhiteSpace(req.NombreUsuario))
-                    {
-                        error = "El nombre de usuario es obligatorio para el administrador.";
-                        return false;
-                    }
-                    break;
                 case "CuentaComercio":
                     if (string.IsNullOrWhiteSpace(req.NombreUsuario) ||
                         string.IsNullOrWhiteSpace(req.CedulaJuridica) ||
@@ -140,11 +129,11 @@ namespace WebApp.Pages
                     break;
                 case "InstitucionBancaria":
                     if (string.IsNullOrWhiteSpace(req.CodigoIdentidad) ||
-                        string.IsNullOrWhiteSpace(req.CodigoIBAN) ||
                         string.IsNullOrWhiteSpace(req.CedulaJuridica) ||
                         string.IsNullOrWhiteSpace(req.DireccionSedePrincipal) ||
                         req.Telefono == null ||
-                        string.IsNullOrWhiteSpace(req.CorreoElectronico))
+                        string.IsNullOrWhiteSpace(req.CorreoElectronico) ||
+                        string.IsNullOrWhiteSpace(req.Password))
                     {
                         error = "Todos los campos de institución bancaria son obligatorios.";
                         return false;
@@ -184,7 +173,6 @@ namespace WebApp.Pages
 
         // InstitucionBancaria
         public string CodigoIdentidad { get; set; }
-        public string CodigoIBAN { get; set; }
         public string DireccionSedePrincipal { get; set; }
         public string EstadoSolicitud { get; set; }
     }

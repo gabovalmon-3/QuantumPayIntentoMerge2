@@ -5,12 +5,12 @@ BEGIN
     SELECT 
         idInstBancaria,
         codigoIdentidad,
-        codigoIBAN,
         cedulaJuridica,
         direccionSedePrincipal,
         telefono,
         estadoSolicitud,
-        correoElectronico
+        correoElectronico,
+        contrasena
     FROM institucionBancaria
     WHERE telefono = @P_telefono
 END

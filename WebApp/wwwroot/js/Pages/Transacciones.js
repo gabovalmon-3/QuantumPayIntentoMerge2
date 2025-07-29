@@ -1,22 +1,39 @@
-﻿function TransaccionesViewController() {
+﻿
+function TransaccionesViewController() {
     const ca = new ControlActions();
+    const self = this;
     this.Api = "Transaccion";
 
     this.initView = function () {
+        this.bindFilterPlaceholder();
         this.loadTable();
         this.bindEvents();
         console.log("Transacciones init → OK");
     };
 
+    this.bindFilterPlaceholder = function () {
+        $('#transaccionFiltro').on('change', function () {
+            const tipo = $(this).val();
+            const $input = $('#filtroValor');
+            if (tipo === 'banco') {
+                $input.prop('disabled', false).attr('placeholder', 'Ingrese IBAN');
+            } else if (tipo === 'comercio') {
+                $input.prop('disabled', false).attr('placeholder', 'Ingrese ID de Comercio');
+            } else {
+                $input.val('').prop('disabled', true).attr('placeholder', 'IBAN o ID de Comercio');
+            }
+        }).trigger('change');
+    };
+
     this.loadTable = function () {
         const filtro = $('#transaccionFiltro').val();
-        const valor = $('#filtroValor').val();
+        const valor = $('#filtroValor').val().trim();
         let endpoint = `${this.Api}/RetrieveAll`;
 
-        if (filtro === "banco" && valor) {
-            endpoint = `${this.Api}/RetrieveByBanco?iban=${valor}`;
-        } else if (filtro === "comercio" && valor) {
-            endpoint = `${this.Api}/RetrieveByComercio?idComercio=${valor}`;
+        if (filtro === 'banco' && valor) {
+            endpoint = `${this.Api}/RetrieveByBanco?iban=${encodeURIComponent(valor)}`;
+        } else if (filtro === 'comercio' && valor) {
+            endpoint = `${this.Api}/RetrieveByComercio?idComercio=${encodeURIComponent(valor)}`;
         }
 
         const url = ca.GetUrlApiService(endpoint);
@@ -42,15 +59,15 @@
     };
 
     this.bindEvents = function () {
-        $('#btnBuscar').click(() => this.loadTable());
+        $('#btnBuscar').on('click', () => this.loadTable());
 
-        $('#transaccionFiltro').change(function () {
+        $('#transaccionFiltro').on('change', function () {
             if (this.value === 'all') {
                 $('#filtroValor').val('');
             }
         });
 
-        $('#btnCreate').click(() => {
+        $('#btnCreate').on('click', () => {
             const dto = {
                 idCuentaBancaria: $('#txtIdCuentaBancaria').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
@@ -63,7 +80,7 @@
             ca.PostToAPI(`${this.Api}/Create`, dto, () => this.loadTable());
         });
 
-        $('#btnUpdate').click(() => {
+        $('#btnUpdate').on('click', () => {
             const id = parseInt($('#txtId').val(), 10);
             const dto = {
                 id,
@@ -78,7 +95,7 @@
             ca.PutToAPI(`${this.Api}/${id}`, dto, () => this.loadTable());
         });
 
-        $('#btnDelete').click(() => {
+        $('#btnDelete').on('click', () => {
             const id = parseInt($('#txtId').val(), 10);
             ca.DeleteToAPI(`${this.Api}/Delete/${id}`, {}, () => this.loadTable());
         });
@@ -97,6 +114,4 @@
     };
 }
 
-$(document).ready(() => {
-    new TransaccionesViewController().initView();
-});
+$(document).ready(() => new TransaccionesViewController().initView());
