@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
             try
             {
                 var tm = new TransaccionManager();
-                await Task.Run(() => tm.Registrar(transaccion)); // If Registrar is not async
+                await Task.Run(() => tm.Registrar(transaccion));
                 return Ok(transaccion);
             }
             catch (Exception ex)
@@ -32,9 +32,9 @@ namespace WebAPI.Controllers
         {
             try
             {
-                transaccion.Id = id; // Asegúrate de asignar el id del path
+                transaccion.Id = id;
                 var tm = new TransaccionManager();
-                tm.Actualizar(transaccion); // Debes tener este método en tu Manager
+                tm.Actualizar(transaccion);
                 return Ok(transaccion);
             }
             catch (Exception ex)

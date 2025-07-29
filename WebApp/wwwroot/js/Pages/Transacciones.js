@@ -1,35 +1,30 @@
-﻿// wwwroot/js/pages/Transacciones.js
-function TransaccionesViewController() {
+﻿function TransaccionesViewController() {
     const ca = new ControlActions();
-    const self = this;
-
     this.Api = "Transaccion";
 
     this.initView = function () {
-        this.loadTable(); // Carga por defecto "todas"
+        this.loadTable();
         this.bindEvents();
         console.log("Transacciones init → OK");
-        this.loadTable();
     };
 
     this.loadTable = function () {
         const filtro = $('#transaccionFiltro').val();
         const valor = $('#filtroValor').val();
+        let endpoint = `${this.Api}/RetrieveAll`;
 
-        let endpoint = "";
         if (filtro === "banco" && valor) {
-            endpoint = `Transaccion/RetrieveByBanco?iban=${valor}`;
+            endpoint = `${this.Api}/RetrieveByBanco?iban=${valor}`;
         } else if (filtro === "comercio" && valor) {
-            endpoint = `Transaccion/RetrieveByComercio?idComercio=${valor}`;
-        } else {
-            endpoint = `Transaccion/RetrieveAll`;
+            endpoint = `${this.Api}/RetrieveByComercio?idComercio=${valor}`;
         }
+
         const url = ca.GetUrlApiService(endpoint);
 
         if (!$.fn.dataTable.isDataTable('#tblTransacciones')) {
             $('#tblTransacciones').DataTable({
                 processing: true,
-                ajax: { url: url, dataSrc: '' },
+                ajax: { url, dataSrc: '' },
                 columns: [
                     { data: 'id' },
                     { data: 'idCuentaBancaria' },
@@ -47,22 +42,16 @@ function TransaccionesViewController() {
     };
 
     this.bindEvents = function () {
-        var self = this;
-        // Botón para recargar según el filtro
-        $('#btnBuscar').click(function () {
-            self.loadTable();
-        });
+        $('#btnBuscar').click(() => this.loadTable());
 
-        // Recargar automáticamente al cambiar el filtro (opcional)
         $('#transaccionFiltro').change(function () {
-            if ($(this).val() === "all") {
+            if (this.value === 'all') {
                 $('#filtroValor').val('');
             }
         });
 
-        // CRUD (igual que antes)
-        $('#btnCreate').click(function () {
-            var dto = {
+        $('#btnCreate').click(() => {
+            const dto = {
                 idCuentaBancaria: $('#txtIdCuentaBancaria').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
                 monto: parseFloat($('#txtMonto').val()),
@@ -71,13 +60,13 @@ function TransaccionesViewController() {
                 fecha: $('#txtFecha').val(),
                 metodoPago: $('#txtMetodoPago').val()
             };
-            ca.PostToAPI(self.Api + "/Create", dto, () => self.loadTable());
+            ca.PostToAPI(`${this.Api}/Create`, dto, () => this.loadTable());
         });
 
-        $('#btnUpdate').click(function () {
-            var id = parseInt($('#txtId').val(), 10); // Debe estar cargado al seleccionar una fila de la tabla
-            var dto = {
-                id: id,
+        $('#btnUpdate').click(() => {
+            const id = parseInt($('#txtId').val(), 10);
+            const dto = {
+                id,
                 idCuentaBancaria: $('#txtIdCuentaBancaria').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
                 monto: parseFloat($('#txtMonto').val()),
@@ -86,13 +75,16 @@ function TransaccionesViewController() {
                 fecha: $('#txtFecha').val(),
                 metodoPago: $('#txtMetodoPago').val()
             };
-            ca.PutToAPI(self.Api + "/" + id, dto, () => self.loadTable());
+            ca.PutToAPI(`${this.Api}/${id}`, dto, () => this.loadTable());
         });
 
-
+        $('#btnDelete').click(() => {
+            const id = parseInt($('#txtId').val(), 10);
+            ca.DeleteToAPI(`${this.Api}/Delete/${id}`, {}, () => this.loadTable());
+        });
 
         $('#tblTransacciones tbody').on('click', 'tr', function () {
-            var data = $('#tblTransacciones').DataTable().row(this).data();
+            const data = $('#tblTransacciones').DataTable().row(this).data();
             $('#txtId').val(data.id);
             $('#txtIdCuentaBancaria').val(data.idCuentaBancaria);
             $('#txtIdCuentaComercio').val(data.idCuentaComercio);
@@ -105,6 +97,6 @@ function TransaccionesViewController() {
     };
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
     new TransaccionesViewController().initView();
 });
