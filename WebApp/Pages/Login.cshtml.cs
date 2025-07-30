@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http.Headers;
@@ -9,6 +10,7 @@ using System.Text.Json;
 
 namespace WebApp.Pages
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         [BindProperty]
@@ -22,29 +24,55 @@ namespace WebApp.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            // Validación manual según el tipo de usuario
+            if (string.IsNullOrWhiteSpace(LoginRequest.UserType) || string.IsNullOrWhiteSpace(LoginRequest.Email))
             {
-                ErrorMessage = "Datos inválidos.";
+                ErrorMessage = "Debe ingresar el tipo de usuario y el correo.";
                 return Page();
             }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(LoginRequest.Password))
+                {
+                    ErrorMessage = "Debe ingresar la contraseña.";
+                    return Page();
+                }
+            }
+
+            string apiUrl = LoginRequest.UserType switch
+            {
+                "Cliente" => "https://localhost:5001/api/Cliente/Login",
+                "Admin" => "https://localhost:5001/api/Admin/Login",
+                "CuentaComercio" => "https://localhost:5001/api/CuentaComercio/Login",
+                "InstitucionBancaria" => "https://localhost:5001/api/InstitucionBancaria/Login",
+                _ => throw new Exception("Tipo de usuario no soportado")
+            };
 
             using var httpClient = new HttpClient();
-            var apiUrl = "https://localhost:7085/api/CuentaComercio/Login";
 
-            var json = JsonSerializer.Serialize(LoginRequest);
+            object loginPayload = LoginRequest.UserType switch
+            {
+                "Admin" => new { UserName = LoginRequest.Email, Password = LoginRequest.Password },
+                "CuentaComercio" => new { Email = LoginRequest.Email, Password = LoginRequest.Password },
+                "InstitucionBancaria" => new { Email = LoginRequest.Email, Password = LoginRequest.Password },
+                _ => new { Email = LoginRequest.Email, Password = LoginRequest.Password }
+            };
+
+            var json = JsonSerializer.Serialize(loginPayload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await httpClient.PostAsync(apiUrl, content);
 
             if (!response.IsSuccessStatusCode)
             {
-                ErrorMessage = "Usuario o contraseña incorrectos.";
+                ErrorMessage = "Usuario o credenciales incorrectos.";
                 return Page();
             }
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, LoginRequest.Email)
+            new Claim(ClaimTypes.Name, LoginRequest.Email),
+            new Claim(ClaimTypes.Role, LoginRequest.UserType) // Agrega el rol aquí
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -57,13 +85,21 @@ namespace WebApp.Pages
                     IsPersistent = true
                 });
 
-            return RedirectToPage("/Index");
+            return LoginRequest.UserType switch
+            {
+                "Admin" => RedirectToPage("/AdminPages/AdminHome"),
+                "Cliente" => RedirectToPage("/ClientesPages/ClienteHome"),
+                "CuentaComercio" => RedirectToPage("/ComercioPages/ComercioHome"),
+                "InstitucionBancaria" => RedirectToPage("/BancoPages/BancoHome"),
+                _ => RedirectToPage("/") // en caso de tipo inesperado
+            };
         }
     }
 
     public class LoginRequestModel
     {
+        public string UserType { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 }

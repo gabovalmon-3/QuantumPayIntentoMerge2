@@ -17,45 +17,30 @@ namespace CoreApp
             {
                 var iCrud = new InstitucionBancariaCrudFactory();
 
-                var iExist = iCrud.RetrieveById<InstitucionBancaria>(institucionBancaria.codigoIdentidad);
+                var iExist = iCrud.RetrieveById<InstitucionBancaria>(institucionBancaria.Id);
 
                 if (iExist == null)
                 {
-                    iExist = iCrud.RetrieveByIBAN<InstitucionBancaria>(institucionBancaria.codigoIBAN);
+                    iExist = iCrud.RetrieveByEmail<InstitucionBancaria>(institucionBancaria.correoElectronico);
 
                     if (iExist == null)
                     {
-                        iExist = iCrud.RetrieveByEmail<InstitucionBancaria>(institucionBancaria.correoElectronico);
+                        iExist = iCrud.RetrieveByTelefono<InstitucionBancaria>(institucionBancaria.telefono);
 
-                        if (iExist == null)
+                        if(iExist == null)
                         {
-                            iExist = iCrud.RetrieveByTelefono<InstitucionBancaria>(institucionBancaria.telefono);
+                            iCrud.Create(institucionBancaria);
+                            return;
+                        }
 
-                            if(iExist == null)
-                            {
-                                iCrud.Create(institucionBancaria);
-                            }
-                            else
-                            {
-                                throw new Exception("Ese telefono no esta disponible");
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception("Ese correo electronico no esta disponible.");
-                        }
+                        throw new Exception("Ese telefono no esta disponible");
                     }
-                    else
-                    {
-                        throw new Exception("Ese codigo IBAN no esta disponible");
-                    }
+
+                    throw new Exception("Ese correo electronico no esta disponible.");
                 }
-                else
-                {
-                    throw new Exception("Ese codigo de identidad no esta disponible");
-                }
+
+                throw new Exception("Ese codigo de identidad no esta disponible");
             }
-
             catch (Exception ex)
             {
                 ManageException(ex);
@@ -66,7 +51,6 @@ namespace CoreApp
         {
             var iCrud = new InstitucionBancariaCrudFactory();
             return iCrud.RetrieveAll<InstitucionBancaria>();
-
         }
 
         public InstitucionBancaria RetrieveById(int Id)
@@ -81,13 +65,7 @@ namespace CoreApp
             return iCrud.RetrieveByEmail<InstitucionBancaria>(correoElectronico);
         }
 
-        public InstitucionBancaria RetrieveByIBAN(int codigoIBAN)
-        {
-            var iCrud = new InstitucionBancariaCrudFactory();
-            return iCrud.RetrieveByIBAN<InstitucionBancaria>(codigoIBAN);
-        }
-
-        public InstitucionBancaria RetrieveByCodigoIdentidad(int institucionBancaria)
+        public InstitucionBancaria RetrieveByCodigoIdentidad(string institucionBancaria)
         {
             var iCrud = new InstitucionBancariaCrudFactory();
             return iCrud.RetrieveByCodigoIdentidad<InstitucionBancaria>(institucionBancaria);

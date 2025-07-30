@@ -24,12 +24,11 @@ namespace WebAPI.Controllers
         {
             try
             {
+                Console.WriteLine($"[CREATE] Registro de cliente: correo={cliente.correo}, contrasena={cliente.contrasena}");
                 //VERIFICADORES
 
                 var emailVerifier = new EmailVerificationManager(); //instancia del verificador de email
                 var smsVerifier = new SmsVerificationManager(); // instancia del verificador de SMS
-
-
 
                 // Verificar código OTP email 1
                 bool emailVerified = emailVerifier.VerifyCode(cliente.correo, emailCode);
@@ -37,7 +36,12 @@ namespace WebAPI.Controllers
                     return BadRequest("Código de verificación de email inválido.");
 
                 // Verificar código OTP de SMS
-                bool smsVerified = smsVerifier.VerifyCode(cliente.telefono.ToString(), smsCode);
+                if (string.IsNullOrWhiteSpace(smsCode))
+                {
+                    Console.WriteLine("[CREATE] smsCode vacío o nulo.");
+                    return BadRequest("El código de verificación SMS es requerido.");
+                }
+                bool smsVerified = smsVerifier.VerifyCode(cliente.telefono, smsCode);
                 if (!smsVerified)
                     return BadRequest("Código de verificación SMS inválido.");
 
@@ -51,7 +55,22 @@ namespace WebAPI.Controllers
 
                 var faceVerifier = new FaceRecognitionManager(awsAccessKeyId, awsSecretKey, region);
 
-                // Convertir imágenes base64 a byte[]
+                if (cliente == null)
+                {
+                    Console.WriteLine("[CREATE] Cliente is null.");
+                    return BadRequest("Cliente data is missing.");
+                }
+                if (string.IsNullOrWhiteSpace(cliente.fotoCedula) || string.IsNullOrWhiteSpace(cliente.fotoPerfil))
+                {
+                    Console.WriteLine("[CREATE] fotoCedula or fotoPerfil is null or empty.");
+                    return BadRequest("Las imágenes son requeridas.");
+                }
+                if (!IsBase64String(cliente.fotoCedula) || !IsBase64String(cliente.fotoPerfil))
+                {
+                    Console.WriteLine("[CREATE] Invalid base64 for images.");
+                    return BadRequest("Las imágenes deben estar en formato base64 válido.");
+                }
+
                 byte[] cedulaBytes = Convert.FromBase64String(cliente.fotoCedula);
                 byte[] selfieBytes = Convert.FromBase64String(cliente.fotoPerfil);
 
@@ -62,12 +81,16 @@ namespace WebAPI.Controllers
 
                 //SI PASA LAS VERIFICACIONES, CREAR EL CLIENTE
 
+                cliente.contrasena = BCrypt.Net.BCrypt.HashPassword(cliente.contrasena);
+
                 var cm = new ClienteManager();
                 await cm.Create(cliente);
+                Console.WriteLine("[CREATE] Cliente creado exitosamente.");
                 return Ok(cliente);
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"[CREATE] Excepción: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -95,8 +118,12 @@ namespace WebAPI.Controllers
             {
                 var cm = new ClienteManager();
                 var result = cm.RetrieveById(Id);
+                if (result == null)
+                {
+                    return Ok(new List<object>());
+                }
 
-                return Ok(result);
+                return Ok(new List<object> { result });
             }
             catch (Exception ex)
             {
@@ -113,7 +140,12 @@ namespace WebAPI.Controllers
                 var cm = new ClienteManager();
                 var result = cm.RetrieveByEmail(correo);
 
-                return Ok(result);
+                if (result == null)
+                {
+                    return Ok(new List<object>());
+                }
+
+                return Ok(new List<object> { result });
             }
             catch (Exception ex)
             {
@@ -130,7 +162,12 @@ namespace WebAPI.Controllers
                 var cm = new ClienteManager();
                 var result = cm.RetrieveByCedula(cedula);
 
-                return Ok(result);
+                if (result == null)
+                {
+                    return Ok(new List<object>());
+                }
+
+                return Ok(new List<object> { result });
             }
             catch (Exception ex)
             {
@@ -140,14 +177,19 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("RetrieveByTelefono")]
-        public ActionResult RetrieveByTelefono(int telefono)
+        public ActionResult RetrieveByTelefono(string telefono)
         {
             try
             {
                 var cm = new ClienteManager();
                 var result = cm.RetrieveByTelefono(telefono);
 
-                return Ok(result);
+                if (result == null)
+                {
+                    return Ok(new List<object>());
+                }
+
+                return Ok(new List<object> { result });
             }
             catch (Exception ex)
             {
@@ -161,6 +203,11 @@ namespace WebAPI.Controllers
         {
             try
             {
+                if (!string.IsNullOrWhiteSpace(cliente.contrasena))
+                {
+                    cliente.contrasena = BCrypt.Net.BCrypt.HashPassword(cliente.contrasena);
+                }
+
                 var cm = new ClienteManager();
                 var updatedCliente = cm.Update(cliente);
                 return Ok(updatedCliente);
@@ -226,18 +273,32 @@ namespace WebAPI.Controllers
         {
             try
             {
+                Console.WriteLine($"[LOGIN] Email recibido: {request.Email}");
+                Console.WriteLine($"[LOGIN] Password recibido: {request.Password}");
+
                 var cm = new ClienteManager();
                 var user = cm.RetrieveByEmail(request.Email);
+
                 if (user == null)
+                {
+                    Console.WriteLine("[LOGIN] Usuario no encontrado en la base de datos.");
                     return Unauthorized("Usuario o contraseña incorrectos.");
+                }
+
+                Console.WriteLine($"[LOGIN] Hash almacenado en BD: {user.contrasena}");
 
                 if (!BCrypt.Net.BCrypt.Verify(request.Password, user.contrasena))
+                {
+                    Console.WriteLine("[LOGIN] Contraseña incorrecta.");
                     return Unauthorized("Usuario o contraseña incorrectos.");
+                }
 
+                Console.WriteLine("[LOGIN] Login exitoso.");
                 return Ok(new { Message = "Login exitoso", UserId = user.Id });
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"[LOGIN] Excepción: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -250,5 +311,58 @@ namespace WebAPI.Controllers
             return Ok(new { Message = "Sesión cerrada correctamente." });
         }
 
+        [HttpPost]
+        [Route("SendPasswordResetCode")]
+        public ActionResult SendPasswordResetCode([FromBody] string email)
+        {
+            try
+            {
+                var user = new ClienteManager().RetrieveByEmail(email);
+                if (user == null)
+                    return NotFound("Usuario no encontrado.");
+
+                var emailVerifier = new EmailVerificationManager();
+                emailVerifier.SendVerificationCode(email);
+                return Ok("Código de recuperación enviado por email.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        public ActionResult ResetPassword([FromBody] DTOs.PasswordResetRequest request)
+        {
+            try
+            {
+                var emailVerifier = new EmailVerificationManager();
+                bool verified = emailVerifier.VerifyCode(request.email, request.Code);
+                if (!verified)
+                    return BadRequest("Código de verificación inválido.");
+
+                var cm = new ClienteManager();
+                var user = cm.RetrieveByEmail(request.email);
+                if (user == null)
+                    return NotFound("Usuario no encontrado.");
+
+                user.contrasena = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+                cm.Update(user);
+                return Ok("Contraseña actualizada correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        private bool IsBase64String(string base64)
+        {
+            if (string.IsNullOrWhiteSpace(base64))
+                return false;
+            Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
+            return Convert.TryFromBase64String(base64, buffer, out _);
+        }
     }
 }

@@ -1,111 +1,94 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("create-account-form");
+    const userTypeSelect = document.getElementById("UserType");
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        // Validar campos principales
-        const fullname = document.getElementById("fullname").value.trim();
-        const identification = document.getElementById("identification").value.trim();
-        const phone = "+506" + document.getElementById("phone").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const confirmPassword = document.getElementById("confirm-password").value.trim();
-        const selfie = document.getElementById("selfie").files[0];
-        const cedula = document.getElementById("cedula").files[0];
+        const userType = userTypeSelect.value;
 
-        if (password !== confirmPassword) {
-            await Swal.fire('Error', 'Las contraseñas no coinciden.', 'error');
-            return;
-        }
+        let data = {};
+        let apiUrl = "";
 
-        // 1. Enviar OTPs
-        try {
-            await Promise.all([
-                fetch(`/api/Cliente/SendEmailVerification?email=${encodeURIComponent(email)}`),
-                fetch(`/api/Cliente/SendSmsVerification?telefono=${encodeURIComponent(phone)}`)
-            ]);
-        } catch (err) {
-            await Swal.fire('Error', 'Error al enviar códigos OTP.', 'error');
-            return;
-        }
-
-        // 2. Pedir códigos al usuario con Swal inputs
-        const { value: emailCode } = await Swal.fire({
-            title: 'Código de verificación',
-            input: 'text',
-            inputLabel: 'Ingresa el código que recibiste por correo',
-            inputValidator: value => !value && 'Debes ingresar el código'
-        });
-
-        if (!emailCode) return;
-
-        const { value: smsCode } = await Swal.fire({
-            title: 'Código de verificación',
-            input: 'text',
-            inputLabel: 'Ingresa el código que recibiste por SMS',
-            inputValidator: value => !value && 'Debes ingresar el código'
-        });
-
-        if (!smsCode) return;
-
-        // 3. Verificar códigos
-        try {
-            const otpResp = await fetch(`/api/Otp/Verify?email=${encodeURIComponent(email)}&telefono=${encodeURIComponent(phone)}&emailCode=${emailCode}&smsCode=${smsCode}`);
-            const otpData = await otpResp.json();
-            if (!otpResp.ok || !otpData.success) {
-                await Swal.fire('Error', 'Códigos incorrectos.', 'error');
-                return;
-            }
-        } catch {
-            await Swal.fire('Error', 'Error verificando códigos.', 'error');
-            return;
-        }
-
-        // 4. Verificación facial
-        let facialPassed = false;
-        try {
-            const formData = new FormData();
-            formData.append("selfie", selfie);
-            formData.append("cedula", cedula);
-            const facialResp = await fetch("/api/Verificacion/Facial", {
-                method: "POST",
-                body: formData
-            });
-            const facialData = await facialResp.json();
-            facialPassed = facialData.aprobado;
-        } catch {
-            await Swal.fire('Error', 'Error en verificación facial.', 'error');
-            return;
-        }
-
-        await Swal.fire(
-            facialPassed ? 'Verificación aprobada' : 'Verificación fallida',
-            facialPassed ? 'La verificación facial fue exitosa.' : 'La verificación facial falló.',
-            facialPassed ? 'success' : 'error'
-        );
-        if (!facialPassed) return;
-
-        // 5. Crear cuenta
-        try {
-            const data = {
-                nombre: fullname,
-                cedula: identification,
-                telefono: phone,
-                correo: email,
-                contrasena: password
+        if (userType === "Cliente") {
+            data = {
+                nombre: form.querySelector('[name="SignUpRequest.Nombre"]').value,
+                apellido: form.querySelector('[name="SignUpRequest.Apellido"]').value,
+                cedula: form.querySelector('[name="SignUpRequest.Cedula"]').value,
+                telefono: parseInt(form.querySelector('[name="SignUpRequest.Telefono"]').value),
+                correo: form.querySelector('[name="SignUpRequest.Correo"]').value,
+                direccion: form.querySelector('[name="SignUpRequest.Direccion"]').value,
+                contrasena: form.querySelector('[name="SignUpRequest.Password"]').value,
+                IBAN: form.querySelector('[name="SignUpRequest.IBAN"]').value,
+                fotoCedula: "",
+                fotoPerfil: "",
+                fechaNacimiento: form.querySelector('[name="SignUpRequest.FechaNacimiento"]').value
             };
-            const createResp = await fetch(`/api/Cliente/Create?emailCode=${emailCode}&smsCode=${smsCode}`, {
+            apiUrl = "https://localhost:5001/api/Cliente/Create";
+        } else if (userType === "Admin") {
+            data = {
+                nombreUsuario: form.querySelector('[name="SignUpRequest.NombreUsuario"]').value,
+                contrasena: form.querySelector('[name="SignUpRequest.Password"]').value
+            };
+            apiUrl = "https://localhost:5001/api/Admin/Create";
+        } else if (userType === "CuentaComercio") {
+            data = {
+                nombreUsuario: document.getElementById("SignUpRequest_NombreUsuario_CuentaComercio").value,
+                contrasena: form.querySelector('[name="SignUpRequest.Password"]').value,
+                cedulaJuridica: document.getElementById("SignUpRequest_CedulaJuridica_CuentaComercio").value,
+                telefono: parseInt(document.getElementById("SignUpRequest_Telefono_CuentaComercio").value) || 0,
+                correoElectronico: document.getElementById("SignUpRequest_CorreoElectronico_CuentaComercio").value,
+                direccion: document.getElementById("SignUpRequest_Direccion_CuentaComercio").value
+            };
+            apiUrl = "https://localhost:5001/api/CuentaComercio/Create";
+        } else if (userType === "InstitucionBancaria") {
+            data = {
+                codigoIdentidad: document.getElementById("SignUpRequest_CodigoIdentidad").value,
+                cedulaJuridica: document.getElementById("SignUpRequest_CedulaJuridica_InstitucionBancaria").value,
+                direccionSedePrincipal: document.getElementById("SignUpRequest_DireccionSedePrincipal").value,
+                telefono: parseInt(document.getElementById("SignUpRequest_Telefono_InstitucionBancaria").value, 10),
+                correoElectronico: document.getElementById("SignUpRequest_CorreoElectronico_InstitucionBancaria").value,
+                contrasena: form.querySelector('[name="SignUpRequest.Password"]').value,
+                estadoSolicitud: "Pendiente"
+            };
+            apiUrl = "https://localhost:5001/api/InstitucionBancaria/Create";
+        } else {
+            alert("Seleccione un tipo de usuario válido.");
+            return;
+        }
+
+        try {
+            const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             });
-            if (!createResp.ok) throw new Error();
 
-            await Swal.fire('Éxito', 'Cuenta creada con éxito.', 'success');
-            window.location.href = "/index.html";
-        } catch {
-            await Swal.fire('Error', 'No se pudo crear la cuenta.', 'error');
+            if (response.ok) {
+                alert("Registro exitoso. Ahora puede iniciar sesión.");
+                window.location.href = "/Login";
+            } else {
+                const error = await response.text();
+                alert("Error al registrar el usuario: " + error);
+            }
+        } catch (err) {
+            alert("Error de red o del servidor.");
         }
     });
+
+    const allFields = document.querySelectorAll(".user-fields");
+
+    function showFieldsForType(type) {
+        allFields.forEach(f => f.style.display = "none");
+        if (!type) return;
+        const className = "user-" + type.toLowerCase();
+        const fields = document.querySelectorAll("." + className);
+        fields.forEach(f => f.style.display = "block");
+    }
+
+    userTypeSelect.addEventListener("change", function () {
+        showFieldsForType(this.value);
+    });
+
+    showFieldsForType(userTypeSelect.value);
 });
