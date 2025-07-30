@@ -40,7 +40,7 @@ namespace DataAccess.CRUD
         {
             var lstAdmins = new List<T>();
 
-            var sqlOperation = new SQLOperation() { ProcedureName = "RET_ALL_ADMIN_PR" };
+            var sqlOperation = new SQLOperation() { ProcedureName = "RET_ALL_ADMINS_PR" };
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -75,18 +75,18 @@ namespace DataAccess.CRUD
             return default(T);
         }
 
-        public T RetrieveById<T>(Admin admin)
+        public override T RetrieveById<T>(int Id)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_ADMIN_BY_ID_PR" };
 
-            sqlOperation.AddIntParam("P_Id", admin.Id);
+            sqlOperation.AddIntParam("@P_idAdmin", Id);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
             {
                 var row = lstResult[0];
-                admin = BuildAdmin(row);
+                var admin = BuildAdmin(row);
                 return (T)Convert.ChangeType(admin, typeof(T));
             }
 
@@ -98,11 +98,9 @@ namespace DataAccess.CRUD
             var admin = baseDTO as Admin;
             var sqlOperation = new SQLOperation() { ProcedureName = "UPD_ADMIN_PR" };
 
-            sqlOperation.AddIntParam("P_Id", admin.Id);
-            sqlOperation.AddDateTimeParam("P_Created", admin.Created);
-            sqlOperation.AddDateTimeParam("P_Updated", admin.Updated);
-            sqlOperation.AddStringParameter("P_NombreUsuario", admin.nombreUsuario);
-            sqlOperation.AddStringParameter("P_Contrasena", admin.contrasena);
+            sqlOperation.AddIntParam("P_idAdmin", admin.Id);
+            sqlOperation.AddStringParameter("P_nombreUsuario", admin.nombreUsuario);
+            sqlOperation.AddStringParameter("P_contrasena", admin.contrasena);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
@@ -112,7 +110,7 @@ namespace DataAccess.CRUD
         {
             var admin = baseDTO as Admin;
             var sqlOperation = new SQLOperation() { ProcedureName = "DEL_ADMIN_PR" };
-            sqlOperation.AddIntParam("P_Id", admin.Id);
+            sqlOperation.AddIntParam("P_idAdmin", admin.Id);
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
@@ -121,17 +119,11 @@ namespace DataAccess.CRUD
         {
             return new Admin()
             {
-                Id = (int)row["Id"],
-                Created = row["Created"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Created"],
-                Updated = row["Updated"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Updated"],
-                nombreUsuario = row["NombreUsuario"].ToString(),
-                contrasena = row["Contrasena"].ToString()
+                Id = (int)row["idAdmin"],
+                nombreUsuario = row["nombreUsuario"].ToString(),
+                contrasena = row["contrasena"].ToString()
             };
         }
 
-        public override T RetrieveById<T>()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

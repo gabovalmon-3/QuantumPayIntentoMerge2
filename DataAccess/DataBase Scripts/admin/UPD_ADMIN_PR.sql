@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE UPD_ADMIN_PR
 @P_idAdmin INT,
 @P_nombreUsuario NVARCHAR(20),
-@P_contrasena NVARCHAR(20)
+@P_contrasena NVARCHAR(120)
 AS
 BEGIN
     UPDATE admin

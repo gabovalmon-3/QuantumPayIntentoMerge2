@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE CRE_CUENTACOMERCIO_PR
     @P_nombreUsuario NVARCHAR(20),
-    @P_contrasena NVARCHAR(20),
+    @P_contrasena NVARCHAR(120),
     @P_cedulaJuridica NVARCHAR(20),
     @P_telefono INT,
     @P_correoElectronico NVARCHAR(50),

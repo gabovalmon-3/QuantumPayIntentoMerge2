@@ -19,8 +19,8 @@ namespace DataAccess.CRUD
             op.AddIntParam("P_IdInstitucionBancaria", c.IdInstitucionBancaria);
             if (c.IdCuentaComercio.HasValue)
                 op.AddIntParam("P_IdCuentaComercio", c.IdCuentaComercio.Value);
-            op.AddDoubleParam("P_Porcentaje", (double)c.Porcentaje);
-            op.AddDoubleParam("P_MontoMaximo", (double)c.MontoMaximo);
+            op.AddDecimalParam("P_Porcentaje", c.Porcentaje, 5, 4);
+            op.AddDecimalParam("P_MontoMaximo", c.MontoMaximo, 18, 2);
             _sqlDao.ExecuteProcedure(op);
         }
 
@@ -32,8 +32,8 @@ namespace DataAccess.CRUD
             op.AddIntParam("P_IdInstitucionBancaria", c.IdInstitucionBancaria);
             if (c.IdCuentaComercio.HasValue)
                 op.AddIntParam("P_IdCuentaComercio", c.IdCuentaComercio.Value);
-            op.AddDoubleParam("P_Porcentaje", (double)c.Porcentaje);
-            op.AddDoubleParam("P_MontoMaximo", (double)c.MontoMaximo);
+            op.AddDecimalParam("P_Porcentaje", c.Porcentaje, 5, 4);
+            op.AddDecimalParam("P_MontoMaximo", c.MontoMaximo, 18, 2);
             _sqlDao.ExecuteProcedure(op);
         }
 
@@ -46,7 +46,7 @@ namespace DataAccess.CRUD
         }
 
         public override T Retrieve<T>() => throw new NotImplementedException();
-        public override T RetrieveById<T>() => throw new NotImplementedException();
+        public override T RetrieveById<T>(int Id) => throw new NotImplementedException();
 
         public T RetrieveById<T>(Comision c)
         {

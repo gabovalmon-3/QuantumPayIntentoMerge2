@@ -1,0 +1,84 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization
+@model WebApp.Pages.AdminPages.AutorizacionBancoModel
+@{
+}
+@attribute [Authorize(Roles = "Admin")]
+<script src="~/js/pages/autorizacionbanco.js"></script>
+
+<div class="text-end">
+    <a asp-page="/AdminPages/AdminHome" class="btn btn-outline-dark">⬅️ Volver</a>
+</div>
+<div class="    bs-docs-section">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    🏦 Instituciones Bancarias Registradas
+                </div>
+                <div class="card-body" style="overflow-x: auto; width: 100%;">
+                    <table id="tblinstitucionBancaria" class="table table-bordered table-striped table-hover" style="min-width: 600px; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Código Identidad</th>
+                                <th>Cédula Jurídica</th>
+                                <th>Dirección</th>
+                                <th>telefono</th>
+                                <th>Estado Solicitud</th>
+                                <th>Correo Electrónico</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ns-component">
+                <form>
+                    <fieldset>
+                        <legend>Banco</legend>
+                        <div class="form-group">
+                            <label for="txtId" class="form-label mt-$">ID Institucion Bancaria</label>
+                            <input id="txtId" readonly type="number" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtCedulaJuridica" class="form-label mt-$">Cédula Jurídica</label>
+                            <input id="txtCedulaJuridica" readonly type="text" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtDireccionSedePrincipal" class="form-label mt-$">Dirección Sede Principal</label>
+                            <input id="txtDireccionSedePrincipal" readonly type="text" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtTelefono" class="form-label mt-$">Teléfono</label>
+                            <input id="txtTelefono" readonly type="number" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtCorreoElectronico" class="form-label mt-$">Correo Electronico</label>
+                            <input id="txtCorreoElectronico" readonly type="text" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <select for="txtEstadoSolicitud" class="form-select mt-3" id="txtEstadoSolicitud">
+                                <option>PENDIENTE</option>
+                                <option>APROBADO</option>
+                                <option>RECHAZADO</option>
+                            </select>
+                        </div>
+                        
+                    </fieldset>
+                </form>
+                <br />
+                <button id="btnUpdate" class="source-button btn btn-info btn-xs" type="button">Update</button>
+                
+            </div>
+        </div>
+    </div>
+</div>

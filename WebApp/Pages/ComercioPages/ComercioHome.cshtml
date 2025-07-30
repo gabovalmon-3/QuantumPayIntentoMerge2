@@ -1,0 +1,73 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization
+@model WebApp.Pages.ComercioPages.ComercioHomeModel
+@{
+}
+@attribute [Authorize(Roles = "CuentaComercio")]
+<h2 class="mb-4">Panel del Comercio</h2>
+
+<div class="row">
+    <!-- Sección Últimos Pagos -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                Últimos Pagos Realizados
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Monto</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan Pérez</td>
+                            <td>₡12,000</td>
+                            <td>24/07/2025</td>
+                            <td><span class="badge bg-success">Completado</span></td>
+                        </tr>
+                        <tr>
+                            <td>Ana Gómez</td>
+                            <td>₡5,500</td>
+                            <td>23/07/2025</td>
+                            <td><span class="badge bg-success">Completado</span></td>
+                        </tr>
+                        <tr>
+                            <td>Carlos Ruiz</td>
+                            <td>₡9,800</td>
+                            <td>22/07/2025</td>
+                            <td><span class="badge bg-danger">Fallido</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección Solicitar Pago con QR -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                Solicitar Pago
+            </div>
+            <div class="card-body qr-container">
+                <p>Solicite un pago escaneando el siguiente código QR:</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tupago.com/solicitar/123456" alt="Código QR">
+                <br>
+                <button class="btn btn-outline-primary mt-3">Generar Nuevo QR</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="footer-links">
+    <a asp-page="/ComercioPages/AdministrarComercios" class="btn btn-outline-primary me-2">➕ Agregar Administrador</a>
+    <a asp-page="/ComercioPages/CrearPromocion" class="btn btn-outline-secondary me-2">🔖 Administrar Promociones</a>
+    <a asp-page="/ComercioPages/Transacciones" class="btn btn-outline-secondary me-2">📄 Ver Todas las Transacciones</a>
+</div>

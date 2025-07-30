@@ -25,6 +25,8 @@ namespace DataAccess.CRUD
             sqlOperation.ProcedureName = "CRE_COMERCIO_PR";
 
             sqlOperation.AddStringParameter("P_Nombre", comercio.Nombre);
+            sqlOperation.AddIntParam("P_idCuenta", comercio.IdCuenta);
+            sqlOperation.AddStringParameter("P_estadoSolicitud", comercio.estadoSolicitud);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
 
@@ -39,7 +41,7 @@ namespace DataAccess.CRUD
         {
             var lstComercios = new List<T>();
 
-            var sqlOperation = new SQLOperation() { ProcedureName = "RET_ALL_COMCERCIO_PR" };
+            var sqlOperation = new SQLOperation() { ProcedureName = "RET_ALL_COMERCIO_PR" };
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
@@ -55,36 +57,36 @@ namespace DataAccess.CRUD
             return lstComercios;
         }
 
-        public T RetrieveById<T>(Comercio comercio)
+        public override T RetrieveById<T>(int Id)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_COMERCIO_BY_ID_PR" };
 
-            sqlOperation.AddIntParam("P_Id", comercio.Id);
+            sqlOperation.AddIntParam("P_idComercio", Id);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
             {
                 var row = lstResult[0];
-                comercio = BuildComercio(row);
+                var comercio = BuildComercio(row);
                 return (T)Convert.ChangeType(comercio, typeof(T));
             }
 
             return default(T);
         }
 
-        public T RetrieveByComercioName<T>(Comercio comercio)
+        public T RetrieveByComercioName<T>(string nombre)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_COMERCIO_BY_NAME_PR" };
 
-            sqlOperation.AddStringParameter("P_Nombre", comercio.Nombre);
+            sqlOperation.AddStringParameter("P_nombre", nombre);
 
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
             {
                 var row = lstResult[0];
-                comercio = BuildComercio(row);
+                var comercio = BuildComercio(row);
 
                 return (T)Convert.ChangeType(comercio, typeof(T));
             }
@@ -97,11 +99,10 @@ namespace DataAccess.CRUD
             var comercio = baseDTO as Comercio;
             var sqlOperation = new SQLOperation() { ProcedureName = "UPD_COMERCIO_PR" };
 
-            sqlOperation.AddIntParam("P_Id", comercio.Id);
-            sqlOperation.AddIntParam("P_IdCuenta", comercio.IdCuenta);
-            sqlOperation.AddDateTimeParam("P_Created", comercio.Created);
-            sqlOperation.AddDateTimeParam("P_Updated", comercio.Updated);
-            sqlOperation.AddStringParameter("P_Nombre", comercio.Nombre);
+            sqlOperation.AddIntParam("P_idComercio", comercio.Id);
+            sqlOperation.AddIntParam("P_idCuenta", comercio.IdCuenta);
+            sqlOperation.AddStringParameter("P_nombre", comercio.Nombre);
+            sqlOperation.AddStringParameter("P_estadoSolicitud", comercio.estadoSolicitud);
 
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
@@ -111,7 +112,7 @@ namespace DataAccess.CRUD
         {
             var comercio = baseDTO as Comercio;
             var sqlOperation = new SQLOperation() { ProcedureName = "DEL_COMERCIO_PR" };
-            sqlOperation.AddIntParam("P_Id", comercio.Id);
+            sqlOperation.AddIntParam("P_idComercio", comercio.Id);
             _sqlDao.ExecuteProcedure(sqlOperation);
         }
 
@@ -120,18 +121,13 @@ namespace DataAccess.CRUD
         {
             return new Comercio()
             {
-                Id = (int)row["Id"],
-                IdCuenta = (int)row["IdCuenta"],
-                Created = row["Created"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Created"],
-                Updated = row["Updated"] == DBNull.Value ? DateTime.MinValue : (DateTime)row["Updated"],
-                Nombre = row["Nombre"].ToString()
+                Id = (int)row["idComercio"],
+                IdCuenta = (int)row["idCuenta"],
+                Nombre = row["nombre"].ToString(),
+                estadoSolicitud = row["estadoSolicitud"].ToString()
             };
         }
 
-        public override T RetrieveById<T>()
-        {
-            throw new NotImplementedException();
-        }
 
         public T RetrieveByEmail<T>(T comercio)
         {

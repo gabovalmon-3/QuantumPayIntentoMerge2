@@ -1,0 +1,59 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization
+@model WebApp.Pages.AdminPages.AdminHomeModel
+@{
+}
+@attribute [Authorize(Roles = "Admin")]
+<script src="~/js/pages/adminhome.js"></script>
+<link href="~/css/AdminHome.css" rel="stylesheet" />
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel de Administración - QuantumPay</title>
+    <link rel="icon" href="../img/QuantumPayIcon.png" type="image/png" />
+</head>
+<body>
+
+    <div id="header-container"></div>
+
+    <main>
+        <section class="admin-dashboard-container">
+            <h2>Panel de Administración</h2>
+
+            <div class="dashboard-grid">
+                <a asp-page="/AdminPages/Clientes" class="dashboard-card">
+                    <img src="../img/users.png" alt="Usuarios" />
+                    <h3>Usuarios</h3>
+                    <p>Buscar Usuarios Registrados.</p>
+                </a>
+                <a asp-page="/AdminPages/Transacciones" class="dashboard-card">
+                    <img src="../img/transaction.png" alt="Transacciones" />
+                    <h3>Transacciones</h3>
+                    <p>Ver Transacciones.</p>
+                </a>
+                <a asp-page="/AdminPages/AutorizacionComercio" class="dashboard-card">
+                    <img src="../img/business.png" alt="Comercios" />
+                    <h3>Comercios</h3>
+                    <p>Administrar Comercios.</p>
+                </a>
+                <a asp-page="/AdminPages/AutorizacionBanco" class="dashboard-card">
+                    <img src="../img/bank.png" alt="Bancos" />
+                    <h3>Instituciones Bancarias</h3>
+                    <p>Administrar instituciones bancarias.</p>
+                </a>
+                <a asp-page="/AdminPages/Promociones" class="dashboard-card">
+                    <img src="../img/promotion.png" alt="Promociones" />
+                    <h3>Promociones</h3>
+                    <p>Ver Promociones</p>
+                </a>
+                <a asp-page="/Comisiones/Comisiones" class="dashboard-card">
+                    <img src="../img/percentage.png" alt="Comisiones" />
+                    <h3>Comisiones</h3>
+                    <p>Ver Comisiones</p>
+                </a>
+            </div>
+             
+        </section>
+    </main>
+</body>
