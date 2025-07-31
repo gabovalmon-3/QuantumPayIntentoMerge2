@@ -15,7 +15,7 @@
                 nombre: form.querySelector('[name="SignUpRequest.Nombre"]').value,
                 apellido: form.querySelector('[name="SignUpRequest.Apellido"]').value,
                 cedula: form.querySelector('[name="SignUpRequest.Cedula"]').value,
-                telefono: parseInt(form.querySelector('[name="SignUpRequest.Telefono"]').value),
+                telefono: form.querySelector('[name="SignUpRequest.Telefono"]').value,
                 correo: form.querySelector('[name="SignUpRequest.Correo"]').value,
                 direccion: form.querySelector('[name="SignUpRequest.Direccion"]').value,
                 contrasena: form.querySelector('[name="SignUpRequest.Password"]').value,
@@ -24,7 +24,16 @@
                 fotoPerfil: "",
                 fechaNacimiento: form.querySelector('[name="SignUpRequest.FechaNacimiento"]').value
             };
-            apiUrl = "https://localhost:5001/api/Cliente/Create";
+            // Step 1: Send verification codes
+            await fetch("https://localhost:5001/api/Cliente/SendSmsVerification?telefono=" + encodeURIComponent(data.telefono));
+            await fetch("https://localhost:5001/api/Cliente/SendEmailVerification?email=" + encodeURIComponent(data.correo));
+
+            // Step 2: Prompt user for codes
+            const smsCode = prompt("Ingrese el código de verificación recibido por SMS:");
+            const emailCode = prompt("Ingrese el código de verificación recibido por Email:");
+
+            // Step 3: Add codes as query parameters
+            apiUrl = `https://localhost:5001/api/Cliente/Create?emailCode=${encodeURIComponent(emailCode)}&smsCode=${encodeURIComponent(smsCode)}`;
         } else if (userType === "Admin") {
             data = {
                 nombreUsuario: form.querySelector('[name="SignUpRequest.NombreUsuario"]').value,
@@ -65,6 +74,22 @@
             });
 
             if (response.ok) {
+                if (userType === "Cliente") {
+                    // Send verification code to phone
+                    await fetch("https://localhost:5001/api/Cliente/SendPhoneVerificationCode", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ telefono: data.telefono })
+                    });
+
+                    // Send verification code to email
+                    await fetch("https://localhost:5001/api/Cliente/SendEmailVerificationCode", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ correo: data.correo })
+                    });
+                }
+
                 alert("Registro exitoso. Ahora puede iniciar sesión.");
                 window.location.href = "/Login";
             } else {
