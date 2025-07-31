@@ -1,39 +1,22 @@
-﻿
-function TransaccionesViewController() {
+﻿function TransaccionesViewController() {
     const ca = new ControlActions();
-    const self = this;
     this.Api = "Transaccion";
 
     this.initView = function () {
-        this.bindFilterPlaceholder();
         this.loadTable();
         this.bindEvents();
         console.log("Transacciones init → OK");
     };
 
-    this.bindFilterPlaceholder = function () {
-        $('#transaccionFiltro').on('change', function () {
-            const tipo = $(this).val();
-            const $input = $('#filtroValor');
-            if (tipo === 'banco') {
-                $input.prop('disabled', false).attr('placeholder', 'Ingrese IBAN');
-            } else if (tipo === 'comercio') {
-                $input.prop('disabled', false).attr('placeholder', 'Ingrese ID de Comercio');
-            } else {
-                $input.val('').prop('disabled', true).attr('placeholder', 'IBAN o ID de Comercio');
-            }
-        }).trigger('change');
-    };
-
     this.loadTable = function () {
         const filtro = $('#transaccionFiltro').val();
-        const valor = $('#filtroValor').val().trim();
+        const valor = $('#filtroValor').val();
         let endpoint = `${this.Api}/RetrieveAll`;
 
-        if (filtro === 'banco' && valor) {
-            endpoint = `${this.Api}/RetrieveByBanco?iban=${encodeURIComponent(valor)}`;
-        } else if (filtro === 'comercio' && valor) {
-            endpoint = `${this.Api}/RetrieveByComercio?idComercio=${encodeURIComponent(valor)}`;
+        if (filtro === "banco" && valor) {
+            endpoint = `${this.Api}/RetrieveByBanco?iban=${valor}`;
+        } else if (filtro === "comercio" && valor) {
+            endpoint = `${this.Api}/RetrieveByComercio?idComercio=${valor}`;
         }
 
         const url = ca.GetUrlApiService(endpoint);
@@ -41,7 +24,17 @@ function TransaccionesViewController() {
         if (!$.fn.dataTable.isDataTable('#tblTransacciones')) {
             $('#tblTransacciones').DataTable({
                 processing: true,
-                ajax: { url, dataSrc: '' },
+                ajax: {
+                    url: url,
+                    dataSrc: function (json) {
+                        console.log("Respuesta API →", json);
+                        return json;
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error AJAX DataTable:", status, error);
+                        console.log("Response text:", xhr.responseText);
+                    }
+                },
                 columns: [
                     { data: 'id' },
                     { data: 'idCuentaBancaria' },
@@ -58,16 +51,17 @@ function TransaccionesViewController() {
         }
     };
 
-    this.bindEvents = function () {
-        $('#btnBuscar').on('click', () => this.loadTable());
 
-        $('#transaccionFiltro').on('change', function () {
+    this.bindEvents = function () {
+        $('#btnBuscar').click(() => this.loadTable());
+
+        $('#transaccionFiltro').change(function () {
             if (this.value === 'all') {
                 $('#filtroValor').val('');
             }
         });
 
-        $('#btnCreate').on('click', () => {
+        $('#btnCreate').click(() => {
             const dto = {
                 idCuentaBancaria: $('#txtIdCuentaBancaria').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
@@ -80,7 +74,7 @@ function TransaccionesViewController() {
             ca.PostToAPI(`${this.Api}/Create`, dto, () => this.loadTable());
         });
 
-        $('#btnUpdate').on('click', () => {
+        $('#btnUpdate').click(() => {
             const id = parseInt($('#txtId').val(), 10);
             const dto = {
                 id,
@@ -95,7 +89,7 @@ function TransaccionesViewController() {
             ca.PutToAPI(`${this.Api}/${id}`, dto, () => this.loadTable());
         });
 
-        $('#btnDelete').on('click', () => {
+        $('#btnDelete').click(() => {
             const id = parseInt($('#txtId').val(), 10);
             ca.DeleteToAPI(`${this.Api}/Delete/${id}`, {}, () => this.loadTable());
         });
@@ -114,4 +108,6 @@ function TransaccionesViewController() {
     };
 }
 
-$(document).ready(() => new TransaccionesViewController().initView());
+$(document).ready(() => {
+    new TransaccionesViewController().initView();
+});
