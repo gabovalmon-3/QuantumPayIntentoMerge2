@@ -1,0 +1,87 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization
+@model WebApp.Pages.SignUpModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/SignUp.css" />
+}
+
+@section Scripts {
+    <script src="~/js/pages/RegistroUsuario.js"></script>
+}
+@attribute [AllowAnonymous]
+<section class="create-account-container">
+    <h2>Crear una nueva cuenta</h2>
+    <form id="create-account-form" method="post" enctype="multipart/form-data" autocomplete="off">
+        <label for="UserType">Tipo de usuario</label>
+        <select asp-for="SignUpRequest.UserType" id="UserType" name="SignUpRequest.UserType" required>
+            <option value="">Seleccione...</option>
+            <option value="Cliente">Cliente</option>
+            <option value="CuentaComercio">Comercio</option>
+            <option value="InstitucionBancaria">Institución Bancaria</option>
+        </select>
+
+        <!-- Campos Cliente -->
+        <div class="user-fields user-cliente" style="display:none;">
+            <label>Nombre</label>
+            <input asp-for="SignUpRequest.Nombre" />
+            <label>Apellido</label>
+            <input asp-for="SignUpRequest.Apellido" />
+            <label>Cédula</label>
+            <input asp-for="SignUpRequest.Cedula" />
+            <label>Teléfono</label>
+            <input asp-for="SignUpRequest.Telefono" />
+            <label>Correo</label>
+            <input asp-for="SignUpRequest.Correo" />
+            <label>Dirección</label>
+            <input asp-for="SignUpRequest.Direccion" />
+            <label>Foto de la cédula</label>
+            <input type="file" id="FotoCedula" name="FotoCedula" />
+            <label>Foto de perfil</label>
+            <input type="file" id="FotoPerfil" name="FotoPerfil" />
+            <label>Fecha de nacimiento</label>
+            <input asp-for="SignUpRequest.FechaNacimiento" type="date" />
+            <label>IBAN</label>
+            <input asp-for="SignUpRequest.IBAN" />
+        </div>
+        <!-- Campos CuentaComercio -->
+        <div class="user-fields user-cuentacomercio" style="display:none;">
+            <label>Nombre de Usuario</label>
+            <input asp-for="SignUpRequest.NombreUsuario" id="SignUpRequest_NombreUsuario_CuentaComercio" name="SignUpRequest.NombreUsuario" />
+            <label>Cédula Jurídica</label>
+            <input asp-for="SignUpRequest.CedulaJuridica" id="SignUpRequest_CedulaJuridica_CuentaComercio" name="SignUpRequest.CedulaJuridica" />
+            <label>Teléfono</label>
+            <input asp-for="SignUpRequest.Telefono" id="SignUpRequest_Telefono_CuentaComercio" name="SignUpRequest.Telefono" />
+            <label>Correo electrónico</label>
+            <input asp-for="SignUpRequest.CorreoElectronico" id="SignUpRequest_CorreoElectronico_CuentaComercio" name="SignUpRequest.CorreoElectronico" />
+            <label>Dirección</label>
+            <input asp-for="SignUpRequest.Direccion" id="SignUpRequest_Direccion_CuentaComercio" name="SignUpRequest.Direccion" />
+        </div>
+
+        <!-- Campos InstitucionBancaria -->
+        <div class="user-fields user-institucionbancaria" style="display:none;">
+            <label>Código Identidad</label>
+            <input asp-for="SignUpRequest.CodigoIdentidad" id="SignUpRequest_CodigoIdentidad" />
+            <label>Cédula Jurídica</label>
+            <input asp-for="SignUpRequest.CedulaJuridica" id="SignUpRequest_CedulaJuridica_InstitucionBancaria" name="SignUpRequest.CedulaJuridica" />
+            <label>Dirección Sede Principal</label>
+            <input asp-for="SignUpRequest.DireccionSedePrincipal" id="SignUpRequest_DireccionSedePrincipal" />
+            <label>Teléfono</label>
+            <input asp-for="SignUpRequest.Telefono" id="SignUpRequest_Telefono_InstitucionBancaria" name="SignUpRequest.Telefono" />
+            <label>Correo electrónico</label>
+            <input asp-for="SignUpRequest.CorreoElectronico" id="SignUpRequest_CorreoElectronico_InstitucionBancaria" name="SignUpRequest.CorreoElectronico" />
+        </div>
+
+        <!-- Campo común -->
+        <label>Contraseña</label>
+        <input asp-for="SignUpRequest.Password" type="password" required minlength="6" />
+
+        <button type="submit">Crear cuenta</button>
+    </form>
+    <p class="login-link">
+        ¿Ya tienes cuenta? <a asp-page="/Login">Inicia sesión aquí</a>
+    </p>
+</section>

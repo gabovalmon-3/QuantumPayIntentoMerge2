@@ -1,0 +1,85 @@
+﻿/* Reiniciar estilos básicos solo para esta vista */
+.create-account-container * {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal centrado */
+.create-account-container {
+    max-width: 500px;
+    margin: 100px auto; /* centro horizontal + separación vertical */
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+    /* Título */
+    .create-account-container h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        color: #333;
+    }
+
+    /* Etiquetas e inputs */
+    .create-account-container label {
+        display: block;
+        margin-bottom: 6px;
+        color: #555;
+        font-weight: bold;
+    }
+
+    .create-account-container input[type="text"],
+    .create-account-container input[type="email"],
+    .create-account-container input[type="password"] {
+        width: 100%;
+        padding: 10px 15px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fff;
+        transition: border-color 0.3s;
+    }
+
+    .create-account-container input:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+    /* Botón de envío */
+    .create-account-container button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .create-account-container button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Mensaje de error o validación */
+    .create-account-container .text-danger {
+        color: red;
+        font-size: 14px;
+        margin-top: -10px;
+        margin-bottom: 15px;
+    }
+
+/* Responsive para móviles */
+@media (max-width: 600px) {
+    .create-account-container {
+        margin: 50px 20px;
+        padding: 30px 20px;
+    }
+
+        .create-account-container h1 {
+            font-size: 24px;
+        }
+}

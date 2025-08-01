@@ -1,0 +1,8 @@
+﻿CREATE PROCEDURE DEL_ADMIN_PR
+@P_idAdmin INT
+AS
+BEGIN
+    DELETE FROM admin
+    WHERE idAdmin = @P_idAdmin
+END
+GO
