@@ -28,11 +28,6 @@ namespace DataAccess.DAOs
             Parameters.Add(new SqlParameter(ParamName, ParamValue));
         }
 
-        public void AddStringParameterT(string paramName, string paramValue)
-        {
-            Parameters.Add(new SqlParameter(paramName, paramValue ?? string.Empty));
-        }
-
         public void AddIntParam(string paramName, int paramValue)
         {
             Parameters.Add(new SqlParameter(paramName, paramValue));
@@ -49,7 +44,6 @@ namespace DataAccess.DAOs
 
         public void AddDecimalParam(string paramName, decimal value, byte precision, byte scale)
         {
-            Console.WriteLine($"[AddDecimalParam] {paramName}: {value} (precision={precision}, scale={scale})");
             var param = new SqlParameter(paramName, System.Data.SqlDbType.Decimal)
             {
                 Precision = precision,
@@ -57,26 +51,6 @@ namespace DataAccess.DAOs
                 Value = value
             };
             Parameters.Add(param);
-        }
-
-        public void AddDecimalParamT(string paramName, decimal value, byte precision, byte scale)
-        {
-            var param = new SqlParameter(paramName, SqlDbType.Decimal)
-            {
-                Precision = precision,
-                Scale = scale,
-                Value = value
-            };
-            Parameters.Add(param);
-        }
-
-        internal void AddVarcharParam(string paramName, string value, int size)
-        {
-            var param = new SqlParameter(paramName, System.Data.SqlDbType.NVarChar, size)
-            {
-                Value = value ?? (object)DBNull.Value
-            };
-            Parameters.Add(param); 
         }
     }
 }
