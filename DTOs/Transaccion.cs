@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTOs
+﻿namespace DTOs
 {
     public class Transaccion : BaseDTO
     {
-        public string IdCuentaBancaria { get; set; }
-
+        public int Id { get; set; }
+        public int IdCuentaBancaria { get; set; }   // ahora INT
+        public string IBAN { get; set; }   // nuevo campo VARCHAR
         public int IdCuentaComercio { get; set; }
         public decimal Monto { get; set; }
         public decimal Comision { get; set; }

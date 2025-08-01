@@ -38,6 +38,7 @@
                 columns: [
                     { data: 'id' },
                     { data: 'idCuentaBancaria' },
+                    { data: 'iban' },                // muestra también la columna IBAN
                     { data: 'idCuentaComercio' },
                     { data: 'monto' },
                     { data: 'comision' },
@@ -51,7 +52,6 @@
         }
     };
 
-
     this.bindEvents = function () {
         $('#btnBuscar').click(() => this.loadTable());
 
@@ -63,7 +63,8 @@
 
         $('#btnCreate').click(() => {
             const dto = {
-                idCuentaBancaria: $('#txtIdCuentaBancaria').val(),
+                idCuentaBancaria: parseInt($('#txtIdCuentaBancaria').val(), 10),
+                iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
                 monto: parseFloat($('#txtMonto').val()),
                 comision: parseFloat($('#txtComision').val()),
@@ -72,16 +73,19 @@
                 metodoPago: $('#txtMetodoPago').val()
             };
             const email = $('#txtEmail').val();
-            ca.PostToAPI(`${this.Api}/Create?email=${encodeURIComponent(email)}`, dto, () => {
-                window.location.href = '/ClientesPages/ClienteHome';
-            });
+            ca.PostToAPI(
+                `${this.Api}/Create?email=${encodeURIComponent(email)}`,
+                dto,
+                () => { window.location.href = '/ClientesPages/ClienteHome'; }
+            );
         });
 
         $('#btnUpdate').click(() => {
             const id = parseInt($('#txtId').val(), 10);
             const dto = {
-                id,
+                id: id,
                 idCuentaBancaria: $('#txtIdCuentaBancaria').val(),
+                iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
                 monto: parseFloat($('#txtMonto').val()),
                 comision: parseFloat($('#txtComision').val()),
@@ -89,7 +93,7 @@
                 fecha: $('#txtFecha').val(),
                 metodoPago: $('#txtMetodoPago').val()
             };
-            ca.PutToAPI(`${this.Api}/${id}`, dto, () => this.loadTable());
+            ca.PutToAPI(`${this.Api}/Update/${id}`, dto, () => this.loadTable());
         });
 
         $('#btnDelete').click(() => {
@@ -97,10 +101,10 @@
             ca.DeleteToAPI(`${this.Api}/Delete/${id}`, {}, () => this.loadTable());
         });
 
-        $('#tblTransacciones tbody').on('click', 'tr', function () {
-            const data = $('#tblTransacciones').DataTable().row(this).data();
-            $('#txtId').val(data.id);
-            $('#txtIdCuentaBancaria').val(data.idCuentaBancaria);
+$('#tblTransacciones tbody').on('click','tr', function(){
+  const data = $('#tblTransacciones').DataTable().row(this).data();
+  $('#txtIdCuentaBancaria').val(data.idCuentaBancaria);
+  $('#IBAN').val(data.iban);
             $('#txtIdCuentaComercio').val(data.idCuentaComercio);
             $('#txtMonto').val(data.monto);
             $('#txtComision').val(data.comision);

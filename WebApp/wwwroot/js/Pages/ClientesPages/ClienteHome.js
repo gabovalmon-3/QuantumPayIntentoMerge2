@@ -1,4 +1,4 @@
-function ClienteHomeController() {
+function ClienteHomePage() {
     const ca = new ControlActions();
     this.apiCuenta = "CuentaCliente";
     this.apiTrans = "Transaccion";
@@ -6,44 +6,28 @@ function ClienteHomeController() {
     this.init = function () {
         this.loadCuentas();
         this.loadTransacciones();
+
+        // Aquí va el listener del botón Nueva Transacción
         $('#btnNuevaTransaccion').click(() => {
-            window.location.href = '/Transacciones/Transacciones';
+            const id = this.getClienteId();
+            const email = $('#hdnClienteEmail').val();
+            window.location.href = `/Transacciones/Transacciones?clienteId=${id}&email=${encodeURIComponent(email)}`;
         });
     };
 
     this.getClienteId = function () {
-        return $('#hdnClienteId').val() || 1;
+        return $('#hdnClienteId').val();
     };
 
     this.loadCuentas = function () {
         const url = ca.GetUrlApiService(`${this.apiCuenta}/RetrieveAll?clienteId=${this.getClienteId()}`);
-        $('#tblCuentasHome').DataTable({
-            destroy: true,
-            ajax: { url: url, dataSrc: '' },
-            columns: [
-                { data: 'banco' },
-                { data: 'tipoCuenta' },
-                { data: 'numeroCuenta' },
-                { data: 'saldo' }
-            ]
-        });
+        // inicializa tu DataTable de cuentas…
     };
 
     this.loadTransacciones = function () {
         const url = ca.GetUrlApiService(`${this.apiTrans}/RetrieveByCliente?clienteId=${this.getClienteId()}`);
-        $('#tblUltimasTransacciones').DataTable({
-            destroy: true,
-            ajax: { url: url, dataSrc: '' },
-            columns: [
-                { data: 'fecha' },
-                { data: 'metodoPago' },
-                { data: 'monto' },
-                { data: 'idCuentaBancaria' }
-            ]
-        });
+        // inicializa tu DataTable de transacciones…
     };
 }
 
-$(document).ready(function () {
-    new ClienteHomeController().init();
-});
+$(document).ready(() => new ClienteHomePage().init());
