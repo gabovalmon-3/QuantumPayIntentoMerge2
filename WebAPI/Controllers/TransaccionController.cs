@@ -77,7 +77,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("RetrieveByBanco")]
+
         public ActionResult<IEnumerable<Transaccion>> RetrieveByBanco([FromQuery] int cuentaId)
+
+        public ActionResult<Transaccion> RetrieveByBanco([FromQuery] int cuentaId)
+
         {
             try
             {
@@ -92,7 +96,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("RetrieveByComercio")]
+
         public ActionResult<IEnumerable<Transaccion>> RetrieveByComercio([FromQuery] int idComercio)
+
+        public ActionResult<Transaccion> RetrieveByComercio([FromQuery] int idComercio)
+
         {
             try
             {
@@ -107,7 +115,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("RetrieveByCliente")]
+
         public ActionResult<IEnumerable<Transaccion>> RetrieveByCliente([FromQuery] int clienteId)
+
+        public ActionResult<Transaccion> RetrieveByCliente([FromQuery] int clienteId)
+
         {
             try
             {
