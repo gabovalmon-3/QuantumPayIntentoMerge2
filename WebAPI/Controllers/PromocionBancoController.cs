@@ -8,16 +8,16 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PromocionController : ControllerBase
+    public class PromocionBancoController : ControllerBase
     {
         [HttpPost]
         [Route("Create")]
-        public async Task<ActionResult> Create(Promocion promocion)
+        public async Task<ActionResult> Create(PromocionBanco promocion)
         {
             try
             {
-                var pm = new PromocionManager();
-                await pm.Create(promocion);
+                var manager = new PromocionBancoManager();
+                await manager.Crear(promocion);
                 return Ok(promocion);
             }
             catch (Exception ex)
@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var pm = new PromocionManager();
+                var pm = new PromocionBancoManager();
                 var lst = pm.RetrieveAll();
                 return Ok(lst);
             }
@@ -48,8 +48,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var pm = new PromocionManager();
-                var promocion = pm.RetrieveById(id);
+                var pm = new PromocionBancoManager();
+                var promocion = pm.OrdenarPorId(id);
                 if (promocion == null)
                 {
                     return Ok(new List<object>());
@@ -65,12 +65,12 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("Update")]
-        public ActionResult Update(Promocion promocion)
+        public ActionResult Update(PromocionBanco promocion)
         {
             try
             {
-                var pm = new PromocionManager();
-                pm.Update(promocion);
+                var pm = new PromocionBancoManager();
+                pm.Actualizar(promocion);
                 return Ok(promocion);
             }
             catch (Exception ex)
@@ -85,8 +85,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var pm = new PromocionManager();
-                pm.Delete(id);
+                var pm = new PromocionBancoManager();
+                pm.Eliminar(id);
                 return Ok(new { Message = $"Promoción con ID {id} eliminada correctamente." });
             }
             catch (Exception ex)
