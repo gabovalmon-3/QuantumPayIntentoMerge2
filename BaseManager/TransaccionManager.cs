@@ -47,6 +47,24 @@ namespace CoreApp
             return cCrud.RetrieveById<Transaccion>(id);
         }
 
+
+        public List<Transaccion> OrdenarPorBanco(int idComercio)
+        {
+            var cCrud = new TransaccionCrudFactory();
+            return cCrud.RetrieveByBanco<List<Transaccion>>(idComercio);
+        }
+
+        public List<Transaccion> OrdenarPorComercio(int idComercio)
+        {
+            var cCrud = new TransaccionCrudFactory();
+            return cCrud.RetrieveByComercio<List<Transaccion>>(idComercio);
+        }
+
+        public List<Transaccion> OrdenarPorCliente(int idCliente)
+        {
+            var cCrud = new TransaccionCrudFactory();
+            return cCrud.RetrieveByCliente<List<Transaccion>>(idCliente);
+
         public Transaccion OrdenarPorBanco(int idComercio)
         {
             var cCrud = new TransaccionCrudFactory();
@@ -63,6 +81,7 @@ namespace CoreApp
         {
             var cCrud = new TransaccionCrudFactory();
             return cCrud.RetrieveByCliente<Transaccion>(idCliente);
+
         }
 
         public Transaccion Update(Transaccion t)
