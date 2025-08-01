@@ -1,89 +1,174 @@
-﻿using BaseManager;
-using CoreApp;
+﻿using Microsoft.AspNetCore.Mvc;
+using BaseManager;
 using DTOs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+using CoreApp;
+using System.Data.SqlClient;
 
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class TransaccionController : ControllerBase
     {
-        [HttpPost("Create")]
-        public async Task<ActionResult<Transaccion>> Create([FromBody] Transaccion transaccion)
+        private readonly TransaccionManager _manager = new();
+
+        [HttpPost]
+        [Route("Create")]
+        public async Task<IActionResult> Crear([FromBody] Transaccion transaccion)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
-                var tm = new TransaccionManager();
-                await Task.Run(() => tm.Registrar(transaccion));
-                return Ok(transaccion);
+                await _manager.Create(transaccion);
+                return Ok(new { message = "Transacción creada exitosamente." });
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    return BadRequest(new { error = "Alguna de las entidades relacionadas (cliente, comercio o banco) no existe o es inválida." });
+                }
+                return BadRequest(new { error = "Error de base de datos: " + ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return BadRequest(new { error = ex.Message });
             }
         }
 
-        // Aquí eliminamos la ambigüedad: solo un atributo HTTP con ruta clara
-        [HttpPut("Update/{id}")]
-        public ActionResult<Transaccion> Update(int id, [FromBody] Transaccion transaccion)
+        [HttpGet]
+        [Route("RetrieveAll")]
+        public ActionResult RetrieveAll()
         {
             try
             {
-                transaccion.Id = id;
-                var tm = new TransaccionManager();
-                tm.Actualizar(transaccion);
-                return Ok(transaccion);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
-
-        [HttpGet("RetrieveAll")]
-        public ActionResult<IEnumerable<Transaccion>> RetrieveAll()
-        {
-            try
-            {
-                var tm = new TransaccionManager();
-                var lstResults = tm.RetrieveAll();
+                var cm = new TransaccionManager();
+                var lstResults = cm.RetrieveAll();
                 return Ok(lstResults);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
-        [HttpGet("RetrieveByBanco")]
-        public ActionResult<List<Transaccion>> RetrieveByBanco([FromQuery] string iban)
+        [HttpGet]
+        [Route("RetrieveById")]
+        public ActionResult RetrieveById(int id)
         {
             try
             {
-                var tm = new TransaccionManager();
-                var lstResults = tm.ObtenerPorBanco(iban) ?? new List<Transaccion>();
-                return Ok(lstResults);
+                var cm = new TransaccionManager();
+                var result = cm.OrdenarPorId(id);
+                if (result == null)
+                {
+                    return Ok(new List<object>());
+                }
+
+                return Ok(new List<object> { result });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
-        [HttpGet("RetrieveByComercio")]
-        public ActionResult<List<Transaccion>> RetrieveByComercio([FromQuery] int idComercio)
+        [HttpGet]
+        [Route("RetrieveByBanco")]
+        public ActionResult RetrieveByBanco(int idCuentaBancaria)
         {
             try
             {
-                var tm = new TransaccionManager();
-                var lstResults = tm.ObtenerPorComercio(idComercio) ?? new List<Transaccion>();
-                return Ok(lstResults);
+                var cm = new TransaccionManager();
+                var result = cm.OrdenarPorBanco(idCuentaBancaria);
+                if (result == null)
+                {
+                    return Ok(new List<object>());
+                }
+
+                return Ok(new List<object> { result });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("RetrieveByComercio")]
+        public ActionResult RetrieveByComercio(int idComercio)
+        {
+            try
+            {
+                var cm = new TransaccionManager();
+                var result = cm.OrdenarPorComercio(idComercio);
+                if (result == null)
+                {
+                    return Ok(new List<object>());
+                }
+
+                return Ok(new List<object> { result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("RetrieveByCliente")]
+        public ActionResult RetrieveByCliente(int idCliente)
+        {
+            try
+            {
+                var cm = new TransaccionManager();
+                var result = cm.OrdenarPorCliente(idCliente);
+                if (result == null)
+                {
+                    return Ok(new List<object>());
+                }
+
+                return Ok(new List<object> { result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("Update")]
+        public IActionResult Update([FromBody] Transaccion transaccion)
+        {
+            try
+            {
+                _manager.Update(transaccion);
+                return Ok(new { message = "Transacción actualizada exitosamente." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                var cm = new TransaccionManager();
+                var existing = cm.OrdenarPorId(id);
+                cm.Delete(id);
+                return Ok(new { Message = $"Transaccion con ID {id} eliminado correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
     }

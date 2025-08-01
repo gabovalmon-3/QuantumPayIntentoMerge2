@@ -190,11 +190,5 @@ namespace DataAccess.CRUD
                 IBAN = row["IBAN"].ToString()
             };
         }
-
-
-        public T RetrieveByEmail<T>(T cliente)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
