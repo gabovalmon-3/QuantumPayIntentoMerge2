@@ -1,4 +1,4 @@
-﻿using CoreApp;
+using CoreApp;
 using DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

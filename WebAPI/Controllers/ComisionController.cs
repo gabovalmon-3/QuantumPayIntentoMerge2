@@ -1,4 +1,4 @@
-﻿using BaseManager;
+using BaseManager;
 using DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System;

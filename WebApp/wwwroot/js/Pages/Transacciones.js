@@ -64,15 +64,13 @@ this.getClienteId = function () {
         const ddlCuentas = $('#ddlCuentas');
         const ddlComercios = $('#ddlComercios');
         if (ddlCuentas.length) {
-            const url = ca.GetUrlApiService(`${this.ApiCuenta}/RetrieveAll?clienteId=${this.getClienteId()}`);
-            ca.GetToApi(url, (data) => {
+            ca.GetToApi(`${this.ApiCuenta}/RetrieveAll?clienteId=${this.getClienteId()}`,(data) => {
                 ddlCuentas.empty();
                 data.forEach(d => ddlCuentas.append(new Option(d.numeroCuenta, d.id)));
             });
         }
         if (ddlComercios.length) {
-            const urlc = ca.GetUrlApiService(`${this.ApiComercio}/RetrieveAll`);
-            ca.GetToApi(urlc, (data) => {
+            ca.GetToApi(`${this.ApiComercio}/RetrieveAll`, (data) => {
                 ddlComercios.empty();
                 data.forEach(c => ddlComercios.append(new Option(c.nombre, c.id)));
             });
