@@ -1,13 +1,18 @@
 ﻿function TransaccionesViewController() {
-    const ca = new ControlActions();
-    this.Api = "Transaccion";
-    this.getClienteId = function () {
+const ca = new ControlActions();
+this.Api = "Transaccion";
+this.ApiCuenta = "CuentaCliente";
+this.ApiComercio = "Comercio";
+this.getClienteId = function () {
         return parseInt($("#hdnClienteId").val() || "0", 10);
     };
 
 
     this.initView = function () {
-        this.loadTable();
+        if ($('#tblTransacciones').length) {
+            this.loadTable();
+        }
+        this.loadDropdowns();
         this.bindEvents();
         console.log("Transacciones init → OK");
     };
@@ -18,7 +23,7 @@
         let endpoint = `${this.Api}/RetrieveAll`;
 
         if (filtro === "banco" && valor) {
-            endpoint = `${this.Api}/RetrieveByBanco?iban=${valor}`;
+            endpoint = `${this.Api}/RetrieveByBanco?cuentaId=${valor}`;
         } else if (filtro === "comercio" && valor) {
             endpoint = `${this.Api}/RetrieveByComercio?idComercio=${valor}`;
         }
@@ -42,7 +47,6 @@
                 columns: [
                     { data: 'id' },
                     { data: 'idCuentaBancaria' },
-                    { data: 'iban' },                // muestra también la columna IBAN
                     { data: 'idCuentaComercio' },
                     { data: 'monto' },
                     { data: 'comision' },
@@ -56,6 +60,25 @@
         }
     };
 
+    this.loadDropdowns = function () {
+        const ddlCuentas = $('#ddlCuentas');
+        const ddlComercios = $('#ddlComercios');
+        if (ddlCuentas.length) {
+            const url = ca.GetUrlApiService(`${this.ApiCuenta}/RetrieveAll?clienteId=${this.getClienteId()}`);
+            ca.GetToApi(url, (data) => {
+                ddlCuentas.empty();
+                data.forEach(d => ddlCuentas.append(new Option(d.numeroCuenta, d.id)));
+            });
+        }
+        if (ddlComercios.length) {
+            const urlc = ca.GetUrlApiService(`${this.ApiComercio}/RetrieveAll`);
+            ca.GetToApi(urlc, (data) => {
+                ddlComercios.empty();
+                data.forEach(c => ddlComercios.append(new Option(c.nombre, c.id)));
+            });
+        }
+    };
+
     this.bindEvents = function () {
         $('#btnBuscar').click(() => this.loadTable());
 
@@ -66,20 +89,15 @@
         });
 
         $('#btnCreate').click(() => {
-            const cuentaVal = $('#txtIdCuentaBancaria').val();
+            const cuenta = $('#ddlCuentas').length ? $('#ddlCuentas').val() : $('#txtIdCuentaBancaria').val();
+            const comercio = $('#ddlComercios').length ? $('#ddlComercios').val() : $('#txtIdCuentaComercio').val();
             const dto = {
-                idCuentaCliente: this.getClienteId(),
-
-                idCuentaBancaria: /^\d+$/.test(cuentaVal) ? parseInt(cuentaVal, 10) : 0,
-                iban: $('#IBAN').val(),
-                idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
+                idCuentaBancaria: parseInt(cuenta, 10),
+                idCuentaComercio: parseInt(comercio, 10),
                 monto: parseFloat($('#txtMonto').val()),
-                comision: parseFloat($('#txtComision').val()),
-                descuentoAplicado: parseFloat($('#txtDescuentoAplicado').val()),
-                fecha: $('#txtFecha').val(),
                 metodoPago: $('#txtMetodoPago').val()
             };
-            const email = $('#txtEmail').val();
+            const email = $('#hdnEmail').val() || $('#txtEmail').val();
             ca.PostToAPI(
                 `${this.Api}/Create?email=${encodeURIComponent(email)}`,
                 dto,
@@ -92,9 +110,7 @@
             const cuentaValUp = $('#txtIdCuentaBancaria').val();
             const dto = {
                 id: id,
-                idCuentaCliente: this.getClienteId(),
                 idCuentaBancaria: /^\d+$/.test(cuentaValUp) ? parseInt(cuentaValUp, 10) : 0,
-                iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
                 monto: parseFloat($('#txtMonto').val()),
                 comision: parseFloat($('#txtComision').val()),
@@ -113,8 +129,7 @@
 $('#tblTransacciones tbody').on('click','tr', function(){
   const data = $('#tblTransacciones').DataTable().row(this).data();
   $('#txtIdCuentaBancaria').val(data.idCuentaBancaria);
-  $('#IBAN').val(data.iban);
-            $('#txtIdCuentaComercio').val(data.idCuentaComercio);
+  $('#txtIdCuentaComercio').val(data.idCuentaComercio);
             $('#txtMonto').val(data.monto);
             $('#txtComision').val(data.comision);
             $('#txtDescuentoAplicado').val(data.descuentoAplicado);

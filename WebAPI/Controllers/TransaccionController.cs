@@ -77,12 +77,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("RetrieveByBanco")]
-        public ActionResult<List<Transaccion>> RetrieveByBanco([FromQuery] string iban)
+        public ActionResult<List<Transaccion>> RetrieveByBanco([FromQuery] int cuentaId)
         {
             try
             {
                 var tm = new TransaccionManager();
-                var lstResults = tm.ObtenerPorBanco(iban) ?? new List<Transaccion>();
+                var lstResults = tm.ObtenerPorBanco(cuentaId) ?? new List<Transaccion>();
                 return Ok(lstResults);
             }
             catch (Exception ex)

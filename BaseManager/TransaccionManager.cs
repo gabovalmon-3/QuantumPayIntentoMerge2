@@ -11,7 +11,7 @@ namespace BaseManager
 
         public void Registrar(Transaccion t) => crud.Create(t);
 
-        public List<Transaccion> ObtenerPorBanco(string iban) => crud.RetrieveByBanco(iban);
+        public List<Transaccion> ObtenerPorBanco(int cuentaId) => crud.RetrieveByBanco(cuentaId);
 
         public List<Transaccion> ObtenerPorComercio(int idComercio)
             => crud.RetrieveByComercio(idComercio);
