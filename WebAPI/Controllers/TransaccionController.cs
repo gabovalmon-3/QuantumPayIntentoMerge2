@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
             try
             {
                 var tm = new TransaccionManager();
-                await Task.Run(() => tm.Registrar(transaccion));
+                await tm.Create(transaccion);
                 if (!string.IsNullOrWhiteSpace(email))
                 {
                     try
@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
             {
                 transaccion.Id = id;
                 var tm = new TransaccionManager();
-                tm.Actualizar(transaccion);
+                tm.Update(transaccion);
                 return Ok(transaccion);
             }
             catch (Exception ex)
@@ -77,13 +77,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("RetrieveByBanco")]
-        public ActionResult<List<Transaccion>> RetrieveByBanco([FromQuery] int cuentaId)
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByBanco([FromQuery] int cuentaId)
         {
             try
             {
                 var tm = new TransaccionManager();
-                var lstResults = tm.ObtenerPorBanco(cuentaId) ?? new List<Transaccion>();
-                return Ok(lstResults);
+                var result = tm.OrdenarPorBanco(cuentaId);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -92,13 +92,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("RetrieveByComercio")]
-        public ActionResult<List<Transaccion>> RetrieveByComercio([FromQuery] int idComercio)
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByComercio([FromQuery] int idComercio)
         {
             try
             {
                 var tm = new TransaccionManager();
-                var lstResults = tm.ObtenerPorComercio(idComercio) ?? new List<Transaccion>();
-                return Ok(lstResults);
+                var result = tm.OrdenarPorComercio(idComercio);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -107,13 +107,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("RetrieveByCliente")]
-        public ActionResult<List<Transaccion>> RetrieveByCliente([FromQuery] int clienteId)
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByCliente([FromQuery] int clienteId)
         {
             try
             {
                 var tm = new TransaccionManager();
-                var lstResults = tm.ObtenerPorCliente(clienteId) ?? new List<Transaccion>();
-                return Ok(lstResults);
+                var result = tm.OrdenarPorCliente(clienteId);
+                return Ok(result);
             }
             catch (Exception ex)
             {
