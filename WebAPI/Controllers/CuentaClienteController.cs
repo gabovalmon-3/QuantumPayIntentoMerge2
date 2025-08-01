@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
             try
             {
                 var m = new CuentaClienteManager();
-                var list = m.RetrieveByCliente(clienteId);
+                var list = m.Listar(clienteId);
                 return Ok(list);
             }
             catch (Exception ex)
@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
             try
             {
                 var m = new CuentaClienteManager();
-                m.Create(dto);
+                m.Crear(dto);
                 return Ok(dto);
             }
             catch (Exception ex)
@@ -44,7 +44,7 @@ namespace WebAPI.Controllers
             try
             {
                 var m = new CuentaClienteManager();
-                m.Update(dto);
+                m.Actualizar(dto);
                 return Ok(dto);
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
             try
             {
                 var m = new CuentaClienteManager();
-                m.Delete(id);
+                m.Eliminar(id);
                 return Ok();
             }
             catch (Exception ex)

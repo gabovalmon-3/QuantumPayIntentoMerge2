@@ -5,7 +5,8 @@
 }
 @attribute [Authorize(Roles = "Cliente")]
 <h2 class="mb-4">Bienvenido, Cliente</h2>
-<input type="hidden" id="hdnClienteId" value="1" />
+<input type="hidden" id="hdnClienteId" value="@Model.ClienteId" />
+<input type="hidden" id="hdnClienteEmail" value="@Model.ClienteEmail" />
 
 <!-- Sección: Cuentas del Usuario -->
 <div class="row">
