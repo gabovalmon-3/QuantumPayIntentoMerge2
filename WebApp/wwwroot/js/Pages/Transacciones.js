@@ -71,7 +71,10 @@
                 fecha: $('#txtFecha').val(),
                 metodoPago: $('#txtMetodoPago').val()
             };
-            ca.PostToAPI(`${this.Api}/Create`, dto, () => this.loadTable());
+            const email = $('#txtEmail').val();
+            ca.PostToAPI(`${this.Api}/Create?email=${encodeURIComponent(email)}`, dto, () => {
+                window.location.href = '/ClientesPages/ClienteHome';
+            });
         });
 
         $('#btnUpdate').click(() => {

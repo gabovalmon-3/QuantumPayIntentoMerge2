@@ -20,6 +20,11 @@ namespace BaseManager
         {
             return crud.RetrieveAll<Transaccion>();
         }
+
+        public List<Transaccion> ObtenerPorCliente(int clienteId)
+        {
+            return crud.RetrieveByCliente(clienteId);
+        }
         public void Actualizar(Transaccion t) => crud.Update(t);
 
 
