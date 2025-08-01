@@ -1,8 +1,5 @@
-﻿using DTOs;
-using DataAccess.CRUD;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using DataAccess.CRUD;
+using DTOs;
 
 namespace CoreApp
 {
