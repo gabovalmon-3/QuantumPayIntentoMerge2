@@ -1,4 +1,4 @@
-﻿using BaseManager;
+using BaseManager;
 using CoreApp;
 using DTOs;
 using Microsoft.AspNetCore.Http;
@@ -80,7 +80,11 @@ namespace WebAPI.Controllers
 
         public ActionResult<IEnumerable<Transaccion>> RetrieveByBanco([FromQuery] int cuentaId)
 
+
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByBanco([FromQuery] int cuentaId)
+
         public ActionResult<Transaccion> RetrieveByBanco([FromQuery] int cuentaId)
+
 
         {
             try
@@ -99,7 +103,11 @@ namespace WebAPI.Controllers
 
         public ActionResult<IEnumerable<Transaccion>> RetrieveByComercio([FromQuery] int idComercio)
 
+
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByComercio([FromQuery] int idComercio)
+
         public ActionResult<Transaccion> RetrieveByComercio([FromQuery] int idComercio)
+
 
         {
             try
@@ -118,7 +126,11 @@ namespace WebAPI.Controllers
 
         public ActionResult<IEnumerable<Transaccion>> RetrieveByCliente([FromQuery] int clienteId)
 
+
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByCliente([FromQuery] int clienteId)
+
         public ActionResult<Transaccion> RetrieveByCliente([FromQuery] int clienteId)
+
 
         {
             try

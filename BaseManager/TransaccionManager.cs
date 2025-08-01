@@ -13,6 +13,7 @@ namespace CoreApp
             if (transaccion == null)
                 throw new Exception("La transacción no puede ser nula.");
 
+
             if (transaccion.Monto <= 0)
                 throw new Exception("El monto de la transacción debe ser mayor a cero.");
 
@@ -25,6 +26,22 @@ namespace CoreApp
             var comercioExist = comercioCrud.RetrieveById<Comercio>(transaccion.IdCuentaComercio);
             if (comercioExist == null)
                 throw new Exception("El comercio especificado no existe.");
+
+
+
+            if (transaccion.Monto <= 0)
+                throw new Exception("El monto de la transacción debe ser mayor a cero.");
+
+            var clienteCrud = new ClienteCrudFactory();
+            var clienteExist = clienteCrud.RetrieveById<Cliente>(transaccion.IdCuentaCliente);
+            if (clienteExist == null)
+                throw new Exception("El cliente especificado no existe.");
+
+            var comercioCrud = new ComercioCrudFactory();
+            var comercioExist = comercioCrud.RetrieveById<Comercio>(transaccion.IdCuentaComercio);
+            if (comercioExist == null)
+                throw new Exception("El comercio especificado no existe.");
+
 
             var bancoCrud = new InstitucionBancariaCrudFactory();
             var bancoExist = bancoCrud.RetrieveById<InstitucionBancaria>(transaccion.IdCuentaBancaria);
@@ -39,6 +56,34 @@ namespace CoreApp
         {
             var cCrud = new TransaccionCrudFactory();
             return cCrud.RetrieveAll<Transaccion>();
+
+        }
+
+        public Transaccion OrdenarPorId(int id)
+        {
+            var cCrud = new TransaccionCrudFactory();
+            return cCrud.RetrieveById<Transaccion>(id);
+        }
+
+        public List<Transaccion> OrdenarPorBanco(int idComercio)
+        {
+            var cCrud = new TransaccionCrudFactory();
+            return cCrud.RetrieveByBanco<List<Transaccion>>(idComercio);
+        }
+
+        public List<Transaccion> OrdenarPorComercio(int idComercio)
+        {
+            var cCrud = new TransaccionCrudFactory();
+            return cCrud.RetrieveByComercio<List<Transaccion>>(idComercio);
+        }
+
+        public List<Transaccion> OrdenarPorCliente(int idCliente)
+        {
+            var cCrud = new TransaccionCrudFactory();
+            return cCrud.RetrieveByCliente<List<Transaccion>>(idCliente);
+        }
+
+
         }
 
         public Transaccion OrdenarPorId(int id)
@@ -83,6 +128,7 @@ namespace CoreApp
             return cCrud.RetrieveByCliente<Transaccion>(idCliente);
 
         }
+
 
         public Transaccion Update(Transaccion t)
         {

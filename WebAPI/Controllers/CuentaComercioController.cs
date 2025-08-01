@@ -1,4 +1,4 @@
-﻿using BaseManager;
+using BaseManager;
 using BCrypt.Net;
 using CoreApp;
 using DTOs;
