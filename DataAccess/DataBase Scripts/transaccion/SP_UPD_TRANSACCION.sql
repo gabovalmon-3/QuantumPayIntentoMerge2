@@ -14,6 +14,7 @@ BEGIN
     UPDATE dbo.Transaccion
     SET IdCuentaCliente = @P_IdCuentaCliente,
         IdCuentaBancaria = @P_IdCuentaBancaria,
+    SET IdCuentaBancaria = @P_IdCuentaBancaria,
         IBAN = @P_IBAN,
         IdCuentaComercio = @P_IdCuentaComercio,
         Monto = @P_Monto,

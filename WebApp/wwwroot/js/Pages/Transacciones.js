@@ -69,6 +69,7 @@
             const cuentaVal = $('#txtIdCuentaBancaria').val();
             const dto = {
                 idCuentaCliente: this.getClienteId(),
+
                 idCuentaBancaria: /^\d+$/.test(cuentaVal) ? parseInt(cuentaVal, 10) : 0,
                 iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
