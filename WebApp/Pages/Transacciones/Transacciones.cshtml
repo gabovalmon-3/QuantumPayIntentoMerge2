@@ -5,6 +5,8 @@
 }
 
 <a asp-page="/ComercioPages/ComercioHome" class="btn btn-outline-dark">⬅️ Volver</a>
+<input type="hidden" id="hdnClienteId" value="@Model.ClienteId" />
+<input type="hidden" id="hdnEmail" value="@Model.Email" />
 <div class="container mt-4">
     <h2>@ViewData["Title"]</h2>
 
@@ -63,7 +65,7 @@
 
                 <div class="form-group">
                     <label for="txtIdCuentaBancaria">Cuenta Bancaria</label>
-                    <input id="txtIdCuentaBancaria" type="text" class="form-control" />
+                    <input id="txtIdCuentaBancaria" type="number" class="form-control" />
                     <!-- Campo oculto para enviar el IBAN -->
                     <input id="IBAN" name="IBAN" type="hidden" />
                 </div>
@@ -100,7 +102,7 @@
 
                 <div class="form-group">
                     <label for="txtEmail">Correo</label>
-                    <input id="txtEmail" type="email" class="form-control" />
+                    <input id="txtEmail" type="email" value="@Model.Email" class="form-control" />
                 </div>
             </fieldset>
 
@@ -118,10 +120,15 @@
     document.addEventListener("DOMContentLoaded", function() {
         var txtIban = document.getElementById("txtIdCuentaBancaria");
         var hiddenIban = document.getElementById("IBAN");
+        var emailInput = document.getElementById("txtEmail");
+        var hdnEmail = document.getElementById("hdnEmail");
         // Cuando cambie el valor de la cuenta bancaria, actualizamos el campo oculto IBAN
         txtIban.addEventListener("change", function() {
             hiddenIban.value = txtIban.value;
         });
+        if(hdnEmail && emailInput){
+            emailInput.value = hdnEmail.value;
+        }
     });
 </script>
 

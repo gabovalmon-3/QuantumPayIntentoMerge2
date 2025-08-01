@@ -14,6 +14,7 @@ namespace DataAccess.CRUD
             var t = (Transaccion)dto;
             var op = new SQLOperation { ProcedureName = "dbo.SP_INS_TRANSACCION" };
 
+            op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
             op.AddVarcharParam("P_IBAN", t.IBAN, 30);
 
@@ -33,6 +34,7 @@ namespace DataAccess.CRUD
             var op = new SQLOperation { ProcedureName = "dbo.SP_UPD_TRANSACCION" };
 
             op.AddIntParam("P_Id", t.Id);
+            op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
             op.AddVarcharParam("P_IBAN", t.IBAN, 30);
             op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);
@@ -60,6 +62,7 @@ namespace DataAccess.CRUD
                 var x = new Transaccion
                 {
                     Id = (int)r["Id"],
+                    IdCuentaCliente = r.ContainsKey("IdCuentaCliente") ? Convert.ToInt32(r["IdCuentaCliente"]) : 0,
                     IdCuentaBancaria = Convert.ToInt32(r["IdCuentaBancaria"]),
                     IBAN = r["IBAN"].ToString(),
                     IdCuentaComercio = (int)r["IdCuentaComercio"],
@@ -88,6 +91,7 @@ namespace DataAccess.CRUD
                 lst.Add(new Transaccion
                 {
                     Id = (int)r["Id"],
+                    IdCuentaCliente = r.ContainsKey("IdCuentaCliente") ? Convert.ToInt32(r["IdCuentaCliente"]) : 0,
                     IdCuentaBancaria = Convert.ToInt32(r["IdCuentaBancaria"]),
                     IBAN = r["IBAN"].ToString(),
                     IdCuentaComercio = (int)r["IdCuentaComercio"],
@@ -115,6 +119,7 @@ namespace DataAccess.CRUD
                 lst.Add(new Transaccion
                 {
                     Id = (int)r["Id"],
+                    IdCuentaCliente = r.ContainsKey("IdCuentaCliente") ? Convert.ToInt32(r["IdCuentaCliente"]) : 0,
                     IdCuentaBancaria = Convert.ToInt32(r["IdCuentaBancaria"]),
                     IBAN = r["IBAN"].ToString(),
                     IdCuentaComercio = (int)r["IdCuentaComercio"],
@@ -142,6 +147,7 @@ namespace DataAccess.CRUD
                 lst.Add(new Transaccion
                 {
                     Id = (int)r["Id"],
+                    IdCuentaCliente = r.ContainsKey("IdCuentaCliente") ? Convert.ToInt32(r["IdCuentaCliente"]) : 0,
                     IdCuentaBancaria = Convert.ToInt32(r["IdCuentaBancaria"]),
                     IBAN = r["IBAN"].ToString(),
                     IdCuentaComercio = (int)r["IdCuentaComercio"],
