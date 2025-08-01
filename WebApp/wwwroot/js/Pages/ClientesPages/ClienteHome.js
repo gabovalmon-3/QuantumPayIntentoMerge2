@@ -11,7 +11,7 @@ function ClienteHomePage() {
         $('#btnNuevaTransaccion').click(() => {
             const id = this.getClienteId();
             const email = $('#hdnClienteEmail').val();
-            window.location.href = `/Transacciones/Transacciones?clienteId=${id}&email=${encodeURIComponent(email)}`;
+            window.location.href = `/ClientesPages/NuevaTransaccion?clienteId=${id}&email=${encodeURIComponent(email)}`;
         });
     };
 
