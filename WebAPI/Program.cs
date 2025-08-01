@@ -8,6 +8,7 @@ builder.WebHost.UseUrls("http://localhost:5221", "https://localhost:5001");
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<WebAPI.Services.IEmailSender, WebAPI.Services.SendGridEmailSender>();
 
 
 builder.Services.AddCors(options =>
@@ -39,7 +40,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// 3) ¡Importante!  
+// 3) Â¡Importante!  
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

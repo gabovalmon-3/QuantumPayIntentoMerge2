@@ -3,6 +3,7 @@ using CoreApp;
 using DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
@@ -10,13 +11,31 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class TransaccionController : ControllerBase
     {
+        private readonly IEmailSender _emailSender;
+
+        public TransaccionController(IEmailSender emailSender)
+        {
+            _emailSender = emailSender;
+        }
+
         [HttpPost("Create")]
-        public async Task<ActionResult<Transaccion>> Create([FromBody] Transaccion transaccion)
+        public async Task<ActionResult<Transaccion>> Create([FromBody] Transaccion transaccion, [FromQuery] string email)
         {
             try
             {
                 var tm = new TransaccionManager();
                 await Task.Run(() => tm.Registrar(transaccion));
+                if (!string.IsNullOrWhiteSpace(email))
+                {
+                    try
+                    {
+                        await _emailSender.SendEmailAsync(email, "Confirmación de compra", $"Su compra por {transaccion.Monto:C} ha sido procesada.");
+                    }
+                    catch
+                    {
+                        // ignore email send errors
+                    }
+                }
                 return Ok(transaccion);
             }
             catch (Exception ex)
