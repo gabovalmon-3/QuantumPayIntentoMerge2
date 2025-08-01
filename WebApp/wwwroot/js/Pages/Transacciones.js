@@ -62,8 +62,9 @@
         });
 
         $('#btnCreate').click(() => {
+            const cuentaVal = $('#txtIdCuentaBancaria').val();
             const dto = {
-                idCuentaBancaria: parseInt($('#txtIdCuentaBancaria').val(), 10),
+                idCuentaBancaria: /^\d+$/.test(cuentaVal) ? parseInt(cuentaVal, 10) : 0,
                 iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
                 monto: parseFloat($('#txtMonto').val()),
@@ -82,9 +83,10 @@
 
         $('#btnUpdate').click(() => {
             const id = parseInt($('#txtId').val(), 10);
+            const cuentaValUp = $('#txtIdCuentaBancaria').val();
             const dto = {
                 id: id,
-                idCuentaBancaria: parseInt($('#txtIdCuentaBancaria').val(), 10),
+                idCuentaBancaria: /^\d+$/.test(cuentaValUp) ? parseInt(cuentaValUp, 10) : 0,
                 iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
                 monto: parseFloat($('#txtMonto').val()),

@@ -4,7 +4,7 @@
 @{
 }
 @attribute [Authorize(Roles = "Cliente")]
-<input type="hidden" id="hdnClienteId" value="1" />
+<input type="hidden" id="hdnClienteId" value="@Model.ClienteId" />
 
 <div class="text-end">
     <a asp-page="/ClientesPages/ClienteHome" class="btn btn-outline-dark">⬅️ Volver</a>
