@@ -1,5 +1,4 @@
-﻿CREATE PROCEDURE RET_PROMOCION_BY_ID_PR
-    @P_Id INT
+﻿CREATE PROCEDURE RET_ALL_PROMOCIONCOMERCIO_PR
 AS
 BEGIN
     SELECT 
@@ -9,6 +8,5 @@ BEGIN
         Descuento AS descuento,
         FechaInicio AS fechaInicio,
         FechaFin AS fechaFin
-    FROM promocion
-    WHERE Id = @P_Id;
+    FROM promocionComercio;
 END
