@@ -33,7 +33,7 @@ function CuentaClienteController() {
             numeroCuenta: $('#txtNumeroCuenta').val(),
             banco: $('#selectBanco').val(),
             tipoCuenta: $('#selectTipoCuenta').val(),
-            saldo: 0
+            saldo: parseFloat($('#txtSaldo').val() || 0)
         };
         ca.PostToAPI(`${this.Api}/Create`, dto, () => this.loadTable());
     };
