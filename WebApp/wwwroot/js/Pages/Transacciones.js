@@ -84,7 +84,7 @@
             const id = parseInt($('#txtId').val(), 10);
             const dto = {
                 id: id,
-                idCuentaBancaria: $('#txtIdCuentaBancaria').val(),
+                idCuentaBancaria: parseInt($('#txtIdCuentaBancaria').val(), 10),
                 iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
                 monto: parseFloat($('#txtMonto').val()),

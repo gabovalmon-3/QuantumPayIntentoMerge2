@@ -8,9 +8,9 @@ namespace CoreApp
     {
         private readonly ClienteCuentaCrudFactory crud = new();
 
-        public void Create(ClienteCuenta c) => crud.Create(c);
-        public void Update(ClienteCuenta c) => crud.Update(c);
-        public void Delete(int id) => crud.Delete(new ClienteCuenta { Id = id });
-        public List<ClienteCuenta> RetrieveByCliente(int clienteId) => crud.RetrieveByCliente(clienteId);
+        public void Crear(ClienteCuenta c) => crud.Create(c);
+        public void Actualizar(ClienteCuenta c) => crud.Update(c);
+        public void Eliminar(int id) => crud.Delete(new ClienteCuenta { Id = id });
+        public List<ClienteCuenta> Listar(int clienteId) => crud.RetrieveByCliente(clienteId);
     }
 }

@@ -14,9 +14,7 @@ namespace DataAccess.CRUD
             var t = (Transaccion)dto;
             var op = new SQLOperation { ProcedureName = "dbo.SP_INS_TRANSACCION" };
 
-            // IdCuentaBancaria sigue siendo INT para la FK
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
-            // Nuevo parámetro IBAN como VARCHAR
             op.AddVarcharParam("P_IBAN", t.IBAN, 30);
 
             op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);

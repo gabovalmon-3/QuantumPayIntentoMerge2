@@ -3,8 +3,8 @@
     public class Transaccion : BaseDTO
     {
         public int Id { get; set; }
-        public int IdCuentaBancaria { get; set; }   // ahora INT
-        public string IBAN { get; set; }   // nuevo campo VARCHAR
+        public int IdCuentaBancaria { get; set; }
+        public string IBAN { get; set; }
         public int IdCuentaComercio { get; set; }
         public decimal Monto { get; set; }
         public decimal Comision { get; set; }

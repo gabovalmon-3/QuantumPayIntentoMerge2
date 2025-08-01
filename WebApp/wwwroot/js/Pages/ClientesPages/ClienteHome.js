@@ -7,7 +7,7 @@ function ClienteHomePage() {
         this.loadCuentas();
         this.loadTransacciones();
 
-        // Aquí va el listener del botón Nueva Transacción
+        // AquÃ­ va el listener del botÃ³n Nueva TransacciÃ³n
         $('#btnNuevaTransaccion').click(() => {
             const id = this.getClienteId();
             const email = $('#hdnClienteEmail').val();
@@ -21,12 +21,30 @@ function ClienteHomePage() {
 
     this.loadCuentas = function () {
         const url = ca.GetUrlApiService(`${this.apiCuenta}/RetrieveAll?clienteId=${this.getClienteId()}`);
-        // inicializa tu DataTable de cuentas…
+        $('#tblCuentasHome').DataTable({
+            destroy: true,
+            ajax: { url: url, dataSrc: '' },
+            columns: [
+                { data: 'banco' },
+                { data: 'tipoCuenta' },
+                { data: 'numeroCuenta' },
+                { data: 'saldo' }
+            ]
+        });
     };
 
     this.loadTransacciones = function () {
         const url = ca.GetUrlApiService(`${this.apiTrans}/RetrieveByCliente?clienteId=${this.getClienteId()}`);
-        // inicializa tu DataTable de transacciones…
+        $('#tblUltimasTransacciones').DataTable({
+            destroy: true,
+            ajax: { url: url, dataSrc: '' },
+            columns: [
+                { data: 'fecha' },
+                { data: 'metodoPago' },
+                { data: 'monto' },
+                { data: 'id' }
+            ]
+        });
     };
 }
 
