@@ -105,5 +105,20 @@ namespace WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet("RetrieveByCliente")]
+        public ActionResult<List<Transaccion>> RetrieveByCliente([FromQuery] int clienteId)
+        {
+            try
+            {
+                var tm = new TransaccionManager();
+                var lstResults = tm.ObtenerPorCliente(clienteId) ?? new List<Transaccion>();
+                return Ok(lstResults);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

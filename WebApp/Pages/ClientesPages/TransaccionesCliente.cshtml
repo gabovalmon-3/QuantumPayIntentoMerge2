@@ -4,7 +4,7 @@
 @{
 }
 @attribute [Authorize(Roles = "Cliente")]
-<script src="~/js/pages/Transacciones.js"></script>
+<input type="hidden" id="hdnClienteId" value="1" />
 
 <div class="text-end">
     <a asp-page="/ClientesPages/ClienteHome" class="btn btn-outline-dark">⬅️ Volver</a>
@@ -17,7 +17,7 @@
                 🔔 Transacciones Realizadas
             </div>
             <div class="card-body" style="overflow-x: auto; width: 100%;">
-                <table class="table table-bordered table-striped table-hover">
+                <table id="tblTransaccionesCliente" class="table table-bordered table-striped table-hover">
                     <thead class="thead-dark">
                         <tr>
                             <th>ID Transacción</th>
@@ -28,9 +28,15 @@
                             <th>Cuenta Destino</th>
                             <th>Descripción</th>
                         </tr>
-                    </thead>              
+                    </thead>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
+
+<script src="~/js/ControlActions.js"></script>
+@section Scripts {
+    <script src="~/js/Pages/ClientesPages/TransaccionesCliente.js" asp-append-version="true"></script>
+}

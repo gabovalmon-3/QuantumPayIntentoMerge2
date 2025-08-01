@@ -5,6 +5,7 @@
 }
 @attribute [Authorize(Roles = "Cliente")]
 <h2 class="mb-4">Bienvenido, Cliente</h2>
+<input type="hidden" id="hdnClienteId" value="1" />
 
 <!-- Sección: Cuentas del Usuario -->
 <div class="row">
@@ -14,7 +15,7 @@
                 💳 Cuentas Asociadas
             </div>
             <div class="card-body">
-                <table class="table table-bordered table-sm">
+                <table id="tblCuentasHome" class="table table-bordered table-sm">
                     <thead class="table-light">
                         <tr>
                             <th>Banco</th>
@@ -23,21 +24,7 @@
                             <th>Saldo</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!--Implementar traer desde base de datos cuentas registradas por el usuario-->
-                        <tr>
-                            <td>BAC San José</td>
-                            <td>Ahorros</td>
-                            <td>CR12000123456789123456</td>
-                            <td>₡250,000</td>
-                        </tr>
-                        <tr>
-                            <td>Banco Nacional</td>
-                            <td>Corriente</td>
-                            <td>CR05000123456789012345</td>
-                            <td>₡75,500</td>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
@@ -51,7 +38,7 @@
                 🔔 Últimas Transacciones
             </div>
             <div class="card-body">
-                <table class="table table-bordered table-sm-6">
+                <table id="tblUltimasTransacciones" class="table table-bordered table-sm-6">
                     <thead class="table-light">
                         <tr>
                             <th>Fecha</th>
@@ -60,6 +47,7 @@
                             <th>Estado</th>
                         </tr>
                     </thead>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
@@ -70,9 +58,16 @@
 <div class="footer-links">
 
     <a asp-page="/Clientespages/AgregarCuenta" class="btn btn-outline-primary me-2">➕ Agregar Cuenta</a>
+    <button id="btnNuevaTransaccion" class="btn btn-outline-success me-2">💸 Nueva Transacción</button>
     <a asp-page="/ClientesPages/TransaccionesCliente" class="btn btn-outline-secondary me-2">📄 Todas las Transacciones</a>
     <a asp-page="/ClientesPages/Bancos" class="btn btn-outline-secondary me-2">🏦 Bancos Registrados</a>
     <a asp-page="/Clientespages/PromocionesActivas" class="btn btn-outline-secondary me-2">🔖 Promociones Activas</a>
     <a asp-page="/ClientesPages/Comercios" class="btn btn-outline-secondary me-2">🛍️ Comercios Registrados</a>
 
 </div>
+
+<script src="~/js/ControlActions.js"></script>
+@section Scripts {
+    <script src="~/js/Pages/ClientesPages/ClienteHome.js" asp-append-version="true"></script>
+}
+

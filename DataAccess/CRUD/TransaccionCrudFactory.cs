@@ -112,5 +112,26 @@ namespace DataAccess.CRUD
                 });
             return lst;
         }
+
+        public List<Transaccion> RetrieveByCliente(int clienteId)
+        {
+            var op = new SQLOperation { ProcedureName = "SP_SEL_TRANSACCIONES_POR_CLIENTE" };
+            op.AddIntParam("ClienteId", clienteId);
+            var rows = _sqlDao.ExecuteQueryProcedure(op);
+            var lst = new List<Transaccion>();
+            foreach (var r in rows)
+                lst.Add(new Transaccion
+                {
+                    Id = (int)r["Id"],
+                    IdCuentaBancaria = r["IdCuentaBancaria"].ToString(),
+                    IdCuentaComercio = (int)r["IdCuentaComercio"],
+                    Monto = Convert.ToDecimal(r["Monto"]),
+                    Comision = Convert.ToDecimal(r["Comision"]),
+                    DescuentoAplicado = Convert.ToDecimal(r["DescuentoAplicado"]),
+                    Fecha = (DateTime)r["Fecha"],
+                    MetodoPago = r["MetodoPago"].ToString()
+                });
+            return lst;
+        }
     }
 }
