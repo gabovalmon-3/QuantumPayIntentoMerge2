@@ -1,10 +1,12 @@
 ALTER TABLE dbo.Transaccion ADD IBAN VARCHAR(30) NULL;
+ALTER TABLE dbo.Transaccion ADD IdCuentaCliente INT NULL;
 GO
 
 IF OBJECT_ID('dbo.SP_INS_TRANSACCION') IS NOT NULL
     DROP PROCEDURE dbo.SP_INS_TRANSACCION;
 GO
 CREATE PROCEDURE dbo.SP_INS_TRANSACCION
+    @P_IdCuentaCliente INT,
     @P_IdCuentaBancaria INT,
     @P_IBAN VARCHAR(30),
     @P_IdCuentaComercio INT,
@@ -16,9 +18,9 @@ CREATE PROCEDURE dbo.SP_INS_TRANSACCION
 AS
 BEGIN
     INSERT INTO dbo.Transaccion
-        (IdCuentaBancaria, IBAN, IdCuentaComercio, Monto, Comision, DescuentoAplicado, Fecha, MetodoPago)
+        (IdCuentaCliente, IdCuentaBancaria, IBAN, IdCuentaComercio, Monto, Comision, DescuentoAplicado, Fecha, MetodoPago)
     VALUES
-        (@P_IdCuentaBancaria, @P_IBAN, @P_IdCuentaComercio, @P_Monto, @P_Comision, @P_DescuentoAplicado, @P_Fecha, @P_MetodoPago);
+        (@P_IdCuentaCliente, @P_IdCuentaBancaria, @P_IBAN, @P_IdCuentaComercio, @P_Monto, @P_Comision, @P_DescuentoAplicado, @P_Fecha, @P_MetodoPago);
 END
 GO
 
@@ -30,6 +32,7 @@ CREATE PROCEDURE dbo.SP_SEL_TRANSACCIONES_POR_CLIENTE
 AS
 BEGIN
     SELECT t.Id,
+           t.IdCuentaCliente,
            t.IdCuentaBancaria,
            t.IBAN,
            t.IdCuentaComercio,

@@ -1,5 +1,6 @@
 CREATE TABLE dbo.Transaccion (
     Id INT IDENTITY(1,1) PRIMARY KEY,
+    IdCuentaCliente INT NOT NULL,
     IdCuentaBancaria INT NOT NULL,
     IdCuentaComercio INT NOT NULL,
     Monto DECIMAL(18,2) NOT NULL,

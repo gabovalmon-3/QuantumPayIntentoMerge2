@@ -1,6 +1,10 @@
 ﻿function TransaccionesViewController() {
     const ca = new ControlActions();
     this.Api = "Transaccion";
+    this.getClienteId = function () {
+        return parseInt($("#hdnClienteId").val() || "0", 10);
+    };
+
 
     this.initView = function () {
         this.loadTable();
@@ -64,6 +68,8 @@
         $('#btnCreate').click(() => {
             const cuentaVal = $('#txtIdCuentaBancaria').val();
             const dto = {
+                idCuentaCliente: this.getClienteId(),
+
                 idCuentaBancaria: /^\d+$/.test(cuentaVal) ? parseInt(cuentaVal, 10) : 0,
                 iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),
@@ -86,6 +92,7 @@
             const cuentaValUp = $('#txtIdCuentaBancaria').val();
             const dto = {
                 id: id,
+                idCuentaCliente: this.getClienteId(),
                 idCuentaBancaria: /^\d+$/.test(cuentaValUp) ? parseInt(cuentaValUp, 10) : 0,
                 iban: $('#IBAN').val(),
                 idCuentaComercio: parseInt($('#txtIdCuentaComercio').val(), 10),

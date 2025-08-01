@@ -1,5 +1,6 @@
 CREATE PROCEDURE SP_UPD_TRANSACCION
     @P_Id INT,
+    @P_IdCuentaCliente INT,
     @P_IdCuentaBancaria INT,
     @P_IBAN VARCHAR(30),
     @P_IdCuentaComercio INT,
@@ -11,6 +12,8 @@ CREATE PROCEDURE SP_UPD_TRANSACCION
 AS
 BEGIN
     UPDATE dbo.Transaccion
+    SET IdCuentaCliente = @P_IdCuentaCliente,
+        IdCuentaBancaria = @P_IdCuentaBancaria,
     SET IdCuentaBancaria = @P_IdCuentaBancaria,
         IBAN = @P_IBAN,
         IdCuentaComercio = @P_IdCuentaComercio,

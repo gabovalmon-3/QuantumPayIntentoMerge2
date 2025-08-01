@@ -1,4 +1,5 @@
 CREATE PROCEDURE SP_INS_TRANSACCION
+  @P_IdCuentaCliente INT,
   @P_IdCuentaBancaria INT,
   @P_IdCuentaComercio INT,
   @P_Monto DECIMAL(18,2),
@@ -9,7 +10,7 @@ CREATE PROCEDURE SP_INS_TRANSACCION
 AS
 BEGIN
   INSERT INTO dbo.Transaccion
-    (IdCuentaBancaria, IdCuentaComercio, Monto, Comision, DescuentoAplicado, Fecha, MetodoPago)
+    (IdCuentaCliente, IdCuentaBancaria, IdCuentaComercio, Monto, Comision, DescuentoAplicado, Fecha, MetodoPago)
   VALUES
-    (@P_IdCuentaBancaria, @P_IdCuentaComercio, @P_Monto, @P_Comision, @P_DescuentoAplicado, @P_Fecha, @P_MetodoPago);
+    (@P_IdCuentaCliente, @P_IdCuentaBancaria, @P_IdCuentaComercio, @P_Monto, @P_Comision, @P_DescuentoAplicado, @P_Fecha, @P_MetodoPago);
 END
