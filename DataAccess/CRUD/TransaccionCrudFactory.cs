@@ -25,6 +25,8 @@ namespace DataAccess.CRUD
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
 
 
+
+
             op.AddStringParameter("P_IBAN", t.IBAN);
             op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);
             op.AddDecimalParam("P_Monto", t.Monto, 18, 2);
@@ -46,7 +48,6 @@ namespace DataAccess.CRUD
             op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
 
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
-
 
             op.AddStringParameter("P_IBAN", t.IBAN);
             op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);
