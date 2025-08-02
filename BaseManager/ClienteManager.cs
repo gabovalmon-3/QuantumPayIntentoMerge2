@@ -73,12 +73,6 @@ namespace CoreApp
         }
 
 
-        public Cliente GetByEmail(string correo)
-        {
-            return new ClienteCrudFactory().RetrieveByEmail(correo);
-        }
-
-
         public Cliente RetrieveByCedula(string cedula)
         {
             var cCrud = new ClienteCrudFactory();
