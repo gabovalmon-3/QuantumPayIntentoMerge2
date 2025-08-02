@@ -17,9 +17,13 @@ namespace DataAccess.CRUD
         {
             var t = (Transaccion)dto;
             var op = new SQLOperation { ProcedureName = "SP_INS_TRANSACCION" };
+
+            op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
+
             op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
 
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
+
 
             op.AddStringParameter("P_IBAN", t.IBAN);
             op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);
@@ -36,9 +40,13 @@ namespace DataAccess.CRUD
             var t = (Transaccion)dto;
             var op = new SQLOperation { ProcedureName = "SP_UPD_TRANSACCION" };
             op.AddIntParam("P_Id", t.Id);
+
+            op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
+
             op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
 
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
+
 
             op.AddStringParameter("P_IBAN", t.IBAN);
             op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);

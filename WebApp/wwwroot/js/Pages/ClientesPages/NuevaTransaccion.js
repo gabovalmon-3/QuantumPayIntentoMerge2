@@ -19,8 +19,15 @@ function NuevaTransaccionController() {
 
             const seen = new Set();
             data.forEach(c => {
+                if (!seen.has(c.numeroCuenta)) {
+                    seen.add(c.numeroCuenta);
+
+
+            const seen = new Set();
+            data.forEach(c => {
                 if (!seen.has(c.id)) {
                     seen.add(c.id);
+
                     ddl.append($("<option>", {
                         value: c.id,
                         text: c.numeroCuenta,
@@ -30,11 +37,13 @@ function NuevaTransaccionController() {
             });
 
 
+
             data.forEach(c => {
                 ddl.append($("<option>", { value: c.id, text: c.numeroCuenta, "data-iban": c.numeroCuenta }));
             });
 
             data.forEach(c => ddl.append(new Option(c.numeroCuenta, c.id)));
+
 
         });
         ca.GetToApi(`${this.apiComercio}/RetrieveAll`, data => {
@@ -46,6 +55,10 @@ function NuevaTransaccionController() {
     this.bindEvents = () => {
         $("#btnRealizarPago").click(() => {
             const dto = {
+
+                idCuentaBancaria: parseInt($("#ddlCuentas").val(), 10),
+                iban: $("#ddlCuentas option:selected").data("iban"),
+
                 idCuentaCliente: this.clienteId,
                 idCuentaBancaria: parseInt($("#ddlCuentas").val(), 10),
 
@@ -53,6 +66,7 @@ function NuevaTransaccionController() {
 
 
                 iban: $("#ddlCuentas option:selected").data("iban"),
+
 
 
 
