@@ -15,45 +15,37 @@ function NuevaTransaccionController() {
     };
 
     this.loadDropdowns = () => {
-
-        ca.GetToApi(`${this.apiCuenta}/RetrieveAll?clienteId=${this.clienteId}`, data => {
-            const ddl = $("#ddlCuentas").empty();
-            const seen = new Set();
-            data.forEach(c => {
-                if (!seen.has(c.numeroCuenta)) {
-                    seen.add(c.numeroCuenta);
-
         // Carga cuentas bancarias, evitando duplicados
-        ca.GetToApi(`${this.apiCuenta}/RetrieveAll?clienteId=${this.clienteId}`, data => {
-            const ddl = $("#ddlCuentas").empty();
-            const seen = new Set();
-
-            data.forEach(c => {
-                if (!seen.has(c.id)) {
-                    seen.add(c.id);
-
-                    ddl.append($("<option>", {
-                        value: c.id,
-                        text: c.numeroCuenta,
-                        "data-iban": c.numeroCuenta
-                    }));
-                }
-            });
-        });
-
-        ca.GetToApi(`${this.apiComercio}/RetrieveAll`, data => {
-            const ddl = $("#ddlComercios").empty();
-            data.forEach(c => ddl.append(new Option(c.nombre, c.id)));
-
+        ca.GetToApi(
+            `${this.apiCuenta}/RetrieveAll?clienteId=${this.clienteId}`,
+            data => {
+                const ddl = $("#ddlCuentas").empty();
+                const seen = new Set();
+                data.forEach(c => {
+                    if (!seen.has(c.id)) {
+                        seen.add(c.id);
+                        ddl.append(
+                            $("<option>", {
+                                value: c.id,
+                                text: c.numeroCuenta,
+                                "data-iban": c.numeroCuenta
+                            })
+                        );
+                    }
+                });
+            }
+        );
 
         // Carga comercios
-        ca.GetToApi(`${this.apiComercio}/RetrieveAll`, data => {
-            const ddl = $("#ddlComercios").empty();
-            data.forEach(c => {
-                ddl.append(new Option(c.nombre, c.id));
-            });
-
-        });
+        ca.GetToApi(
+            `${this.apiComercio}/RetrieveAll`,
+            data => {
+                const ddl = $("#ddlComercios").empty();
+                data.forEach(c => {
+                    ddl.append(new Option(c.nombre, c.id));
+                });
+            }
+        );
     };
 
     this.bindEvents = () => {
@@ -70,17 +62,13 @@ function NuevaTransaccionController() {
                 metodoPago: $("#txtMetodoPago").val()
             };
 
-            ca.PostToAPI(`${this.api}/Create?email=${encodeURIComponent(this.email)}`, dto, () => {
-                window.location.href = "/ClientesPages/ClienteHome";
-            });
-
-
             ca.PostToAPI(
                 `${this.api}/Create?email=${encodeURIComponent(this.email)}`,
                 dto,
-                () => window.location.href = "/ClientesPages/ClienteHome"
+                () => {
+                    window.location.href = "/ClientesPages/ClienteHome";
+                }
             );
-
         });
     };
 }

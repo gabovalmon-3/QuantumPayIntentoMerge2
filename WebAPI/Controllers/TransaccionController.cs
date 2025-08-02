@@ -1,9 +1,5 @@
+// WebAPI/Controllers/TransaccionController.cs
 using BaseManager;
-using CoreApp;
-using DTOs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-// 4_WebAPI/WebAPI/Controllers/TransaccionController.cs
 using CoreApp;
 using DTOs;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +15,7 @@ namespace WebAPI.Controllers
     public class TransaccionController : ControllerBase
     {
         private readonly IEmailSender _emailSender;
+
         public TransaccionController(IEmailSender emailSender)
             => _emailSender = emailSender;
 
@@ -29,14 +26,19 @@ namespace WebAPI.Controllers
         {
             try
             {
+                // 1) Crear la transacción
                 var mgr = new TransaccionManager();
-                await mgr.Create(t);
+                mgr.Create(t);
 
+                // 2) Enviar correo si recibimos email
                 if (!string.IsNullOrWhiteSpace(email))
+                {
                     await _emailSender.SendEmailAsync(
-                        email,
-                        "Confirmación de compra",
-                        $"Compra por {t.Monto:C} procesada.");
+                        toEmail: email,
+                        subject: "Confirmación de compra",
+                        message: $"Compra por {t.Monto:C} procesada."
+                    );
+                }
 
                 return Ok(t);
             }
@@ -44,7 +46,8 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(
                     StatusCodes.Status500InternalServerError,
-                    ex.Message);
+                    ex.Message
+                );
             }
         }
 
@@ -64,7 +67,8 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(
                     StatusCodes.Status500InternalServerError,
-                    ex.Message);
+                    ex.Message
+                );
             }
         }
 
@@ -80,7 +84,8 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(
                     StatusCodes.Status500InternalServerError,
-                    ex.Message);
+                    ex.Message
+                );
             }
         }
 

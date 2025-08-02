@@ -1,4 +1,7 @@
+using BaseManager;
+using CoreApp;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +11,13 @@ builder.WebHost.UseUrls("http://localhost:5221", "https://localhost:5001");
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<WebAPI.Services.IEmailSender, WebAPI.Services.SendGridEmailSender>();
 
+// Registrar TransaccionManager para inyección de dependencias
+builder.Services.AddTransient<TransaccionManager>();
+
+// Registrar implementación SMTP de IEmailSender
+//builder.Services.AddScoped<IEmailSender, SendGridEmailSender>();
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 builder.Services.AddCors(options =>
 {
@@ -24,10 +32,11 @@ builder.Services.AddCors(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Login"; 
+    options.LoginPath = "/Login";
 });
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
+
 var app = builder.Build();
 
 app.UseCors("AllowLocalhost");

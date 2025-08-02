@@ -62,5 +62,10 @@ namespace DataAccess.DAOs
             };
             Parameters.Add(param); // Usa tu lista interna de parámetros, igual que con otros métodos
         }
+
+        internal void AddStringParameter(string v, int idCuentaBancaria)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

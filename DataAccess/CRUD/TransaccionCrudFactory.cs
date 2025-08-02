@@ -18,22 +18,16 @@ namespace DataAccess.CRUD
             var t = (Transaccion)dto;
             var op = new SQLOperation { ProcedureName = "SP_INS_TRANSACCION" };
 
-            op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
+          
+            op.AddStringParameter("P_IdCuentaBancaria", t.IdCuentaBancaria);    // varchar(30)
+            op.AddStringParameter("P_IBAN", t.IBAN);                // varchar(30)
+            op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);     // int
+            op.AddDecimalParam("P_Monto", t.Monto, 18, 2); // float/decimal
+            op.AddDecimalParam("P_Comision", t.Comision, 18, 2); // float/decimal
+            op.AddDecimalParam("P_DescuentoAplicado", t.DescuentoAplicado, 18, 2); // float/decimal
+            op.AddDateTimeParam("P_Fecha", t.Fecha);               // datetime
+            op.AddStringParameter("P_MetodoPago", t.MetodoPago);          // varchar(50)
 
-            op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
-
-            op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
-
-
-
-
-            op.AddStringParameter("P_IBAN", t.IBAN);
-            op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);
-            op.AddDecimalParam("P_Monto", t.Monto, 18, 2);
-            op.AddDecimalParam("P_Comision", t.Comision, 18, 2);
-            op.AddDecimalParam("P_DescuentoAplicado", t.DescuentoAplicado, 18, 2);
-            op.AddDateTimeParam("P_Fecha", t.Fecha);
-            op.AddStringParameter("P_MetodoPago", t.MetodoPago);
             _sqlDao.ExecuteProcedure(op);
         }
 
