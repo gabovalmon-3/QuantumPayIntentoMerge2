@@ -26,6 +26,17 @@
                 { data: 'saldo' }
             ]
         });
+
+        $('#tblCuentaCliente tbody')
+            .off('click', 'tr')
+            .on('click', 'tr', function () {
+                var dto = $('#tblCuentaCliente').DataTable().row(this).data();
+                $('#txtId').val(dto.id);
+                $('#txtNumeroCuenta').val(dto.numeroCuenta);
+                $('#selectBanco').val(dto.banco);
+                $('#selectTipoCuenta').val(dto.tipoCuenta);
+                $('#txtSaldo').val(dto.saldo);
+            });
     };
 
     this.create = function () {
