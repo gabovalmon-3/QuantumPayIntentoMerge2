@@ -135,9 +135,10 @@ namespace CoreApp
             return age >= 18;
         }
 
-        public object RetrieveByEmail(string correo)
+        public Cliente RetrieveByEmail(string correo)
         {
-            throw new NotImplementedException();
+            var cCrud = new ClienteCrudFactory();
+            return cCrud.RetrieveByEmail<Cliente>(correo);
         }
     }
 }
