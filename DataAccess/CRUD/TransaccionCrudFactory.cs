@@ -1,8 +1,6 @@
+﻿// 2_DataAccess/DataAccess/CRUD/TransaccionCrudFactory.cs
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DataAccess.DAOs;
 using DTOs;
 
@@ -10,15 +8,18 @@ namespace DataAccess.CRUD
 {
     public class TransaccionCrudFactory : CrudFactory
     {
-        public TransaccionCrudFactory() => _sqlDao = SQL_DAO.GetInstance();
+        public TransaccionCrudFactory()
+        {
+            _sqlDao = SQL_DAO.GetInstance();
+        }
 
         public override void Create(BaseDTO dto)
         {
             var t = (Transaccion)dto;
-            var op = new SQLOperation { ProcedureName = "CRE_TRANSACCION_PR" };
+            var op = new SQLOperation { ProcedureName = "SP_INS_TRANSACCION" };
+            op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
             op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);
-            op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
             op.AddDecimalParam("P_Monto", t.Monto, 18, 2);
             op.AddDecimalParam("P_Comision", t.Comision, 18, 2);
             op.AddDecimalParam("P_DescuentoAplicado", t.DescuentoAplicado, 18, 2);
@@ -30,11 +31,11 @@ namespace DataAccess.CRUD
         public override void Update(BaseDTO dto)
         {
             var t = (Transaccion)dto;
-            var op = new SQLOperation { ProcedureName = "UPD_TRANSACCION_PR" };
+            var op = new SQLOperation { ProcedureName = "SP_UPD_TRANSACCION" };
             op.AddIntParam("P_Id", t.Id);
+            op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
             op.AddIntParam("P_IdCuentaBancaria", t.IdCuentaBancaria);
             op.AddIntParam("P_IdCuentaComercio", t.IdCuentaComercio);
-            op.AddIntParam("P_IdCuentaCliente", t.IdCuentaCliente);
             op.AddDecimalParam("P_Monto", t.Monto, 18, 2);
             op.AddDecimalParam("P_Comision", t.Comision, 18, 2);
             op.AddDecimalParam("P_DescuentoAplicado", t.DescuentoAplicado, 18, 2);
@@ -43,113 +44,91 @@ namespace DataAccess.CRUD
             _sqlDao.ExecuteProcedure(op);
         }
 
-        public override T Retrieve<T>()
+        public override void Delete(BaseDTO dto)
         {
-            throw new NotImplementedException();
+            var t = (Transaccion)dto;
+            var op = new SQLOperation { ProcedureName = "SP_DEL_TRANSACCION" };
+            op.AddIntParam("P_Id", t.Id);
+            _sqlDao.ExecuteProcedure(op);
         }
 
         public override List<T> RetrieveAll<T>()
         {
-            var lstTransacciones = new List<T>();
-            var sqlOperation = new SQLOperation() { ProcedureName = "RET_ALL_TRANSACCION_PR" };
-            var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-            if (lstResult.Count > 0)
+            var op = new SQLOperation { ProcedureName = "SP_SEL_ALL_TRANSACCIONES" };
+            var rows = _sqlDao.ExecuteQueryProcedure(op);
+            var list = new List<T>();
+            foreach (var r in rows)
             {
-                foreach (var row in lstResult)
-                {
-                    var cliente = BuildTransaccion(row);
-                    lstTransacciones.Add((T)(object)cliente);
-                }
+                var t = BuildTransaccion(r);
+                list.Add((T)(object)t);
             }
-            return lstTransacciones;
+            return list;
         }
 
         public override T RetrieveById<T>(int id)
         {
-            var op = new SQLOperation { ProcedureName = "RET_TRANSACCION_BY_ID_PR" };
+            var op = new SQLOperation { ProcedureName = "SP_SEL_TRANSACCION_POR_ID" };
             op.AddIntParam("P_Id", id);
-            var lstResult = _sqlDao.ExecuteQueryProcedure(op);
-            if (lstResult.Count > 0)
-            {
-                var row = lstResult[0];
-                var cliente = BuildTransaccion(row);
-                return (T)Convert.ChangeType(cliente, typeof(T));
-            }
-            return default(T);
+            var rows = _sqlDao.ExecuteQueryProcedure(op);
+            if (rows.Count == 0) return default;
+            var t = BuildTransaccion(rows[0]);
+            return (T)(object)t;
         }
 
-        public T RetrieveByBanco<T>(int idCuentaBancaria)
+        // Strongly-typed, non-generic retrieves:
+        public List<Transaccion> RetrieveByBanco(int cuentaId)
         {
-            var op = new SQLOperation { ProcedureName = "RET_TRANSACCION_BY_BANCO_PR" };
-            op.AddIntParam("P_IdCuentaBancaria", idCuentaBancaria);
-            var lstResult = _sqlDao.ExecuteQueryProcedure(op);
-            if (typeof(T) == typeof(List<Transaccion>))
-            {
-                var transacciones = new List<Transaccion>();
-                foreach (var row in lstResult)
-                {
-                    transacciones.Add(BuildTransaccion(row));
-                }
-                return (T)(object)transacciones;
-            }
-            else if (lstResult.Count > 0)
-            {
-                var cliente = BuildTransaccion(lstResult[0]);
-                return (T)(object)cliente;
-            }
-            return default(T);
+            var op = new SQLOperation { ProcedureName = "SP_SEL_TRANSACCIONES_POR_CUENTA" };
+            op.AddIntParam("P_IdCuentaBancaria", cuentaId);
+            var rows = _sqlDao.ExecuteQueryProcedure(op);
+            var list = new List<Transaccion>();
+            foreach (var r in rows)
+                list.Add(BuildTransaccion(r));
+            return list;
         }
 
-        public T RetrieveByComercio<T>(int idComercio)
+        public List<Transaccion> RetrieveByComercio(int comercioId)
         {
-            var op = new SQLOperation { ProcedureName = "RET_TRANSACCION_BY_COMERCIO_PR" };
-            op.AddIntParam("P_IdCuentaComercio", idComercio);
-            var lstResult = _sqlDao.ExecuteQueryProcedure(op);
-            if (lstResult.Count > 0)
-            {
-                var row = lstResult[0];
-                var cliente = BuildTransaccion(row);
-                return (T)Convert.ChangeType(cliente, typeof(T));
-            }
-            return default(T);
+            var op = new SQLOperation { ProcedureName = "SP_SEL_TRANSACCIONES_POR_COMERCIO" };
+            op.AddIntParam("P_IdCuentaComercio", comercioId);
+            var rows = _sqlDao.ExecuteQueryProcedure(op);
+            var list = new List<Transaccion>();
+            foreach (var r in rows)
+                list.Add(BuildTransaccion(r));
+            return list;
         }
 
-        public T RetrieveByCliente<T>(int idCliente)
+        public List<Transaccion> RetrieveByCliente(int clienteId)
         {
-            var op = new SQLOperation { ProcedureName = "RET_TRANSACCION_BY_CLIENTE_PR" };
-            op.AddIntParam("P_IdCuentaCliente", idCliente);
-            var lstResult = _sqlDao.ExecuteQueryProcedure(op);
-            if (lstResult.Count > 0)
-            {
-                var row = lstResult[0];
-                var cliente = BuildTransaccion(row);
-                return (T)Convert.ChangeType(cliente, typeof(T));
-            }
-            return default(T);
-        }
+            var op = new SQLOperation { ProcedureName = "dbo.SP_SEL_TRANSACCIONES_POR_CLIENTE" };
+            op.AddIntParam("ClienteId", clienteId);   // ← must match SP parameter name
+            var rows = _sqlDao.ExecuteQueryProcedure(op);
 
-        public override void Delete(BaseDTO baseDTO)
-        {
-            var transaccion = baseDTO as Transaccion;
-            var sqlOperation = new SQLOperation() { ProcedureName = "DEL_TRANSACCION_PR" };
-            sqlOperation.AddIntParam("P_Id", transaccion.Id);
-            _sqlDao.ExecuteProcedure(sqlOperation);
+            var list = new List<Transaccion>();
+            foreach (var r in rows)
+                list.Add(BuildTransaccion(r));
+            return list;
         }
 
         private Transaccion BuildTransaccion(Dictionary<string, object> r)
         {
-            return new Transaccion()
+            return new Transaccion
             {
                 Id = (int)r["Id"],
+                IdCuentaCliente = (int)r["IdCuentaCliente"],
                 IdCuentaBancaria = (int)r["IdCuentaBancaria"],
                 IdCuentaComercio = (int)r["IdCuentaComercio"],
-                IdCuentaCliente = (int)r["IdCuentaCliente"],
                 Monto = Convert.ToDecimal(r["Monto"]),
                 Comision = Convert.ToDecimal(r["Comision"]),
                 DescuentoAplicado = Convert.ToDecimal(r["DescuentoAplicado"]),
                 Fecha = (DateTime)r["Fecha"],
                 MetodoPago = (string)r["MetodoPago"]
             };
+        }
+
+        public override T Retrieve<T>()
+        {
+            throw new NotImplementedException();
         }
     }
 }

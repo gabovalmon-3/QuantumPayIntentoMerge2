@@ -3,6 +3,13 @@ using CoreApp;
 using DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+// 4_WebAPI/WebAPI/Controllers/TransaccionController.cs
+using CoreApp;
+using DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebAPI.Services;
 
 namespace WebAPI.Controllers
@@ -12,137 +19,88 @@ namespace WebAPI.Controllers
     public class TransaccionController : ControllerBase
     {
         private readonly IEmailSender _emailSender;
-
         public TransaccionController(IEmailSender emailSender)
-        {
-            _emailSender = emailSender;
-        }
+            => _emailSender = emailSender;
 
         [HttpPost("Create")]
-        public async Task<ActionResult<Transaccion>> Create([FromBody] Transaccion transaccion, [FromQuery] string email)
+        public async Task<ActionResult<Transaccion>> Create(
+            [FromBody] Transaccion t,
+            [FromQuery] string email)
         {
             try
             {
-                var tm = new TransaccionManager();
-                await tm.Create(transaccion);
+                var mgr = new TransaccionManager();
+                await mgr.Create(t);
+
                 if (!string.IsNullOrWhiteSpace(email))
-                {
-                    try
-                    {
-                        await _emailSender.SendEmailAsync(email, "Confirmación de compra", $"Su compra por {transaccion.Monto:C} ha sido procesada.");
-                    }
-                    catch
-                    {
-                        // ignore email send errors
-                    }
-                }
-                return Ok(transaccion);
+                    await _emailSender.SendEmailAsync(
+                        email,
+                        "Confirmación de compra",
+                        $"Compra por {t.Monto:C} procesada.");
+
+                return Ok(t);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message);
             }
         }
 
-        // Aquí eliminamos la ambigüedad: solo un atributo HTTP con ruta clara
         [HttpPut("Update/{id}")]
-        public ActionResult<Transaccion> Update(int id, [FromBody] Transaccion transaccion)
+        public ActionResult<Transaccion> Update(
+            int id,
+            [FromBody] Transaccion t)
         {
             try
             {
-                transaccion.Id = id;
-                var tm = new TransaccionManager();
-                tm.Update(transaccion);
-                return Ok(transaccion);
+                t.Id = id;
+                var mgr = new TransaccionManager();
+                var updated = mgr.Update(t);
+                return Ok(updated);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message);
+            }
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                new TransaccionManager().Delete(id);
+                return NoContent();
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    ex.Message);
             }
         }
 
         [HttpGet("RetrieveAll")]
         public ActionResult<IEnumerable<Transaccion>> RetrieveAll()
-        {
-            try
-            {
-                var tm = new TransaccionManager();
-                var lstResults = tm.RetrieveAll();
-                return Ok(lstResults);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+            => Ok(new TransaccionManager().RetrieveAll());
 
         [HttpGet("RetrieveByBanco")]
-
-        public ActionResult<IEnumerable<Transaccion>> RetrieveByBanco([FromQuery] int cuentaId)
-
-
-        public ActionResult<IEnumerable<Transaccion>> RetrieveByBanco([FromQuery] int cuentaId)
-
-        public ActionResult<Transaccion> RetrieveByBanco([FromQuery] int cuentaId)
-
-
-        {
-            try
-            {
-                var tm = new TransaccionManager();
-                var result = tm.OrdenarPorBanco(cuentaId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByBanco(
+            [FromQuery] int cuentaId)
+            => Ok(new TransaccionManager().RetrieveByCuenta(cuentaId));
 
         [HttpGet("RetrieveByComercio")]
-
-        public ActionResult<IEnumerable<Transaccion>> RetrieveByComercio([FromQuery] int idComercio)
-
-
-        public ActionResult<IEnumerable<Transaccion>> RetrieveByComercio([FromQuery] int idComercio)
-
-        public ActionResult<Transaccion> RetrieveByComercio([FromQuery] int idComercio)
-
-
-        {
-            try
-            {
-                var tm = new TransaccionManager();
-                var result = tm.OrdenarPorComercio(idComercio);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByComercio(
+            [FromQuery] int idComercio)
+            => Ok(new TransaccionManager().RetrieveByComercio(idComercio));
 
         [HttpGet("RetrieveByCliente")]
-
-        public ActionResult<IEnumerable<Transaccion>> RetrieveByCliente([FromQuery] int clienteId)
-
-
-        public ActionResult<IEnumerable<Transaccion>> RetrieveByCliente([FromQuery] int clienteId)
-
-        public ActionResult<Transaccion> RetrieveByCliente([FromQuery] int clienteId)
-
-
-        {
-            try
-            {
-                var tm = new TransaccionManager();
-                var result = tm.OrdenarPorCliente(clienteId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
+        public ActionResult<IEnumerable<Transaccion>> RetrieveByCliente(
+            [FromQuery] int clienteId)
+            => Ok(new TransaccionManager().RetrieveByCliente(clienteId));
     }
 }

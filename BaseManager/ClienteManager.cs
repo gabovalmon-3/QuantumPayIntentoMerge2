@@ -72,11 +72,12 @@ namespace CoreApp
             return cCrud.RetrieveById<Cliente>(Id);
         }
 
-        public Cliente RetrieveByEmail(string correo)
+
+        public Cliente GetByEmail(string correo)
         {
-            var uCrud = new ClienteCrudFactory();
-            return uCrud.RetrieveByEmail<Cliente>(correo);
+            return new ClienteCrudFactory().RetrieveByEmail(correo);
         }
+
 
         public Cliente RetrieveByCedula(string cedula)
         {
@@ -132,6 +133,11 @@ namespace CoreApp
                 age--;
             }
             return age >= 18;
+        }
+
+        public object RetrieveByEmail(string correo)
+        {
+            throw new NotImplementedException();
         }
     }
 }

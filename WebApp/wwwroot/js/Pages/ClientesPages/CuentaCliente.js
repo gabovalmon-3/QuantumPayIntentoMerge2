@@ -1,4 +1,4 @@
-function CuentaClienteController() {
+﻿function CuentaClienteController() {
     const ca = new ControlActions();
     this.Api = "CuentaCliente";
 
@@ -10,7 +10,8 @@ function CuentaClienteController() {
     };
 
     this.getClienteId = function () {
-        return $('#hdnClienteId').val() || 1;
+        // now pulls the real hidden input
+        return parseInt($('#hdnClienteId').val(), 10);
     };
 
     this.loadTable = function () {
@@ -36,7 +37,7 @@ function CuentaClienteController() {
             saldo: parseFloat($('#txtSaldo').val() || 0)
         };
         ca.PostToAPI(`${this.Api}/Create`, dto, () => this.loadTable());
-    };
+    };  // ← make sure this closing brace+semicolon is here!
 
     this.update = function () {
         const dto = {

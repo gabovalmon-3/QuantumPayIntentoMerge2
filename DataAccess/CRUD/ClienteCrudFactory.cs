@@ -124,22 +124,30 @@ namespace DataAccess.CRUD
             return default(T);
         }
 
-        public T RetrieveByEmail<T>(string correo)
+        // 2_DataAccess/DataAccess/CRUD/ClienteCrudFactory.cs
+        public Cliente RetrieveByEmail(string correo)
         {
-            var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_EMAIL_PR" };
-
-            sqlOperation.AddStringParameter("P_correoElectronico", correo);
-
-            var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-
-            if (lstResult.Count > 0)
+            var op = new SQLOperation { ProcedureName = "dbo.SP_SEL_CLIENTE_POR_EMAIL" };
+            op.AddVarcharParam("CorreoElectronico", correo, 100);
+            var rows = _sqlDao.ExecuteQueryProcedure(op);
+            if (rows.Count == 0) return null;
+            var r = rows[0];
+            return new Cliente
             {
-                var row = lstResult[0];
-                var cliente = BuildCliente(row);
-                return (T)Convert.ChangeType(cliente, typeof(T));
-            }
-            return default(T);
+                IdCliente = (int)r["idCliente"],
+                Cedula = (string)r["cedula"],
+                Nombre = (string)r["nombre"],
+                Apellidos = (string)r["apellidos"],
+                Telefono = (int)r["telefono"],
+                CorreoElectronico = (string)r["correoElectronico"],
+                Direccion = (string)r["direccion"],
+                FechaNacimiento = (DateTime)r["fechaNacimiento"],
+                FotoCedula = (string)r["fotoCedula"],
+                FotoPerfil = (string)r["fotoPerfil"],
+                Contrasena = (string)r["contrasena"]
+            };
         }
+
 
         public override void Update(BaseDTO baseDTO)
         {
@@ -189,6 +197,11 @@ namespace DataAccess.CRUD
                 contrasena = row["contrasena"].ToString(),
                 IBAN = row["IBAN"].ToString()
             };
+        }
+
+        public T RetrieveByEmail<T>(string correo)
+        {
+            throw new NotImplementedException();
         }
     }
 }

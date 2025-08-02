@@ -2,7 +2,15 @@
 @using Microsoft.AspNetCore.Authorization
 @model WebApp.Pages.ClientesPages.AgregarCuentaModel
 @{
+    ViewData["Title"] = "Agregar Cuenta";
+    // Este clienteId lo recibes en la URL: /ClientesPages/AgregarCuenta/3
 }
+<input type="hidden"
+       id="hdnClienteId"
+       value="@Model.ClienteId" />
+<input type="hidden" id="hdnClienteId" value="@Model.ClienteId" />
+<input type="hidden" id="hdnClienteEmail" value="@Model.ClienteEmail" />
+<div class="container mt-4">
 @attribute [Authorize(Roles = "Cliente")]
 
 <div class="text-end">

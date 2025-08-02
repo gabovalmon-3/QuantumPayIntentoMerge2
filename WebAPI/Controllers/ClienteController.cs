@@ -285,7 +285,7 @@ namespace WebAPI.Controllers
                     return Unauthorized("Usuario o contraseña incorrectos.");
                 }
 
-                Console.WriteLine($"[LOGIN] Hash almacenado en BD: {user.contrasena}");
+                Console.WriteLine(value: $"[LOGIN] Hash almacenado en BD: {user.contrasena}");
 
                 if (!BCrypt.Net.BCrypt.Verify(request.Password, user.contrasena))
                 {
