@@ -32,7 +32,7 @@ namespace WebApp.Pages.ClientesPages
             }
 
             // 2) Busca al cliente por correo
-            var cliente = _clienteManager.GetByEmail(ClienteEmail);
+            var cliente = _clienteManager.RetrieveByEmail(ClienteEmail);
             if (cliente == null)
             {
                 // Usuario autenticado no corresponde a un cliente en la DB
