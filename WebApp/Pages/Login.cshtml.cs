@@ -24,7 +24,7 @@ namespace WebApp.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Validación manual según el tipo de usuario
+            // ValidaciÃ³n manual segÃºn el tipo de usuario
             if (string.IsNullOrWhiteSpace(LoginRequest.UserType) || string.IsNullOrWhiteSpace(LoginRequest.Email))
             {
                 ErrorMessage = "Debe ingresar el tipo de usuario y el correo.";
@@ -34,7 +34,7 @@ namespace WebApp.Pages
             {
                 if (string.IsNullOrWhiteSpace(LoginRequest.Password))
                 {
-                    ErrorMessage = "Debe ingresar la contraseña.";
+                    ErrorMessage = "Debe ingresar la contraseÃ±a.";
                     return Page();
                 }
             }
@@ -69,11 +69,33 @@ namespace WebApp.Pages
                 return Page();
             }
 
+            var responseBody = await response.Content.ReadAsStringAsync();
+            int userId = 0;
+            try
+            {
+                using var doc = JsonDocument.Parse(responseBody);
+                var root = doc.RootElement;
+                if (root.TryGetProperty("userId", out var userIdElement) ||
+                    root.TryGetProperty("UserId", out userIdElement))
+                {
+                    userId = userIdElement.GetInt32();
+                }
+            }
+            catch
+            {
+                userId = 0;
+            }
+
             var claims = new List<Claim>
             {
-            new Claim(ClaimTypes.Name, LoginRequest.Email),
-            new Claim(ClaimTypes.Role, LoginRequest.UserType) // Agrega el rol aquí
+                new Claim(ClaimTypes.Name, LoginRequest.Email),
+                new Claim(ClaimTypes.Role, LoginRequest.UserType)
             };
+
+            if (userId > 0)
+            {
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, userId.ToString()));
+            }
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
