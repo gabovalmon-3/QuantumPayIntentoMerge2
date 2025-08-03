@@ -7,7 +7,7 @@ function TransaccionesClienteController() {
     };
 
     this.getClienteId = function () {
-        return $('#hdnClienteId').val() || 1;
+        return $('#hdnClienteId').val();
     };
 
     this.loadTable = function () {

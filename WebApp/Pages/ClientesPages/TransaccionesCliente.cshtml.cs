@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace WebApp.Pages.ClientesPages
 {
@@ -12,9 +13,10 @@ namespace WebApp.Pages.ClientesPages
 
         public void OnGet()
         {
-            if (ClienteId == 0)
+            var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(idClaim, out var id))
             {
-                ClienteId = 1;
+                ClienteId = id;
             }
         }
     }
