@@ -1,4 +1,4 @@
-CREATE PROCEDURE CRE_TRANSACCION_PR
+﻿CREATE PROCEDURE CRE_TRANSACCION_PR
     @P_IdCuentaBancaria INT,
     @P_IdCuentaComercio INT,
     @P_IdCuentaCliente INT,

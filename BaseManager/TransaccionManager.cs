@@ -1,4 +1,4 @@
-// BaseManager/TransaccionManager.cs
+﻿// BaseManager/TransaccionManager.cs
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,6 +19,7 @@ namespace CoreApp
             _crud.Create(t);
             await Task.CompletedTask;
         }
+
 
         public Transaccion Update(Transaccion t)
         {

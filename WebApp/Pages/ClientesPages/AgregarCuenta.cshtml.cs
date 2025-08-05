@@ -1,11 +1,13 @@
 // WebApp/Pages/ClientesPages/AgregarCuenta.cshtml.cs
 using CoreApp;
 using DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebApp.Pages.ClientesPages
 {
+    [Authorize(Roles = "Cliente")]
     public class AgregarCuentaModel : PageModel
     {
         private readonly ClienteManager _clienteManager;
@@ -26,18 +28,12 @@ namespace WebApp.Pages.ClientesPages
             // 1) Obtiene el correo del usuario autenticado
             ClienteEmail = User.Identity?.Name;
             if (string.IsNullOrWhiteSpace(ClienteEmail))
-            {
-                // No hay usuario autenticado
                 return RedirectToPage("/Account/Login");
-            }
 
             // 2) Busca al cliente por correo
             var cliente = _clienteManager.RetrieveByEmail(ClienteEmail);
             if (cliente == null)
-            {
-                // Usuario autenticado no corresponde a un cliente en la DB
                 return RedirectToPage("/Error");
-            }
 
             // 3) Inyecta el ID de cliente para el formulario
             ClienteId = cliente.IdCliente;

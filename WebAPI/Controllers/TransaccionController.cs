@@ -1,4 +1,4 @@
-// WebAPI/Controllers/TransaccionController.cs
+﻿// WebAPI/Controllers/TransaccionController.cs
 using BaseManager;
 using CoreApp;
 using DTOs;

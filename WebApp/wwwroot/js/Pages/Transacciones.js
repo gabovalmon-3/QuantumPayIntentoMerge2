@@ -1,33 +1,50 @@
-﻿// WebApp/wwwroot/js/pages/Transacciones.js
+﻿// wwwroot/js/pages/Transacciones.js
 function TransaccionesViewController() {
     const ca = new ControlActions();
+    const self = this;
+
     this.Api = "Transaccion";
     this.ApiCuenta = "CuentaCliente";
     this.ApiComercio = "Comercio";
 
+    // Extrae el ID y el email del cliente desde inputs ocultos
     this.getClienteId = () =>
         parseInt($("#hdnClienteId").val() || "0", 10);
+    this.getEmail = () =>
+        $("#hdnEmail").val() || $("#txtEmail").val() || "";
 
-    this.initView = () => {
+    // Inicializa la vista
+    this.initView = function () {
         this.loadTable();
         this.loadDropdowns();
         this.bindEvents();
+        console.log("Transacciones init → OK");
     };
 
-    this.loadTable = () => {
+    // Carga el DataTable, con filtro por banco o comercio y header Authorization
+    this.loadTable = function () {
         let endpoint = `${this.Api}/RetrieveAll`;
-
         const filtro = $("#transaccionFiltro").val();
         const valor = $("#filtroValor").val();
-        if (filtro === "banco" && valor)
+
+        if (filtro === "banco" && valor) {
             endpoint = `${this.Api}/RetrieveByBanco?cuentaId=${valor}`;
-        if (filtro === "comercio" && valor)
+        } else if (filtro === "comercio" && valor) {
             endpoint = `${this.Api}/RetrieveByComercio?idComercio=${valor}`;
+        }
 
         const url = ca.GetUrlApiService(endpoint);
-        const cfg = {
+
+        const dtCfg = {
             processing: true,
-            ajax: { url, dataSrc: "" },
+            ajax: {
+                url: url,
+                dataSrc: "",
+                headers: { 'Authorization': 'Bearer ' + userToken },
+                error: function (xhr, status, err) {
+                    console.error("DataTable AJAX error:", status, err);
+                }
+            },
             columns: [
                 { data: "id" },
                 { data: "idCuentaCliente" },
@@ -41,26 +58,45 @@ function TransaccionesViewController() {
             ]
         };
 
-        if (!$.fn.dataTable.isDataTable("#tblTransacciones"))
-            $("#tblTransacciones").DataTable(cfg);
-        else
+        if (!$.fn.dataTable.isDataTable("#tblTransacciones")) {
+            $("#tblTransacciones").DataTable(dtCfg);
+        } else {
             $("#tblTransacciones").DataTable().ajax.url(url).load();
+        }
     };
 
-    this.loadDropdowns = () => {
-        ca.GetToApi(`${this.ApiCuenta}/RetrieveAll?clienteId=${this.getClienteId()}`, data => {
-            const ddl = $("#ddlCuentas").empty();
-            data.forEach(c => ddl.append(new Option(c.numeroCuenta, c.id)));
-        });
-        ca.GetToApi(`${this.ApiComercio}/RetrieveAll`, data => {
-            const ddl = $("#ddlComercios").empty();
-            data.forEach(c => ddl.append(new Option(c.nombre, c.id)));
-        });
+    // Carga los dropdowns de cuentas e IDs de comercio
+    this.loadDropdowns = function () {
+        const clienteId = this.getClienteId();
+        // Cuentas del cliente
+        ca.GetToApi(
+            `${this.ApiCuenta}/RetrieveAll?clienteId=${clienteId}`,
+            data => {
+                const ddl = $("#ddlCuentas").empty();
+                data.forEach(c => ddl.append(new Option(c.numeroCuenta, c.id)));
+            },
+            { 'Authorization': 'Bearer ' + userToken }
+        );
+        // Comercios
+        ca.GetToApi(
+            `${this.ApiComercio}/RetrieveAll`,
+            data => {
+                const ddl = $("#ddlComercios").empty();
+                data.forEach(c => ddl.append(new Option(c.nombre, c.id)));
+            },
+            { 'Authorization': 'Bearer ' + userToken }
+        );
     };
 
-    this.bindEvents = () => {
+    // Vincula los eventos de búsqueda, CRUD y selección de fila
+    this.bindEvents = function () {
+        // Filtrar tabla
         $("#btnBuscar").click(() => this.loadTable());
+        $("#transaccionFiltro").change(function () {
+            if (this.value === "all") $("#filtroValor").val("");
+        });
 
+        // Crear transacción
         $("#btnCreate").click(() => {
             const dto = {
                 idCuentaCliente: this.getClienteId(),
@@ -72,12 +108,18 @@ function TransaccionesViewController() {
                 fecha: $("#txtFecha").val(),
                 metodoPago: $("#txtMetodoPago").val()
             };
-            const email = $("#hdnEmail").val() || $("#txtEmail").val();
-            ca.PostToAPI(`${this.Api}/Create?email=${encodeURIComponent(email)}`, dto, () =>
-                window.location.href = "/ClientesPages/ClienteHome"
+            const email = encodeURIComponent(this.getEmail());
+            ca.PostToAPI(
+                `${this.Api}/Create?email=${email}`,
+                dto,
+                () => {
+                    window.location.href = "/ClientesPages/ClienteHome";
+                },
+                { 'Authorization': 'Bearer ' + userToken }
             );
         });
 
+        // Actualizar transacción
         $("#btnUpdate").click(() => {
             const id = parseInt($("#txtId").val(), 10);
             const dto = {
@@ -91,14 +133,40 @@ function TransaccionesViewController() {
                 fecha: $("#txtFecha").val(),
                 metodoPago: $("#txtMetodoPago").val()
             };
-            ca.PutToAPI(`${this.Api}/Update/${id}`, dto, () => this.loadTable());
+            ca.PutToAPI(
+                `${this.Api}/Update/${id}`,
+                dto,
+                () => this.loadTable(),
+                { 'Authorization': 'Bearer ' + userToken }
+            );
         });
 
+        // Eliminar transacción
         $("#btnDelete").click(() => {
             const id = parseInt($("#txtId").val(), 10);
-            ca.DeleteToAPI(`${this.Api}/Delete/${id}`, {}, () => this.loadTable());
+            ca.DeleteToAPI(
+                `${this.Api}/Delete/${id}`,
+                {},
+                () => this.loadTable(),
+                { 'Authorization': 'Bearer ' + userToken }
+            );
+        });
+
+        // Llenar formulario al hacer click en fila
+        $("#tblTransacciones tbody").on("click", "tr", function () {
+            const data = $("#tblTransacciones").DataTable().row(this).data();
+            $("#txtId").val(data.id);
+            $("#ddlCuentas").val(data.idCuentaBancaria);
+            $("#ddlComercios").val(data.idCuentaComercio);
+            $("#txtMonto").val(data.monto);
+            $("#txtComision").val(data.comision);
+            $("#txtDescuentoAplicado").val(data.descuentoAplicado);
+            $("#txtFecha").val(data.fecha);
+            $("#txtMetodoPago").val(data.metodoPago);
         });
     };
 }
 
-$(document).ready(() => new TransaccionesViewController().initView());
+$(document).ready(() => {
+    new TransaccionesViewController().initView();
+});

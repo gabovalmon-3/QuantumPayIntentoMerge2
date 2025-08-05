@@ -10,7 +10,6 @@ namespace CoreApp
 {
     public class ClienteManager : BaseManager
     {
-
         public async Task Create(Cliente cliente)
         {
             try
@@ -73,10 +72,17 @@ namespace CoreApp
             return cCrud.RetrieveById<Cliente>(Id);
         }
 
+
+        public Cliente RetrieveByEmail(string correo)
+        {
+            var uCrud = new ClienteCrudFactory();
+            return uCrud.RetrieveByEmail<Cliente>(correo);
+
         public Cliente RetrieveByEmail(Cliente cliente)
         {
             var uCrud = new ClienteCrudFactory();
             return uCrud.RetrieveByEmail<Cliente>(cliente);
+
         }
 
         public Cliente RetrieveByCedula(string cedula)
@@ -144,12 +150,6 @@ namespace CoreApp
                 age--;
             }
             return age >= 18;
-        }
-
-        public Cliente RetrieveByEmail(string correo)
-        {
-            var cCrud = new ClienteCrudFactory();
-            return cCrud.RetrieveByEmail<Cliente>(correo);
         }
     }
 }
