@@ -48,7 +48,7 @@ namespace CoreApp
             return aCrud.RetrieveById<Admin>(Id);
         }
 
-        
+
 
 
 
@@ -61,8 +61,13 @@ namespace CoreApp
 
         public Admin Update(Admin admin)
         {
-            var aCrud = new AdminCrudFactory();
-            aCrud.Update(admin);
+            try
+            {
+                    var aCrud = new AdminCrudFactory();
+                    var aExist = aCrud.RetrieveById<Admin>(admin);
+                    if (aExist != null)
+                    {
+                        aCrud.Update(admin);
             return RetrieveById(admin.Id);
         }
 

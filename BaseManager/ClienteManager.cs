@@ -63,6 +63,7 @@ namespace CoreApp
         {
             var cCrud = new ClienteCrudFactory();
             return cCrud.RetrieveAll<Cliente>();
+
         }
 
         public Cliente RetrieveById(int Id)
@@ -71,10 +72,17 @@ namespace CoreApp
             return cCrud.RetrieveById<Cliente>(Id);
         }
 
+
         public Cliente RetrieveByEmail(string correo)
         {
             var uCrud = new ClienteCrudFactory();
             return uCrud.RetrieveByEmail<Cliente>(correo);
+
+        public Cliente RetrieveByEmail(Cliente cliente)
+        {
+            var uCrud = new ClienteCrudFactory();
+            return uCrud.RetrieveByEmail<Cliente>(cliente);
+
         }
 
         public Cliente RetrieveByCedula(string cedula)
@@ -90,10 +98,21 @@ namespace CoreApp
         }
 
         public Cliente Update(Cliente cliente)
-        {
-            var cCrud = new ClienteCrudFactory();
-            cCrud.Update(cliente);
+            {
+                if (IsOver18(cliente))
+                {
+                    var cCrud = new ClienteCrudFactory();
+                    var cExist = cCrud.RetrieveById<Cliente>(cliente);
+                    if (cExist != null)
+                    {
+                        cCrud.Update(cliente);
             return RetrieveById(cliente.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                ManageException(ex);
+            }
         }
 
         public void Delete(int id)

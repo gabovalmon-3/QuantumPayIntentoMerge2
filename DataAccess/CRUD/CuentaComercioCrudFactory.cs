@@ -61,6 +61,25 @@ namespace DataAccess.CRUD
         }
 
 
+        public T RetrieveById<T>(CuentaComercio cuentaComercio)
+        {
+            var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_ID_PR" };
+
+            sqlOperation.AddIntParam("P_Id", cuentaComercio.Id);
+
+            var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResult.Count > 0)
+            {
+                var row = lstResult[0];
+                cuentaComercio = BuildCuentasComercio(row);
+                return (T)Convert.ChangeType(cuentaComercio, typeof(T));
+            }
+
+            return default(T);
+        }
+
+
         public override T RetrieveById<T>(int Id)
         {
             var sqlOperation = new SQLOperation() { ProcedureName = "RET_CUENTACOMERCIO_BY_ID_PR" };
@@ -173,6 +192,11 @@ namespace DataAccess.CRUD
                 CorreoElectronico = row["correoElectronico"].ToString(),
                 Direccion = row["direccion"].ToString()
             };
+        }
+
+        public override T RetrieveById<T>()
+        {
+            throw new NotImplementedException();
         }
 
         public T RetrieveByEmail<T>(T cuentaComercio)

@@ -68,6 +68,7 @@ namespace CoreApp
                 return null; // In case of exception, return null
             }
         }
+
         public void Delete(int id)
         {
             try

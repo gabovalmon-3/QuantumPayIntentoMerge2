@@ -27,20 +27,26 @@ namespace CoreApp
                     {
                         iExist = iCrud.RetrieveByTelefono<InstitucionBancaria>(institucionBancaria.telefono);
 
-                        if(iExist == null)
+                        if (iExist == null)
                         {
-                            iCrud.Create(institucionBancaria);
+                            iExist = iCrud.RetrieveByTelefono<InstitucionBancaria>(institucionBancaria);
+
+                            if(iExist == null)
+                            {
+                                iCrud.Create(institucionBancaria);
                             return;
+                            }
+
+                                throw new Exception("Ese telefono no esta disponible");
+                            }
+
+                            throw new Exception("Ese correo electronico no esta disponible.");
                         }
 
-                        throw new Exception("Ese telefono no esta disponible");
-                    }
-
-                    throw new Exception("Ese correo electronico no esta disponible.");
+                    throw new Exception("Ese codigo de identidad no esta disponible");
                 }
-
-                throw new Exception("Ese codigo de identidad no esta disponible");
             }
+
             catch (Exception ex)
             {
                 ManageException(ex);
@@ -51,6 +57,7 @@ namespace CoreApp
         {
             var iCrud = new InstitucionBancariaCrudFactory();
             return iCrud.RetrieveAll<InstitucionBancaria>();
+
         }
 
         public InstitucionBancaria RetrieveById(int Id)
