@@ -1,6 +1,15 @@
 ﻿function ControlActions() {
-	//Ruta base del API
-	this.URL_API = "https://localhost:5001/api/";
+        //Ruta base del API
+        this.URL_API = "https://localhost:5001/api/";
+
+        // Configura el header de autorización para todas las solicitudes AJAX si existe un token
+        if (typeof userToken !== 'undefined' && userToken) {
+                $.ajaxSetup({
+                        headers: {
+                                'Authorization': 'Bearer ' + userToken
+                        }
+                });
+        }
 
 	this.GetUrlApiService = function (service) {
 		return this.URL_API + service;
