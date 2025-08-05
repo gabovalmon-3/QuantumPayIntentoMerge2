@@ -125,9 +125,6 @@ namespace DataAccess.CRUD
             };
         }
 
-        public override T RetrieveById<T>()
-        {
-            throw new NotImplementedException();
-        }
+        // No additional RetrieveById overrides are necessary
     }
 }

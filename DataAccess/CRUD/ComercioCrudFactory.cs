@@ -128,14 +128,6 @@ namespace DataAccess.CRUD
             };
         }
 
-        public override T RetrieveById<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public T RetrieveByEmail<T>(T comercio)
-        {
-            throw new NotImplementedException();
-        }
+        // No additional RetrieveById overrides or email methods are necessary
     }
 }

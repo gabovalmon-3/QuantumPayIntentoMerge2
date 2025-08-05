@@ -156,26 +156,5 @@ namespace DataAccess.CRUD
                 IBAN = row["IBAN"].ToString()
             };
         }
-
-
-
-        public T RetrieveByEmail<T>(string correo)
-        {
-            var sqlOperation = new SQLOperation() { ProcedureName = "RET_CLIENTE_BY_EMAIL_PR" };
-
-            sqlOperation.AddStringParameter("P_correoElectronico", correo);
-
-            var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
-
-            if (lstResult.Count > 0)
-        {
-                var row = lstResult[0];
-                var cliente = BuildCliente(row);
-
-                return (T)Convert.ChangeType(cliente, typeof(T));
-        }
-
-            return default(T);
-        }
     }
 }
