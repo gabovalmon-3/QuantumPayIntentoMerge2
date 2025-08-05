@@ -1,9 +1,16 @@
 using CoreApp;
 using DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
+
+    [Authorize]
+
+
+
     [ApiController]
     [Route("api/[controller]")]
     public class CuentaClienteController : ControllerBase
@@ -13,6 +20,9 @@ namespace WebAPI.Controllers
         {
             try
             {
+                var user = HttpContext.User;
+                var userId = user.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                var userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
                 var m = new CuentaClienteManager();
                 var list = m.Listar(clienteId);
                 return Ok(list);

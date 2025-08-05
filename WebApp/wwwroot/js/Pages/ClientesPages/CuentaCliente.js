@@ -19,6 +19,9 @@
         $('#tblCuentaCliente').DataTable({
             destroy: true,
             ajax: { url: url, dataSrc: '' },
+            headers: {
+                'Authorization': 'Bearer ' + userToken
+            },
             columns: [
                 { data: 'banco' },
                 { data: 'tipoCuenta' },
