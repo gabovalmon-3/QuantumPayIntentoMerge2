@@ -177,7 +177,7 @@ namespace DataAccess.CRUD
         }
 
         public T RetrieveByEmail<T>(T institucionBancaria)
-        {
+    {
             throw new NotImplementedException();
         }
     }

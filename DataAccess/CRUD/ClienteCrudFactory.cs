@@ -184,12 +184,12 @@ namespace DataAccess.CRUD
             var lstResult = _sqlDao.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResult.Count > 0)
-            {
+        {
                 var row = lstResult[0];
                 var cliente = BuildCliente(row);
 
                 return (T)Convert.ChangeType(cliente, typeof(T));
-            }
+        }
 
             return default(T);
         }
