@@ -63,12 +63,23 @@ namespace CoreApp
         {
             try
             {
-                    var aCrud = new AdminCrudFactory();
-                    var aExist = aCrud.RetrieveById<Admin>(admin);
-                    if (aExist != null)
-                    {
-                        aCrud.Update(admin);
-            return RetrieveById(admin.Id);
+                var aCrud = new AdminCrudFactory();
+                var aExist = aCrud.RetrieveById<Admin>(admin.Id);
+                if (aExist != null)
+                {
+                    aCrud.Update(admin);
+                    return RetrieveById(admin.Id);
+                }
+                else
+                {
+                    throw new Exception("No existe un admin con ese ID");
+                }
+            }
+            catch (Exception ex)
+            {
+                ManageException(ex);
+            }
+            return null;
         }
 
         public void Delete(int id)

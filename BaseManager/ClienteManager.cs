@@ -26,11 +26,11 @@ namespace CoreApp
 
                         if (cExist == null)
                         {
-                            cCrud.Create(cliente);
+                            cExist = cCrud.RetrieveByTelefono<Cliente>(cliente.telefono);
 
-                            if ((cExist == null))
+                            if (cExist == null)
                             {
-                                cExist = cCrud.RetrieveByTelefono<Cliente>(cliente.telefono);
+                                cCrud.Create(cliente);
                             }
                             else
                             {
@@ -52,7 +52,6 @@ namespace CoreApp
                     throw new Exception("No cumple con la edad minima");
                 }
             }
-
             catch (Exception ex)
             {
                 ManageException(ex);
@@ -77,12 +76,6 @@ namespace CoreApp
         {
             var uCrud = new ClienteCrudFactory();
             return uCrud.RetrieveByEmail<Cliente>(correo);
-
-        public Cliente RetrieveByEmail(Cliente cliente)
-        {
-            var uCrud = new ClienteCrudFactory();
-            return uCrud.RetrieveByEmail<Cliente>(cliente);
-
         }
 
         public Cliente RetrieveByCedula(string cedula)
@@ -98,21 +91,33 @@ namespace CoreApp
         }
 
         public Cliente Update(Cliente cliente)
+        {
+            try
             {
                 if (IsOver18(cliente))
                 {
                     var cCrud = new ClienteCrudFactory();
-                    var cExist = cCrud.RetrieveById<Cliente>(cliente);
+                    var cExist = cCrud.RetrieveById<Cliente>(cliente.Id);
                     if (cExist != null)
                     {
                         cCrud.Update(cliente);
-            return RetrieveById(cliente.Id);
+                        return RetrieveById(cliente.Id);
+                    }
+                    else
+                    {
+                        throw new Exception("No existe un cliente con ese ID");
+                    }
+                }
+                else
+                {
+                    throw new Exception("No cumple con la edad minima");
                 }
             }
             catch (Exception ex)
             {
                 ManageException(ex);
             }
+            return null;
         }
 
         public void Delete(int id)
